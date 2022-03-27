@@ -102,8 +102,10 @@
                                         <span class="text-muted">{{$client->phone2}}</span>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="margin-0 text-center">{{$client->street}}, {{$client->home_number}},{{$client->entrance}}, {{$client->floor}}, {{$client->apartment_number}}, {{$client->address}}</h6>
+                                        <h6 class="margin-0 text-center">{{$client->street}}, {{$client->home_number}},{{$client->entrance}}, {{$client->floor}}, {{$client->apartment_number}}</h6>
+                                        <h6 class="mb-0" style="font-size: 14px;">{{$client->address}}</h6>
                                         <span class="text-muted">{{$client->city->name}} , {{$client->area->name}}</span>
+                                       
                                     </td>
                                     <td class="text-center">{{$client->balance}}</td>
                                     <td class="text-center">{{$client->container}}</td>

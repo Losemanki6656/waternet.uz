@@ -464,6 +464,10 @@ class HomeController extends Controller
             } else  $product->photo = '';
            
             $product->save();
+
+            $count = Organization::find($organ);
+            $count->products_count = $count->products_count + 1;
+            $count->save();
     
             return redirect()->back()->with('msg' ,'success');
         } else  return redirect()->back()->with('msg' ,'error');

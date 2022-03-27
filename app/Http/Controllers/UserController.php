@@ -115,6 +115,10 @@ class UserController extends Controller
             $x->user_id = User::where('email',$request->email)->value('id');
             $x->save();   
 
+            $count = Organization::find($organ);
+            $count->users_count = $count->users_count + 1;
+            $count->save();
+
             return redirect()->route('users')
                             ->with('success','User created successfully');
         } else 
