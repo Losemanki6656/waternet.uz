@@ -14,23 +14,6 @@
                         <div class="body">
                             <div class="clearfix">
                                 <div class="float-left">
-                                    <i class="fa fa-2x fa-dollar text-col-blue"></i>
-                                </div>
-                                <div class="number float-right text-right">
-                                    <h6>Magazin balansi</h6>
-                                    <span class="font700">{{$organization->balance}} so'm</span>
-                                </div>
-                            </div>
-                            <div class="progress progress-xs progress-transparent custom-color-blue mb-0 mt-3">
-                                <div class="progress-bar" data-transitiongoal="87"></div>
-                            </div>
-                            <small class="text-muted">19% compared to last week</small>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="body">
-                            <div class="clearfix">
-                                <div class="float-left">
                                     <i class="fa fa-2x fa-user text-col-green"></i>
                                 </div>
                                 <div class="number float-right text-right">
@@ -44,6 +27,7 @@
                             <small class="text-muted">19% compared to last week</small>
                         </div>
                     </div>
+                 
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="body">
                             <div class="clearfix">
@@ -74,6 +58,24 @@
                             </div>
                             <div class="progress progress-xs progress-transparent custom-color-yellow mb-0 mt-3">
                                 <div class="progress-bar" data-transitiongoal="75"></div>
+                            </div>
+                            <small class="text-muted">19% compared to last week</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="body">
+                            <div class="clearfix">
+                                <div class="float-left">
+                                    <i class="fa fa-2x fa-dollar text-col-blue"></i>
+                                </div>
+                                <div class="number float-right text-right">
+                                    <h6>Magazin balansi</h6>
+                                    <span class="font700">{{$organization->balance}} so'm</span>
+                                </div>
+                            </div>
+                            <div class="progress progress-xs progress-transparent custom-color-blue mb-0 mt-3">
+                                <div class="progress-bar" data-transitiongoal="87"></div>
                             </div>
                             <small class="text-muted">19% compared to last week</small>
                         </div>
