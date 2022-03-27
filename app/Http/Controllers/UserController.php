@@ -84,34 +84,42 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password'
-        ]);
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $count = Organization::find($organ);
+
+        if($count->users_count < $count->traffic->users_count)
+        {
+            $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|same:confirm-password'
+            ]);
+        
+            $input = $request->all();
+            $input['password'] = Hash::make($input['password']);
+        
+            $user = User::create($input);
     
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+            if($request->bosh == 'on') $user->givePermissionTo('bosh-menu');
+            if($request->client == 'on') $user->givePermissionTo('clients');
+            if($request->order == 'on') $user->givePermissionTo('orders');
+            if($request->results == 'on') $user->givePermissionTo('results');
+            if($request->sms == 'on') $user->givePermissionTo('smsmanager');
+            if($request->regions == 'on') $user->givePermissionTo('regions');
+            if($request->product == 'on') $user->givePermissionTo('products');
+            if($request->sklad == 'on') $user->givePermissionTo('sklad');
+            if($request->users == 'on') $user->givePermissionTo('users');
     
-        $user = User::create($input);
+            $x = new UserOrganization();
+            $x->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+            $x->user_id = User::where('email',$request->email)->value('id');
+            $x->save();   
 
-        if($request->bosh == 'on') $user->givePermissionTo('bosh-menu');
-        if($request->client == 'on') $user->givePermissionTo('clients');
-        if($request->order == 'on') $user->givePermissionTo('orders');
-        if($request->results == 'on') $user->givePermissionTo('results');
-        if($request->sms == 'on') $user->givePermissionTo('smsmanager');
-        if($request->regions == 'on') $user->givePermissionTo('regions');
-        if($request->product == 'on') $user->givePermissionTo('products');
-        if($request->sklad == 'on') $user->givePermissionTo('sklad');
-        if($request->users == 'on') $user->givePermissionTo('users');
-
-        $x = new UserOrganization();
-        $x->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $x->user_id = User::where('email',$request->email)->value('id');
-        $x->save();
-
-        return redirect()->route('users')
-                        ->with('success','User created successfully');
+            return redirect()->route('users')
+                            ->with('success','User created successfully');
+        } else 
+            return redirect()->route('users')
+                            ->with('error',"Xodimlar qo'shish bo'yicha ajratilgan tarif limiti tugadi!");
     }
     
     /**

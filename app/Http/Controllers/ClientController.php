@@ -393,11 +393,19 @@ class ClientController extends Controller
 
     public function edit_product(Request $request, $id)
     {  
+        if($request->photo != null){
+            $fileName = time().'.'.$request->photo->extension();
+            $path = $request->photo->storeAs('products', $fileName);
+        }
+
         $product = Product::find($id);
         $product->name = $request->name;
-        $product->product_count = $request->product_count;
-        $product->container_status = $request->container_status;
-        $product->container = $request->container;
+        $product->price = $request->price;
+        
+        if($request->photo != null){
+            $product->photo =  'storage/products/' . $fileName;
+        } else  $product->photo = '';
+       
         $product->save();
         
         return redirect()->back()->with('msg' ,'success');

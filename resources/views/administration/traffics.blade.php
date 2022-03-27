@@ -59,13 +59,13 @@
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label style="margin-bottom: 0">Tarif turi:</label>
+                                                    <label style="margin-bottom: 0">Ishchilar soni:</label>
                                                     <input class="form-control" type="number" name="users_count"  value="0" placeholder="Ishchilar soni..." required>
                                                 </div> 
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label style="margin-bottom: 0">Ishchilar soni:</label>
+                                            <label style="margin-bottom: 0">Tarif turi:</label>
                                             <select class="form-control" name="status" data-placeholder="Tarif turi" required>
                                                 <option value="0">Asosiy</option>
                                                 <option value="1">Qo'shimcha</option>

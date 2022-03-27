@@ -2,8 +2,8 @@
 @section('content')
 
     @if (\Session::has('msg'))  
-        @if (Session::get('msg') == 1)
-        <div class="alert alert-success" id="success-alert">A simple success alert—check it out!</div>
+        @if (Session::get('msg') == 'error')
+        <div class="alert alert-danger" id="success-alert">Tovarlar bo'yicha ajratilgan tarif limiti tugadi!</div>
         @endif
     @endif
 
@@ -109,7 +109,7 @@
                                         <div class="modal-header">
                                             <h4 class="title" id="defaultModalLabel">Taxrirlash</h4>
                                         </div>
-                                        <form action="{{route('edit_product',['id' => $product->id])}}" method="post">
+                                        <form action="{{route('edit_product',['id' => $product->id])}}" method="post" enctype="multipart/form-data">
                                             @csrf
                                             <div class="modal-body">  
                                                 <div class="form-group">
@@ -118,12 +118,12 @@
                                                 </div> 
                                                 <div class="form-group">
                                                     <h6><label>Narxi:</label></h6>
-                                                    <input class="form-control" type="number" name="product_count" value="{{$product->product_count}}" required>
+                                                    <input class="form-control" type="number" name="price" value="{{$product->price}}" required>
                                                 </div>                                         
                                                 <div class="form-group">
-                                                    <h6><label>Soni:</label></h6>
-                                                    <input class="form-control" name="container" value="{{$product->container}}" required>
-                                                </div>       
+                                                    <h6><label>Rasmi:</label></h6>
+                                                    <input class="form-control" type="file" name="photo">
+                                                </div>      
                                                 <div class="form-group">
                                                     <h6><label>Maxsulot turi:</label></h6>
                                                     <select class="form-control" name="container_status" >

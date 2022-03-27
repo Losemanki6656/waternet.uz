@@ -7,14 +7,19 @@
 <div class="alert alert-success">
   <p>{{ $message }}</p>
 </div>
+@elseif($message = Session::get('error'))
+<div class="alert alert-danger">
+    <p>{{ $message }}</p>
+  </div>
 @endif
 
 <div class="container-fluid">
     <div class="block-header">
         <div class="row">
             <div class="col-lg-5 col-md-8 col-sm-12">
-                <h2>Tovarlar</h2>
+                <h2>Xodimlar</h2>
             </div>            
+            @if (Auth::user()->id != 1)
             <div class="col-lg-7 col-md-4 col-sm-12 text-right">
                 <ul class="breadcrumb justify-content-end">
                     <a href="{{ route('users_create') }}" class="btn btn-primary me-1 mb-1" type="button">
@@ -22,6 +27,7 @@
                     </a>
                 </ul>
             </div>
+            @endif
         </div>
     </div>
 

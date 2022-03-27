@@ -57,7 +57,11 @@
                                         <label for="birhtdate"> Parolni takrorlash: </label>  {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}             
                                     </div>
                                     <div class="mb-3">
+                                        @if (Auth::user()->id == 1)
+                                        <a href="{{ route('users_admin') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
+                                        @else
                                         <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
+                                        @endif
                                         <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
                                     </div>       
                                 </div>

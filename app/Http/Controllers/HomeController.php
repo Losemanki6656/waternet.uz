@@ -441,26 +441,33 @@ class HomeController extends Controller
     }
     public function add_product(Request $request)
     {
-        if($request->photo != null){
-            $fileName = time().'.'.$request->photo->extension();
-            $path = $request->photo->storeAs('products', $fileName);
-        }
-        
-        $product = new Product();
-        $product->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');;
-        $product->name = $request->name;
-        $product->container_status = $request->idish_status;
-        $product->price = $request->sena;
-        $product->product_count = $request->count;
-        $product->container = 0;
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $count = Organization::find($organ);
 
-        if($request->photo != null){
-            $product->photo =  'storage/products/' . $fileName;
-        } else  $product->photo = '';
+        if($count->products_count < $count->traffic->products_count)
+        {
+            if($request->photo != null){
+                $fileName = time().'.'.$request->photo->extension();
+                $path = $request->photo->storeAs('products', $fileName);
+            }
+            
+            $product = new Product();
+            $product->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');;
+            $product->name = $request->name;
+            $product->container_status = $request->idish_status;
+            $product->price = $request->sena;
+            $product->product_count = $request->count;
+            $product->container = 0;
+    
+            if($request->photo != null){
+                $product->photo =  'storage/products/' . $fileName;
+            } else  $product->photo = '';
+           
+            $product->save();
+    
+            return redirect()->back()->with('msg' ,'success');
+        } else  return redirect()->back()->with('msg' ,'error');
        
-        $product->save();
-
-        return redirect()->back()->with('msg' ,'success');
     }
 
     public function workers()
