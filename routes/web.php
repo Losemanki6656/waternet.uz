@@ -127,6 +127,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/administration/edit-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'edit_traffic'])->name('edit_traffic');
     Route::post('/administration/delete-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'delete_traffic'])->name('delete_traffic');
 
+    Route::post('/order-edit/{id}', [App\Http\Controllers\HomeController::class, 'order_edit'])->name('order_edit');
+    Route::get('/client-order-edit/{id}', [App\Http\Controllers\HomeController::class, 'client_order_edit'])->name('client_order_edit');
+
     Route::post('/send-sms', [App\Http\Controllers\ClientController::class, 'send_sms'])->name('send_sms');
     Route::get('/reklama', [App\Http\Controllers\TrafficController::class, 'reklama'])->name('reklama');
     Route::get('/organization/trafficorgan/{id}', [App\Http\Controllers\TrafficController::class, 'trafficorgan'])->name('trafficorgan');

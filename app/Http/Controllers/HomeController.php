@@ -192,7 +192,7 @@ class HomeController extends Controller
         $order = Order::where('client_id',$id)->where('product_id',$request->product_id)->get();
 
         if($order->count() > 0) {
-            return redirect()->back()->with('msg' ,'erorder');
+            return redirect()->route('client_order_edit' , [ 'id' => $id ]);
         }
 
         $zakaz = new Order();
@@ -246,6 +246,44 @@ class HomeController extends Controller
             'info_org' => $info_org
         ]);
     }
+
+    public function client_order_edit($id)
+    {
+      
+        $orders = Order::where('client_id', $id)->with('client')->with('user')->with('product')->get();
+  
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+        
+        $products = Product::where('organization_id', $info_id)->get();
+
+        return view('clients.order_edit',[
+            'orders' => $orders,
+            'info_org' => $info_org,
+            'products' => $products
+        ]);
+    }
+
+    public function order_edit(Request $request, $id)
+    {
+       
+        $zakaz = Order::find($id);
+        $zakaz->product_id = $request->product_id;
+        $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
+        $zakaz->product_count = $request->count;
+        $zakaz->price = $request->sena;
+        $zakaz->comment = $request->izoh ?? '';
+        $zakaz->save();
+
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+        
+        $products = Product::where('organization_id', $info_id)->get();
+
+        return redirect()->back()->with('msg' ,'success');
+     
+    }
+
 
     public function soldproducts($id)
     {

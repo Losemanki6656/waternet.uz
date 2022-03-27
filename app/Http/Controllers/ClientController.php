@@ -48,6 +48,7 @@ class ClientController extends Controller
         $clientprice->payment = $request->payment;
         $clientprice->amount = $request->amount;
         $clientprice->comment = $request->comment ?? ''; 
+        $clientprice->status = 1; 
         $clientprice->save();
 
         $client = Client::find($id);

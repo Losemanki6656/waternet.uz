@@ -221,10 +221,7 @@
     function onsel(){
         if(document.getElementById("tolov-usuli").value == 3)
             {  
-                var x = document.getElementById("price").value;
-                var y = document.getElementById("product_count").value;
-                var z = x * y;
-                $("#take_amount").val(z);
+                $("#take_amount").val(0);
                 $("#take_amount").attr('readonly', true);
                 
         } else {
