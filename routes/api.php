@@ -32,6 +32,7 @@ Route::group([
 ], function ($router) {
     Route::get('/user-profile', [AuthController::class, 'userProfile']);     
     Route::get('/orders', [AuthController::class, 'orders']);      
+    Route::get('/payment/types', [AuthController::class, 'payments']);   
     Route::post('/success-order', [HomeController::class, 'success_order_api']);
 });
 

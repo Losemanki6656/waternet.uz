@@ -90,6 +90,19 @@ class AuthController extends Controller
         return response()->json(Order::with(['product' , 'client','client.city', 'client.area'])->get());
     }
 
+    public function payments() {
+
+        $payments = array(
+            "1" => "Yetqazildi",
+            "3" => "Bekor qilindi",
+            "4" => "Manzil topilmadi",
+            "5" => "Manzilda xech kim yoq"
+        );
+        
+        return response()->json($payments);
+    }
+
+
 
     /**
      * Get the token array structure.
