@@ -66,10 +66,10 @@
                                 @if ($role[$user->id] == 4)
                                     Director
                                 @endif
-                                @if ($role[$user->id] == 3)
+                                @if ($role[$user->id] == 2)
                                     Warehouse manager
                                 @endif
-                                @if ($role[$user->id] == 2)
+                                @if ($role[$user->id] == 3)
                                     Driver
                                 @endif
                                 @if ($role[$user->id] == 1)
