@@ -460,6 +460,55 @@ class HomeController extends Controller
             $clientcontainer->comment = $request->comment ?? ''; 
             $clientcontainer->status = 0;
             $clientcontainer->save();
+
+
+            $char = ['(', ')', ' ','-','+'];
+            $replace = ['', '', '','',''];
+            $phone = str_replace($char, $replace, $client_info->phone);
+            $text = "Poluchena ".$request->amount.",Dostavleno ".$request->product_count.",Vozvrat tari ".$request->container.",Predoplata ".Client::find($x)->balance." sum.Spasibo za pokupku";
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>"{
+                       \"login\":\"sms0085ts\",
+                       \"pwd\":\"1986@max\",
+                       \"CgPN\":\"WEBEST_UZ\",
+                       \"CdPN\":\"998$phone\",
+                       \"text\":\"$text\"
+                   }",
+              CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Content-Type: application/json'
+              ),
+            ));
+            
+            $response = curl_exec($curl);
+           
+            $json = json_decode($response, true);
+            
+            if ($json['query_state'] == "SUCCESS") {         
+    
+                $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                $count = Organization::find($organ);
+                $count->sms_count = $count->sms_count + 1;
+                $count->save();
+    
+                $sms = new Sms();
+                $sms->organization_id = $organ;
+                $sms->client_id = $id;
+                $sms->user_id = Auth::user()->id;
+                $sms->sms_text = $text;
+                $sms->save();
+            }
+            
         }
 
         return redirect()->route('status_client',['id' => $x]);
@@ -470,7 +519,7 @@ class HomeController extends Controller
         $client_info = Client::find($id);
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        
+
         return view('clients.status_client',[
             'client_info' => $client_info,
             'info_org'  => $info_org
