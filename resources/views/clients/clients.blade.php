@@ -112,12 +112,12 @@
                                     <td class="text-center">{{$client->user->name}}</td>
                                     <td class="text-center">
                                             @if ($client->updated_at->diffInDays() > 14)
-                                                <span class="badge badge-danger" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</span>
+                                                <div class="p-2 l-blush text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</div>
                                             @else 
                                                 @if ($client->updated_at->diffInDays() >= 7 && $client->updated_at->diffInDays() <= 14)
-                                                    <span class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas"> {{$client->updated_at->format('d-m-Y')}}</span>    
+                                                    <div class="p-2 l-amber text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas"> {{$client->updated_at->format('d-m-Y')}}</div>    
                                                 @else
-                                                    <span class="badge badge-success" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</span>
+                                                    <div class="p-2 l-green text-dark" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</div>
                                                 @endif        
                                             @endif
 
