@@ -73,7 +73,7 @@ class UserController extends Controller
     {
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        $roles = array([1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver']);
+        $roles = array(1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
 
         return view('users.create',[
             'info_org' => $info_org,
@@ -163,6 +163,7 @@ class UserController extends Controller
         }
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
+
         $roles = array(1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
 
         return view('users.edit',compact('user','p','info_org','roles'));
