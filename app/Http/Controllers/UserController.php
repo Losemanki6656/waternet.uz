@@ -118,6 +118,7 @@ class UserController extends Controller
             $x = new UserOrganization();
             $x->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
             $x->user_id = User::where('email',$request->email)->value('id');
+            $x->role = $request->role;
             $x->save();   
 
             $count = Organization::find($organ);
