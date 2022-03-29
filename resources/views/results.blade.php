@@ -66,7 +66,18 @@
                                         {{$user->name}}
                                     </td>
                                     <td>
-                                        Xodim
+                                        @if ($roles[$user->id] == 4)
+                                            Director
+                                        @endif
+                                        @if ($roles[$user->id] == 3)
+                                            Warehouse Manager
+                                        @endif
+                                        @if ($roles[$user->id] == 2)
+                                            Driver
+                                        @endif
+                                        @if ($roles[$user->id] == 1)
+                                            Operator
+                                        @endif
                                     </td>
                                     <td>
                                         <a href="">{{$order[$user->id]}}</a>

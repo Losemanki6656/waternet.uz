@@ -341,13 +341,14 @@ class HomeController extends Controller
         $payment2 = [];
         $payment3 = [];
         $amount = [];
+        $roles = [];
 
         foreach ( $data as $user ) {
             $order[$user->id] = SuccessOrders::where('order_user_id', $user->id)->get()->count();
             $takeproduct[$user->id] = TakeProduct::where('received_id', $user->id)->sum('product_count');
             $solds = SuccessOrders::where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
             $soldproducts[$user->id] = $solds->sum('count');
-
+            $roles[$user->id] = UserOrganization::where('user_id',$user->id)->value('role');
             $soldsumm[$user->id] = 0; 
             $dolgsumm[$user->id] = 0;
             $amount[$user->id] = 0;
@@ -370,6 +371,7 @@ class HomeController extends Controller
          //dd($order);
         return view('results',[
             'info_org' => $info_org,
+            'roles' => $roles,
             'data'  => $data,
             'order' => $order,
             'takeproduct' => $takeproduct,
