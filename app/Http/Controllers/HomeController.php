@@ -444,7 +444,7 @@ class HomeController extends Controller
             $clientprice->user_id = Auth::user()->id;
             $clientprice->payment = $request->payment;
             $clientprice->amount = $request->amount;
-            $clientprice->comment = $request->comment;
+            $clientprice->comment = $request->comment ?? '';
             $clientprice->status = 0;
             $clientprice->save();
 
@@ -456,7 +456,7 @@ class HomeController extends Controller
             $clientcontainer->product_id = $orderinfo->product_id;
             $clientcontainer->count = $request->container;
             $clientcontainer->invalid_count = $request->invalid_container_count; 
-            $clientcontainer->comment = $request->comment; 
+            $clientcontainer->comment = $request->comment ?? ''; 
             $clientcontainer->status = 0;
             $clientcontainer->save();
         }

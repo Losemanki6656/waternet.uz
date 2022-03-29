@@ -170,7 +170,7 @@
                                     <div class="col-lg-6 col-md-6">
                                         <div class="row">
                                             <div class="col"> 
-                                                <b id="amount">Bergan summasi: {{$order->price * $order->product_count}} dan</b>
+                                                <b id="amount">Bergan summasi: {{$order->price * $order->product_count}}</b>
                                                 <div class="input-group mb-3">
                                                     <input type="number" class="form-control" id="take_amount" name="amount" value="0">
                                                 </div>

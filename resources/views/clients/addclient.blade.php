@@ -152,7 +152,7 @@
                                 </div>   
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6">
-                                        <b>Toliq manzil:</b>
+                                        <b>Izoh(manzil):</b>
                                             <div class="input-group mb-3">
                                                 <textarea class="form-control" name="address">{{ Request::old('address') }}</textarea>
                                             </div>
