@@ -393,6 +393,7 @@ class HomeController extends Controller
         $orderinfo = Order::find($id);
 
         $client_info = Client::find($orderinfo->client_id);
+        $x = $orderinfo->client_id;
         
         if ($request->order_status == 1 || $request->order_status == 2 ) {
 
@@ -461,7 +462,15 @@ class HomeController extends Controller
             $clientcontainer->save();
         }
 
+        return redirect()->route('status_client',['id' => $x]);
+    }
 
+    public function status_client($id)
+    {
+        $client_info = Client::find($id);
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+        
         return view('clients.status_client',[
             'client_info' => $client_info,
             'info_org'  => $info_org

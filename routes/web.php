@@ -29,6 +29,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users_create');
 
     Route::get('/clients', [App\Http\Controllers\HomeController::class, 'clients'])->name('clients');
+    Route::get('/status-client/{id}', [App\Http\Controllers\HomeController::class, 'status_client'])->name('status_client');
+    
     
     Route::post('/client-edit/{id}', [App\Http\Controllers\HomeController::class, 'client_edit'])->name('client_edit');
     Route::post('/client-delete/{id}', [App\Http\Controllers\HomeController::class, 'delete_client'])->name('delete_client');
