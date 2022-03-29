@@ -56,6 +56,7 @@ class ClientController extends Controller
         $client = Client::find($id);
         $client->balance = $client->balance + $request->amount;
         $client->save();
+        
 
        
         return redirect()->back()->with('msg' ,'success');

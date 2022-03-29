@@ -348,6 +348,8 @@ class HomeController extends Controller
             $order[$user->id] = SuccessOrders::where('order_user_id', $user->id)->get()->count();
             $takeproduct[$user->id] = TakeProduct::where('received_id', $user->id)->sum('product_count');
             $solds = SuccessOrders::where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
+            $solds2 = ClientPrices::where('user_id', $user->id)->where('status',1)->get();
+
             $soldproducts[$user->id] = $solds->sum('count');
             $roles[$user->id] = UserOrganization::where('user_id',$user->id)->value('role');
             $soldsumm[$user->id] = 0; 
@@ -362,6 +364,13 @@ class HomeController extends Controller
                 if($sold->count*$sold->price > $sold->amount) 
                  $dolgsumm[$user->id] = $dolgsumm[$user->id] + $sold->count*$sold->price-$sold->amount;
                 
+                if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
+                if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
+                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
+            }
+
+            foreach ($solds2 as $sold) {
+
                 if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
                 if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
