@@ -16,6 +16,7 @@ use App\Models\Area;
 use App\Models\OrderArchive;
 use App\Models\User;
 use App\Models\TakeProduct;
+use App\Models\Sms;
 use App\Models\EntryContainer;
 use Illuminate\Support\Facades\Validator;
 use Auth;
@@ -465,7 +466,8 @@ class HomeController extends Controller
             $char = ['(', ')', ' ','-','+'];
             $replace = ['', '', '','',''];
             $phone = str_replace($char, $replace, $client_info->phone);
-            $text = "Poluchena ".$request->amount.",Dostavleno ".$request->product_count.",Vozvrat tari ".$request->container.",Predoplata ".Client::find($x)->balance." sum.Spasibo za pokupku";
+            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
+            $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
             $curl = curl_init();
     
             curl_setopt_array($curl, array(
