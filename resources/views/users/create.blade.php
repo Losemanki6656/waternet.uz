@@ -61,6 +61,13 @@
                                     {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}             
                                 </div>
                                 <div class="mb-3">
+                                    <select class="form-control" name="role" required>
+                                        @foreach ($roles as $key => $value)
+                                            <option value={{$key}}>{{$values}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
                                     <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
                                     <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
                                 </div>       

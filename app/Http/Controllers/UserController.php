@@ -28,15 +28,17 @@ class UserController extends Controller
         foreach ($users as $user) {
             $x ++;
             $y[$x] = $user->user_id;
+            $role[$user->user_id] = UserOrganization::where('user_id',$user->user_id)->value('role');
         }
 
         $data = User::whereIn('id',$y)->get();
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-
+       // dd($role);
         return view('users.index',[
             'data' => $data,
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'role' => $role
         ]);
     }
     
@@ -48,7 +50,8 @@ class UserController extends Controller
 
     public function users_admin(Request $request)
     {
-        $data = User::all();
+        $arr = UserOrganization::where('role',4)->pluck('user_id')->toArray();
+        $data = User::find($arr);
         $org = [];
 
         foreach ($data as $dat) {
@@ -70,9 +73,11 @@ class UserController extends Controller
     {
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
+        $roles = array([1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver']);
 
         return view('users.create',[
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'roles' => $roles
         ]);
     }
     
@@ -158,8 +163,9 @@ class UserController extends Controller
         }
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
+        $roles = array(1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
 
-        return view('users.edit',compact('user','p','info_org'));
+        return view('users.edit',compact('user','p','info_org','roles'));
     }
     
     /**

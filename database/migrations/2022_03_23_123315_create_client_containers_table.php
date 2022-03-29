@@ -16,6 +16,7 @@ class CreateClientContainersTable extends Migration
         Schema::create('client_containers', function (Blueprint $table) {
             $table->id();
             $table->integer('organization_id');
+            $table->integer('success_order_id');
             $table->integer('client_id');
             $table->integer('user_id');
             $table->integer('product_id');

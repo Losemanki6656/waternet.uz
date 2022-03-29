@@ -425,9 +425,7 @@ class HomeController extends Controller
         $successorder->amount = $request->amount;
         $successorder->comment = $request->comment?? '';
 
-        if($request->order_status == 1 || $request->order_status == 2 ) {
-            $successorder->status = 0;
-        } else  $successorder->status = 1;
+        $successorder->status = 0;
 
         $successorder->save();
 
@@ -439,22 +437,24 @@ class HomeController extends Controller
 
             $clientprice = new ClientPrices();
             $clientprice->organization_id = $info_id;
+            $clientprice->success_order_id = $successorder->id;
             $clientprice->client_id = $client_info->id;
             $clientprice->user_id = Auth::user()->id;
             $clientprice->payment = $request->payment;
             $clientprice->amount = $request->amount;
-            $clientprice->comment = "Dostavka vaqtida";
+            $clientprice->comment = $request->comment;
             $clientprice->status = 0;
             $clientprice->save();
 
             $clientcontainer = new ClientContainer();
             $clientcontainer->organization_id = $info_id;
+            $clientcontainer->success_order_id = $successorder->id;
             $clientcontainer->client_id = $client_info->id;
             $clientcontainer->user_id = Auth::user()->id;
             $clientcontainer->product_id = $orderinfo->product_id;
             $clientcontainer->count = $request->container;
             $clientcontainer->invalid_count = $request->invalid_container_count; 
-            $clientcontainer->comment = 'Dostavka vaqtida'; 
+            $clientcontainer->comment = $request->comment; 
             $clientcontainer->status = 0;
             $clientcontainer->save();
         }

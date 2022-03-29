@@ -134,13 +134,16 @@ class TrafficController extends Controller
             'smsmanager',
             'results',
             'products',
-            'users'
+            'users',
+            'director',
+            'per-delete'
          ];
         $user->givePermissionTo($pers);
 
         $userorgan = new UserOrganization();
         $userorgan->user_id = $user->id;
         $userorgan->organization_id = $organizations->id;
+        $userorgan->role = 4;
         $userorgan->save();
 
         $trafficorgan = new TrafficOrganization();

@@ -13,6 +13,7 @@ use App\Models\TakeProduct;
 use App\Models\EntryProduct;
 use App\Models\TakeContainer;
 use App\Models\EntryContainer;
+use App\Models\SuccessOrders;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Sity;
@@ -43,6 +44,7 @@ class ClientController extends Controller
     {
         $clientprice = new ClientPrices();
         $clientprice->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $clientprice->success_order_id = 0;
         $clientprice->client_id = $id;
         $clientprice->user_id = Auth::user()->id;
         $clientprice->payment = $request->payment;
@@ -62,15 +64,32 @@ class ClientController extends Controller
     public function client_price_edit(Request $request, $id)
     {
         $clientprice = ClientPrices::find($id);
-        $price = $clientprice->amount;
-        $clientprice->payment = $request->payment;
-        $clientprice->amount = $request->amount;
-        $clientprice->comment = $request->comment ?? ''; 
-        $clientprice->save();
+        if($clientprice->status == 1) {
+            $price = $clientprice->amount;
+            $clientprice->payment = $request->payment;
+            $clientprice->amount = $request->amount;
+            $clientprice->comment = $request->comment ?? ''; 
+            $clientprice->save();
+    
+            $client = Client::find($clientprice->client_id);
+            $client->balance = $client->balance - $price +  $request->amount;
+            $client->save();
+        } else {
+            $price = $clientprice->amount;
+            $clientprice->payment = $request->payment;
+            $clientprice->amount = $request->amount;
+            $clientprice->comment = $request->comment ?? ''; 
+            $clientprice->save();
+    
+            $client = Client::find($clientprice->client_id);
+            $client->balance = $client->balance - $price +  $request->amount;
+            $client->save();
 
-        $client = Client::find($clientprice->client_id);
-        $client->balance = $client->balance - $price +  $request->amount;
-        $client->save();
+            $succ = SuccessOrders::find($clientprice->success_order_id);
+            $succ->amount = $request->amount;
+            $succ->save();
+        }
+        
 
        
         return redirect()->back()->with('msg' ,'success');
@@ -93,12 +112,14 @@ class ClientController extends Controller
     {
         $clientprice = new ClientContainer();
         $clientprice->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $clientprice->success_order_id = 0;
         $clientprice->client_id = $id;
         $clientprice->user_id = Auth::user()->id;
         $clientprice->product_id = $request->product_id;
         $clientprice->count = $request->count;
         $clientprice->invalid_count = $request->invalid_count; 
         $clientprice->comment = $request->comment ?? ''; 
+        $clientprice->status = 1; 
         $clientprice->save();
 
         $client = Client::find($id);
@@ -112,18 +133,38 @@ class ClientController extends Controller
     public function client_container_edit(Request $request, $id)
     {
         $clientprice = ClientContainer::find($id);
-        $count = $clientprice->count;
-        $incount = $clientprice->invalid_count;
+        if($clientprice->status == 1) {
+            $count = $clientprice->count;
+            $incount = $clientprice->invalid_count;
+    
+            $clientprice->product_id = $request->product_id;
+            $clientprice->count = $request->count;
+            $clientprice->invalid_count = $request->invalid_count; 
+            $clientprice->comment = $request->comment ?? ''; 
+            $clientprice->save();
+    
+            $client = Client::find($clientprice->client_id);
+            $client->container = $client->container - ($count-$incount) + $request->count - $request->invalid_count;
+            $client->save();
+        } else {
+            $count = $clientprice->count;
+            $incount = $clientprice->invalid_count;
+    
+            $clientprice->product_id = $request->product_id;
+            $clientprice->count = $request->count;
+            $clientprice->invalid_count = $request->invalid_count; 
+            $clientprice->comment = $request->comment ?? ''; 
+            $clientprice->save();
+    
+            $client = Client::find($clientprice->client_id);
+            $client->container = $client->container - ($count-$incount) + $request->count - $request->invalid_count;
+            $client->save();
 
-        $clientprice->product_id = $request->product_id;
-        $clientprice->count = $request->count;
-        $clientprice->invalid_count = $request->invalid_count; 
-        $clientprice->comment = $request->comment ?? ''; 
-        $clientprice->save();
-
-        $client = Client::find($clientprice->client_id);
-        $client->container = $client->container - ($count-$incount) + $request->count - $request->invalid_count;
-        $client->save();
+            $succ = SuccessOrders::find($clientprice->success_order_id);
+            $succ->container = $request->count;
+            $succ->invalid_container_count = $request->invalid_count;
+            $succ->save();
+        }
 
         return redirect()->back()->with('msg' ,'success');
     }

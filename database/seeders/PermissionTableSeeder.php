@@ -24,7 +24,13 @@ class PermissionTableSeeder extends Seeder
            'smsmanager',
            'results',
            'products',
-           'users'
+           'users',
+           'per-delete',
+           'director',
+           'driver',
+           'operator',
+           'warehouse',
+           'manager'
         ];
      
         foreach ($permissions as $permission) {

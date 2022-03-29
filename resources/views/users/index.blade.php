@@ -63,7 +63,18 @@
                                     {{$org[$user->id]}}
                                 @endif
                             @else
-                                Xodim
+                                @if ($role[$user->id] == 4)
+                                    Director
+                                @endif
+                                @if ($role[$user->id] == 3)
+                                    Warehouse manager
+                                @endif
+                                @if ($role[$user->id] == 2)
+                                    Driver
+                                @endif
+                                @if ($role[$user->id] == 1)
+                                    Operator
+                                @endif
                             @endif
                         </td>
                         <td class="text-center">

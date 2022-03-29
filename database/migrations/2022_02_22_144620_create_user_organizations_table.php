@@ -17,6 +17,7 @@ class CreateUserOrganizationsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('organization_id');
+            $table->integer('role');
             $table->timestamps();
         });
     }

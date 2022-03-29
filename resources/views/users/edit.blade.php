@@ -57,15 +57,16 @@
                                         <label for="birhtdate"> Parolni takrorlash: </label>  {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}             
                                     </div>
                                     <div class="mb-3">
-                                        @if (Auth::user()->id == 1)
-                                        <a href="{{ route('users_admin') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
-                                        @else
-                                        <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
-                                        @endif
-                                        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
-                                    </div>       
+                                        <label for="middlename"> Roli: </label>
+                                        <select class="form-control" name="role" required>
+                                            @foreach ($roles as $key => $value)
+                                                <option value={{$key}}>{{$value}}</option> 
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                          
                                 </div>
-                                <div class="col" style="margin-top:165px">
+                                <div class="col" style="margin-top: 247px">
                                     <div class="mt-3">
                                         <div class="row">
                                             <div class="col">
@@ -125,7 +126,17 @@
                                     </div>  
                                 </div>
                         </div>
-                        {!! Form::close() !!}
+                        <div class="header text-right">
+                            <div class="mb-3">
+                                @if (Auth::user()->id == 1)
+                                <a href="{{ route('users_admin') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
+                                @else
+                                <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
+                                @endif
+                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
+                            </div> 
+                        </div>
+                    {!! Form::close() !!}
                 </div>   
             </div>
         </div>
