@@ -61,16 +61,14 @@
                                     {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}             
                                 </div>
                                 <div class="mb-3">
+                                    <label for="birhtdate"> Roli: </label>  
                                     <select class="form-control" name="role" required>
-                                        @foreach ($roles as $key => $values)
-                                            <option value={{$key}}>{{$values}}</option> 
+                                        @foreach ($roles as $key => $value)
+                                            <option value={{$key}}>{{$value}}</option> 
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3">
-                                    <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
-                                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
-                                </div>       
+                                
                             </div>
                             
                             <div class="col" style="margin-top:165px">
@@ -133,7 +131,12 @@
                                 </div>  
                             </div>
                     </div>
-                    
+                    <div class="header text-right">
+                        <div class="mb-3">
+                            <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
+                        </div>   
+                    </div>
                     {!! Form::close() !!}
                 </div>   
             </div>
