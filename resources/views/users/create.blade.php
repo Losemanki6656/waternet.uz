@@ -71,7 +71,7 @@
                                 
                             </div>
                             
-                            <div class="col" style="margin-top:165px">
+                            <div class="col" style="margin-top: 247px">
                                 <div class="mt-3">
                                     <div class="row">
                                         <div class="col">
