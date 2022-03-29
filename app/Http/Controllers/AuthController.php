@@ -90,7 +90,7 @@ class AuthController extends Controller
         return response()->json(Order::with(['product' , 'client','client.city', 'client.area'])->get());
     }
 
-    public function payments() {
+    public function order_status() {
 
         $payments = array(
             "1" => "Yetqazildi",
@@ -102,7 +102,16 @@ class AuthController extends Controller
         return response()->json($payments);
     }
 
+    public function payments() {
 
+        $payments = array(
+            "1" => "Naqd",
+            "2" => "Plastik",
+            "3" => "Pul ko'chirish"
+        );
+        
+        return response()->json($payments);
+    }
 
     /**
      * Get the token array structure.

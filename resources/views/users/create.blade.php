@@ -63,7 +63,7 @@
                                 <div class="mb-3">
                                     <select class="form-control" name="role" required>
                                         @foreach ($roles as $key => $value)
-                                            <option value={{$key}}>{{$values}}</option> 
+                                            <option value={{$key}}>{{$value}}</option> 
                                         @endforeach
                                     </select>
                                 </div>
