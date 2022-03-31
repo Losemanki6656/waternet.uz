@@ -86,8 +86,11 @@ class AuthController extends Controller
         return response()->json(auth('api')->user());
     }
 
-    public function orders() {
-        return response()->json(Order::with(['product' , 'client','client.city', 'client.area'])->get());
+    public function orders(Request $request) {
+        return response()->json(
+
+            Order::query()->with(['product' , 'client','client.city', 'client.area'])->get()
+
     }
 
     public function order_status() {

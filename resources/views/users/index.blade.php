@@ -38,7 +38,7 @@
         <table class="table table-bordered">
             <thead class="bg-light">
             <tr class="text-800 bg-200">
-                <th class="text-nowrap" width="180">No</th>
+                <th class="text-nowrap" width="70">#</th>
                 <th class="text-center text-nowrap">Name</th>
                 <th class="text-center text-nowrap">Email </th>
                 <th class="text-center text-nowrap">Organization</th>

@@ -65,12 +65,13 @@
                                 <th>Zakas oldi</th>
                                 <th>Tovar oldi</th>
                                 <th>Tovar sotdi</th>
-                                <th>Sotilgan summasi</th>
+                                <th>Summa</th>
                                 <th>Idish oldi</th>
                                 <th>Idish qaytardi</th>
                                 <th>Naqd pul</th>
                                 <th>Plastik</th>
-                                <th>Pul ko'chirish</th>
+                                <th>Pul.k</th>
+                                <th>Qarz</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,7 +104,7 @@
                                         <a href="">{{$soldproducts[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$soldsumm[$user->id]}} / {{$amount[$user->id]}} / {{$dolgsumm[$user->id]}}</a>
+                                        <a href="">{{$soldsumm[$user->id]}}</a>
                                     </td>
                                     <td>
                                         <a href="">{{$entrycon[$user->id]}}</a>
@@ -120,6 +121,9 @@
                                     <td>
                                         <a href="">{{$payment3[$user->id]}}</a>
                                     </td>
+                                    <td>
+                                        <a href="">{{$amount[$user->id]}}</a>
+                                    </td>
                                 </tr>  
                             @endforeach
                             <td colspan="2" class="text-center" style="font-weight: bold; text-align: right;"> Jami:</td>
@@ -132,6 +136,7 @@
                             <td style="font-weight: bold;">{{$summpayment1}}</td>
                             <td style="font-weight: bold;">{{$summpayment2}}</td>
                             <td style="font-weight: bold;">{{$summpayment3}}</td>
+                            <td style="font-weight: bold;">{{$dolgsumm}}</td>
                         </tbody>
                     </table>
                 </div>

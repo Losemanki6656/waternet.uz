@@ -493,18 +493,16 @@ class HomeController extends Controller
 
             foreach ($solds as $sold) {
                 
-                $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count*$sold->price;
-                $amount[$user->id] = $amount[$user->id] + $sold->amount;
-               
-                if($sold->count*$sold->price > $sold->amount) 
-                 $dolgsumm[$user->id] = $dolgsumm[$user->id] + $sold->count*$sold->price-$sold->amount;
+                $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count * $sold->price;
+                if($sold->price_sold < 0) $amount[$user->id] = $amount[$user->id] + $sold->price_sold;
                 
                 if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
-                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->count * $sold->price;
+                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
             }
 
             foreach ($solds2 as $sold) {
+                $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
 
                 if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
@@ -519,8 +517,10 @@ class HomeController extends Controller
             $summpayment1 = array_sum($payment1);
             $summpayment2 = array_sum($payment2);
             $summpayment3 = array_sum($payment3);
+            $dolgsumm = (-1)*array_sum($amount);
 
             $entrycon[$user->id] = EntryContainer::where('received_id', $user->id)->sum('product_count');
+            $amount[$user->id] = (-1)*$amount[$user->id];
         }
          //dd($order);
         return view('results',[
@@ -556,6 +556,8 @@ class HomeController extends Controller
         $client_info = Client::find($orderinfo->client_id);
         $x = $orderinfo->client_id;
         
+        $y = $client_info->balance;
+
         if ($request->order_status == 1 || $request->order_status == 2 ) {
 
             $client_info->balance = $client_info->balance  - ($request->product_count * $request->price) + $request->amount;
@@ -589,14 +591,27 @@ class HomeController extends Controller
         $successorder->payment = $request->payment;
 
         if($request->payment == 3) 
-            if( $client_info->balance >= $request->product_count * $request->price){
+            if( $y >= $request->product_count * $request->price){
+
                 $successorder->amount = $request->product_count * $request->price;
+                $successorder->client_price = $y;
+                $successorder->price_sold = (-1) * $request->product_count * $request->price;
             } else 
                 {
-                    $successorder->amount = $client_info->balance;
+                    $successorder->amount = $request->product_count * $request->price;
+                    $successorder->client_price = $y;
+                    if($y>=0)
+                    $successorder->price_sold =  $y - $request->product_count * $request->price;
+                    else
+                    $successorder->price_sold = (-1) * $request->product_count * $request->price;
                 }
         else 
             $successorder->amount = $request->amount;
+            $successorder->client_price = $y;
+            if($y>=0)
+                $successorder->price_sold = $y + $request->amount - $request->product_count * $request->price;
+                    else 
+            $successorder->price_sold = $request->amount - $request->product_count * $request->price;
 
         $successorder->comment = $request->comment?? '';
 

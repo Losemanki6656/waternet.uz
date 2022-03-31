@@ -35,6 +35,8 @@ class CreateSuccessOrdersTable extends Migration
             $table->date('order_date');
             $table->string('comment');
             $table->integer('status');
+            $table->integer('client_price');
+            $table->integer('price_sold');
             $table->timestamps();
         });
     }
