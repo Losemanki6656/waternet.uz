@@ -492,14 +492,16 @@ class HomeController extends Controller
             $payment3[$user->id] = 0;  
 
             foreach ($solds as $sold) {
+                
                 $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count*$sold->price;
                 $amount[$user->id] = $amount[$user->id] + $sold->amount;
+               
                 if($sold->count*$sold->price > $sold->amount) 
                  $dolgsumm[$user->id] = $dolgsumm[$user->id] + $sold->count*$sold->price-$sold->amount;
                 
                 if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
-                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
+                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->count * $sold->price;
             }
 
             foreach ($solds2 as $sold) {
@@ -569,7 +571,13 @@ class HomeController extends Controller
 
         $successorder->payment = $request->payment;
 
-        if($request->payment == 3)  $successorder->amount = $request->product_count * $request->price;
+        if($request->payment == 3) 
+            if( $client_info->balance >= $request->product_count * $request->price){
+                $successorder->amount = $request->product_count * $request->price;
+            } else 
+                {
+                    $successorder->amount = $client_info->balance;
+                }
         else 
             $successorder->amount = $request->amount;
 
