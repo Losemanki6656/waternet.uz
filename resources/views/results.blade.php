@@ -38,7 +38,21 @@
 
         <div class="card" style="margin-top: 20px">
             <div class="header" style="padding-bottom: 1">
-               
+                <div class="row">
+                    <div class="col-lg-2 col-md-6">
+                        <input data-provide="datepicker" data-date-autoclose="true" value="{{now()->format('m/d/Y')}}" class="form-control">
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <input data-provide="datepicker" data-date-autoclose="true" value="{{now()->format('m/d/Y')}}" class="form-control">
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <button class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
+                    </div>
+                    <div class="col-lg-6 col-md-6 text-right">
+                        <button class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Export</button>
+                    </div>
+                </div>
+                
             </div>
             
             <div class="body">
@@ -62,10 +76,10 @@
                         <tbody>
                             @foreach ($data as $user)
                                 <tr>
-                                    <td>
+                                    <td style="font-weight: bold;">
                                         {{$user->name}}
                                     </td>
-                                    <td>
+                                    <td style="font-weight: bold;">
                                         @if ($roles[$user->id] == 4)
                                             Director
                                         @endif
@@ -108,6 +122,16 @@
                                     </td>
                                 </tr>  
                             @endforeach
+                            <td colspan="2" class="text-center" style="font-weight: bold; text-align: right;"> Jami:</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">0</td>
                         </tbody>
                     </table>
                 </div>

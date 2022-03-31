@@ -232,8 +232,8 @@
                         @can('bosh-menu')
                             <li class="heading">Main</li>
                             
-                            <li class="{{ url()->current() == route('home')? 'active' : ''}}">
-                                <a href="{{route('home')}}"><i class="fa fa-home"></i><span>Bosh menu</span>
+                            <li class="{{ url()->current() == route('statistics')? 'active' : ''}}">
+                                <a href="{{route('statistics')}}"><i class="fa fa-home"></i><span>Statistika</span>
                                 </a>
                             </li>
                         @endcan
@@ -257,7 +257,7 @@
                         @endcan
                         @can('regions')
                             <li class="{{strpos(url()->current(),'regions')? 'active' : ''}}">
-                                <a href="{{route('regions')}}" ><i class="fa fa-map-marker"></i><span>Regionlar</span>
+                                <a href="{{route('regions')}}" ><i class="fa fa-map"></i><span>Regionlar</span>
                                 </a>
                             </li> 
                         @endcan

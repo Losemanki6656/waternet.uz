@@ -70,6 +70,7 @@
                 <table class="table m-b-0 table-bordered">
                     <thead>
                         <tr>
+                            <th width="60">#</th>
                             <th>FIO</th>
                             <th>Tel raqami</th>
                             <th>Manzil </th>
@@ -86,6 +87,7 @@
                     
                         @foreach ($orders as $order)
                             <tr>
+                                <td>{{(($orders->currentPage() * 10) - 10) + $loop->index + 1}}</td>
                                 <td>{{$order->client->fullname}}</td>
                                 <td>{{$order->client->phone}}</td>
                                 <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>

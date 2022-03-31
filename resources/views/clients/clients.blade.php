@@ -82,6 +82,7 @@
                     <table class="table mb-0 table-bordered">
                         <thead>
                             <tr>
+                                <th width="60">#</th>
                                 <th class="text-center">FIO</th>
                                 <th class="text-center">Tel raqami</th>
                                 <th class="text-center">Addres</th>
@@ -96,6 +97,7 @@
                         
                             @foreach ($clients as $client)
                                 <tr>
+                                    <td>{{(($clients->currentPage() * 10) - 10) + $loop->index + 1}}</td>
                                     <td class="text-center">{{$client->fullname}}</td>
                                     <td class="text-center">
                                         <h6>{{$client->phone}}</h6>

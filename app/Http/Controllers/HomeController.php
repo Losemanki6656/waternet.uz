@@ -16,6 +16,7 @@ use App\Models\Area;
 use App\Models\OrderArchive;
 use App\Models\User;
 use App\Models\TakeProduct;
+use App\Models\EntryProduct;
 use App\Models\Sms;
 use App\Models\EntryContainer;
 use Illuminate\Support\Facades\Validator;
@@ -43,8 +44,18 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        return view('home',[
+            'info_org' => $info_org
+        ]); 
+    }
+
+    public function statistics()
+    {
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
         if(Auth::user()->id != 1)
-            return view('home',[
+            return view('statistics',[
                 'info_org' => $info_org
             ]); 
         else
@@ -232,7 +243,7 @@ class HomeController extends Controller
 
     public function orders()
     {
-        $orders = Order::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('client')->with('user')->with('product')->get();
+        $orders = Order::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('client')->with('user')->with('product');
         
         $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
@@ -241,7 +252,7 @@ class HomeController extends Controller
         $info_org = Organization::find($info_id);
 
         return view('clients.orders',[
-            'orders' => $orders,
+            'orders' => $orders->paginate(10),
             'sities' => $sities,
             'areas'  => $areas,
             'info_org' => $info_org
@@ -314,7 +325,128 @@ class HomeController extends Controller
     
     public function success_order_api(Request $request) {
         
-        $succ_orders = Order::find($request->order_id);
+        $id = $request->order_id;
+        $orderinfo = Order::find($id);
+
+        $client_info = Client::find($orderinfo->client_id);
+        $x = $orderinfo->client_id;
+        
+        if ($request->order_status == 1 || $request->order_status == 2 ) {
+
+            $client_info->balance = $client_info->balance  - ($request->product_count * $request->price) + $request->amount;
+       
+            $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
+            
+            $client_info->save();
+        }
+
+        $successorder = new SuccessOrders();
+        $successorder->organization_id = $orderinfo->organization_id;
+        $successorder->client_id = $orderinfo->client_id;
+        $successorder->product_id = $orderinfo->product_id;
+        $successorder->user_id = Auth::user()->id;
+        $successorder->order_user_id = $orderinfo->user_id;
+        $successorder->order_status = $request->order_status;
+        $successorder->fullname = $client_info->fullname;
+        $successorder->phone = $client_info->phone;
+        $successorder->address = $client_info->city->name.','.$client_info->area->name;
+        $successorder->order_count = $orderinfo->product_count;
+        $successorder->order_price = $orderinfo->price;
+        $successorder->count = $request->sold_product_count;
+        $successorder->price = $request->sold_product_price;
+
+        $successorder->container = $request->container;
+        $successorder->invalid_container_count = $request->invalid_container_count;
+
+        $successorder->order_date = $orderinfo->created_at;
+
+        $successorder->payment = $request->payment;
+        $successorder->amount = $request->amount;
+        $successorder->comment = $request->comment?? '';
+
+        $successorder->status = 0;
+
+        $successorder->save();
+
+        Order::find($id)->delete();
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        if ($request->order_status == 1 || $request->order_status == 2 ) {
+
+            $clientprice = new ClientPrices();
+            $clientprice->organization_id = $info_id;
+            $clientprice->success_order_id = $successorder->id;
+            $clientprice->client_id = $client_info->id;
+            $clientprice->user_id = Auth::user()->id;
+            $clientprice->payment = $request->payment;
+            $clientprice->amount = $request->amount;
+            $clientprice->comment = $request->comment ?? '';
+            $clientprice->status = 1;
+            $clientprice->save();
+
+            $clientcontainer = new ClientContainer();
+            $clientcontainer->organization_id = $info_id;
+            $clientcontainer->success_order_id = $successorder->id;
+            $clientcontainer->client_id = $client_info->id;
+            $clientcontainer->user_id = Auth::user()->id;
+            $clientcontainer->product_id = $orderinfo->product_id;
+            $clientcontainer->count = $request->container;
+            $clientcontainer->invalid_count = $request->invalid_container_count; 
+            $clientcontainer->comment = $request->comment ?? ''; 
+            $clientcontainer->status = 1;
+            $clientcontainer->save();
+
+
+            $char = ['(', ')', ' ','-','+'];
+            $replace = ['', '', '','',''];
+            $phone = str_replace($char, $replace, $client_info->phone);
+            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
+            $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+            $curl = curl_init();
+    
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>"{
+                       \"login\":\"sms0085ts\",
+                       \"pwd\":\"1986@max\",
+                       \"CgPN\":\"WEBEST_UZ\",
+                       \"CdPN\":\"998$phone\",
+                       \"text\":\"$text\"
+                   }",
+              CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Content-Type: application/json'
+              ),
+            ));
+            
+            $response = curl_exec($curl);
+           
+            $json = json_decode($response, true);
+            
+            if ($json['query_state'] == "SUCCESS") {         
+    
+                $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                $count = Organization::find($organ);
+                $count->sms_count = $count->sms_count + 1;
+                $count->save();
+    
+                $sms = new Sms();
+                $sms->organization_id = $organ;
+                $sms->client_id = $id;
+                $sms->user_id = Auth::user()->id;
+                $sms->sms_text = $text;
+                $sms->save();
+            }
+            
+        }
 
         return response()->json('success');
     }
@@ -345,7 +477,7 @@ class HomeController extends Controller
         $roles = [];
 
         foreach ( $data as $user ) {
-            $order[$user->id] = SuccessOrders::where('order_user_id', $user->id)->get()->count();
+            $order[$user->id] = SuccessOrders::where('order_user_id', $user->id)->whereIn('order_status',[1,2])->sum('order_count');
             $takeproduct[$user->id] = TakeProduct::where('received_id', $user->id)->sum('product_count');
             $solds = SuccessOrders::where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
             $solds2 = ClientPrices::where('user_id', $user->id)->where('status',1)->get();
@@ -355,7 +487,8 @@ class HomeController extends Controller
             $soldsumm[$user->id] = 0; 
             $dolgsumm[$user->id] = 0;
             $amount[$user->id] = 0;
-            $payment1[$user->id] = 0;  $payment2[$user->id] = 0;
+            $payment1[$user->id] = 0; 
+            $payment2[$user->id] = 0;
             $payment3[$user->id] = 0;  
 
             foreach ($solds as $sold) {
@@ -399,7 +532,6 @@ class HomeController extends Controller
     public function success_order(Request $request,$id)
     {
         //dd($request->all());
-
         $orderinfo = Order::find($id);
 
         $client_info = Client::find($orderinfo->client_id);
@@ -409,7 +541,8 @@ class HomeController extends Controller
 
             $client_info->balance = $client_info->balance  - ($request->product_count * $request->price) + $request->amount;
        
-            $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
+            if(Product::find($orderinfo->product_id)->container_status != 1)
+                $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
             
             $client_info->save();
         }
@@ -459,17 +592,20 @@ class HomeController extends Controller
             $clientprice->status = 0;
             $clientprice->save();
 
-            $clientcontainer = new ClientContainer();
-            $clientcontainer->organization_id = $info_id;
-            $clientcontainer->success_order_id = $successorder->id;
-            $clientcontainer->client_id = $client_info->id;
-            $clientcontainer->user_id = Auth::user()->id;
-            $clientcontainer->product_id = $orderinfo->product_id;
-            $clientcontainer->count = $request->container;
-            $clientcontainer->invalid_count = $request->invalid_container_count; 
-            $clientcontainer->comment = $request->comment ?? ''; 
-            $clientcontainer->status = 0;
-            $clientcontainer->save();
+            if(Product::find($orderinfo->product_id)->container_status != 1) {
+                $clientcontainer = new ClientContainer();
+                $clientcontainer->organization_id = $info_id;
+                $clientcontainer->success_order_id = $successorder->id;
+                $clientcontainer->client_id = $client_info->id;
+                $clientcontainer->user_id = Auth::user()->id;
+                $clientcontainer->product_id = $orderinfo->product_id;
+                $clientcontainer->count = $request->container;
+                $clientcontainer->invalid_count = $request->invalid_container_count; 
+                $clientcontainer->comment = $request->comment ?? ''; 
+                $clientcontainer->status = 0;
+                $clientcontainer->save();
+            }
+          
 
 
             $char = ['(', ')', ' ','-','+'];

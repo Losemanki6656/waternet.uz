@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
+    Route::get('/statistics', [App\Http\Controllers\HomeController::class, 'statistics'])->name('statistics');
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users_create');
 
