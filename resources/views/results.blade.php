@@ -123,15 +123,15 @@
                                 </tr>  
                             @endforeach
                             <td colspan="2" class="text-center" style="font-weight: bold; text-align: right;"> Jami:</td>
+                            <td style="font-weight: bold;">{{$summorder}}</td>
+                            <td style="font-weight: bold;">{{$summtakeproduct}}</td>
+                            <td style="font-weight: bold;">{{$summsoldproducts}}</td>
+                            <td style="font-weight: bold;">{{$summsoldsumm}}</td>
+                            <td style="font-weight: bold;">{{$summentrycon}}</td>
                             <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
-                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">{{$summpayment1}}</td>
+                            <td style="font-weight: bold;">{{$summpayment2}}</td>
+                            <td style="font-weight: bold;">{{$summpayment3}}</td>
                         </tbody>
                     </table>
                 </div>

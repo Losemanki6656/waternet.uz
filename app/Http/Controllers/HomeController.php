@@ -510,6 +510,15 @@ class HomeController extends Controller
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
                 if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
             }
+            $summorder = array_sum($order);
+            $summtakeproduct = array_sum($takeproduct);
+            $summsoldproducts = array_sum($soldproducts);
+            $summsoldsumm = array_sum($soldsumm);
+            
+            $summentrycon = array_sum($entrycon);
+            $summpayment1 = array_sum($payment1);
+            $summpayment2 = array_sum($payment2);
+            $summpayment3 = array_sum($payment3);
 
             $entrycon[$user->id] = EntryContainer::where('received_id', $user->id)->sum('product_count');
         }
@@ -528,6 +537,14 @@ class HomeController extends Controller
             'payment1' => $payment1,
             'payment2' => $payment2,
             'payment3'   => $payment3,
+            'summorder' => $summorder,
+            'summtakeproduct' => $summtakeproduct,
+            'summsoldproducts' => $summsoldproducts,
+            'summsoldsumm' => $summsoldsumm,
+            'summentrycon' => $summentrycon,
+            'summpayment1' => $summpayment1,
+            'summpayment2' => $summpayment2,
+            'summpayment3' => $summpayment3
         ]);
     }
 
