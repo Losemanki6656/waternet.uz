@@ -23,6 +23,7 @@ class CreateOrdersTable extends Migration
             $table->boolean('container_status');
             $table->bigInteger('price');
             $table->text('comment');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

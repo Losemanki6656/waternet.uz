@@ -134,6 +134,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/client-order-edit/{id}', [App\Http\Controllers\HomeController::class, 'client_order_edit'])->name('client_order_edit');
 
     Route::get('/admin-traffics', [App\Http\Controllers\ClientController::class, 'admin_traffics'])->name('admin_traffics');
+    Route::get('/results/orders', [App\Http\Controllers\ClientController::class, 'resultorders'])->name('result_orders');
+    Route::get('/results/resulttakeproducts', [App\Http\Controllers\ClientController::class, 'resulttakeproducts'])->name('result_take');
+    Route::get('/results/resultsold', [App\Http\Controllers\ClientController::class, 'resultsold'])->name('resultsold');
+    Route::get('/results/summresult', [App\Http\Controllers\ClientController::class, 'summresult'])->name('summresult');
 
     Route::post('/send-sms', [App\Http\Controllers\ClientController::class, 'send_sms'])->name('send_sms');
     Route::get('/reklama', [App\Http\Controllers\TrafficController::class, 'reklama'])->name('reklama');

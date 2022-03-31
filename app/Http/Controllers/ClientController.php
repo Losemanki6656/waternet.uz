@@ -653,4 +653,78 @@ class ClientController extends Controller
         else
             return json_decode($error, true); 
     }
+
+    public function resultorders(){
+
+        $orders = Order::whereDate('created_at',now())
+        ->where('organization_id', UserOrganization::where('user_id',Auth::user()->id)
+        ->value('organization_id'))->with('client')->with('user')->with('product');
+        
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('result.resultorders',[
+            'orders' => $orders->paginate(10),
+            'info_org' => $info_org
+        ]);
+
+    }
+
+    public function resulttakeproducts(){
+
+        $takeproduct = TakeProduct::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('received')->with('sent')->with('product')->get();
+
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    
+        $arr = UserOrganization::where('organization_id', $organ)->pluck('user_id')->toArray();
+       
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+
+        return view('result.resulttake',[
+            'takeproduct' => $takeproduct,
+            'info_org' => $info_org
+        ]);
+
+    }
+
+    public function resultsold(){
+
+        $soldproducts = SuccessOrders::whereDate('created_at',now())->get();
+       
+        $summ = 0;
+        foreach ($soldproducts as $sold){
+            $summ = $summ + $sold->amount;
+        }
+
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('result.soldproduct',[
+            'soldproducts' => $soldproducts,
+            'summ' => $summ,
+            'info_org' => $info_org
+        ]);
+    }
+
+    public function summresult(){
+
+       $soldproducts = SuccessOrders::whereDate('created_at',now())->get();
+        $clientprices = ClientPrices::whereDate('created_at',now())->get();
+
+        $summ = 0;
+        foreach ($soldproducts as $sold){
+            $summ = $summ + $sold->amount;
+        }
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('result.summ',[
+            'soldproducts' => $soldproducts,
+            'summ' => $summ,
+            'clientprices' => $clientprices,
+            'info_org' => $info_org
+        ]);
+    }
 }

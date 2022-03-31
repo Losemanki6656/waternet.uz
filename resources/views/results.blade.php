@@ -95,16 +95,16 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="">{{$order[$user->id]}}</a>
+                                        <a href="{{route('result_orders')}}">{{$order[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$takeproduct[$user->id]}}</a>
+                                        <a href="{{route('result_take')}}">{{$takeproduct[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$soldproducts[$user->id]}}</a>
+                                        <a href="{{route('resultsold')}}">{{$soldproducts[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$soldsumm[$user->id]}}</a>
+                                        <a href="{{route('summresult')}}">{{$soldsumm[$user->id]}}</a>
                                     </td>
                                     <td>
                                         <a href="">{{$entrycon[$user->id]}}</a>

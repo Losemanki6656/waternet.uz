@@ -215,6 +215,7 @@ class HomeController extends Controller
         $zakaz->product_count = $request->count;
         $zakaz->price = $request->sena;
         $zakaz->comment = $request->izoh ?? '';
+        $zakaz->status = 0;
         $zakaz->user_id = Auth::user()->id;
         $zakaz->save();
 
@@ -243,7 +244,9 @@ class HomeController extends Controller
 
     public function orders()
     {
-        $orders = Order::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('client')->with('user')->with('product');
+        $orders = Order::where('status',0)
+        ->where('organization_id', UserOrganization::where('user_id',Auth::user()->id)
+        ->value('organization_id'))->with('client')->with('user')->with('product');
         
         $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
@@ -468,7 +471,6 @@ class HomeController extends Controller
         $takeproduct = [];
         $soldproducts = [];
         $soldsumm = [];
-        $dolgsumm = [];
         $entrycon = [];
         $payment1 = [];
         $payment2 = [];
@@ -477,15 +479,14 @@ class HomeController extends Controller
         $roles = [];
 
         foreach ( $data as $user ) {
-            $order[$user->id] = SuccessOrders::where('order_user_id', $user->id)->whereIn('order_status',[1,2])->sum('order_count');
-            $takeproduct[$user->id] = TakeProduct::where('received_id', $user->id)->sum('product_count');
-            $solds = SuccessOrders::where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
-            $solds2 = ClientPrices::where('user_id', $user->id)->where('status',1)->get();
+            $order[$user->id] = SuccessOrders::whereDate('created_at',now())->where('order_user_id', $user->id)->whereIn('order_status',[1,2])->sum('order_count');
+            $takeproduct[$user->id] = TakeProduct::whereDate('created_at',now())->where('received_id', $user->id)->sum('product_count');
+            $solds = SuccessOrders::whereDate('created_at',now())->where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
+            $solds2 = ClientPrices::whereDate('created_at',now())->where('user_id', $user->id)->where('status',1)->get();
 
             $soldproducts[$user->id] = $solds->sum('count');
             $roles[$user->id] = UserOrganization::where('user_id',$user->id)->value('role');
             $soldsumm[$user->id] = 0; 
-            $dolgsumm[$user->id] = 0;
             $amount[$user->id] = 0;
             $payment1[$user->id] = 0; 
             $payment2[$user->id] = 0;
@@ -619,7 +620,10 @@ class HomeController extends Controller
 
         $successorder->save();
 
-        Order::find($id)->delete();
+        $or = Order::find($id);
+        $or->status = 1;
+        $or->save();
+        
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
