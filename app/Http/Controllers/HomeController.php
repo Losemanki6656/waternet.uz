@@ -568,7 +568,11 @@ class HomeController extends Controller
         $successorder->order_date = $orderinfo->created_at;
 
         $successorder->payment = $request->payment;
-        $successorder->amount = $request->amount;
+
+        if($request->payment == 3)  $successorder->amount = $request->product_count * $request->price;
+        else 
+            $successorder->amount = $request->amount;
+
         $successorder->comment = $request->comment?? '';
 
         $successorder->status = 0;
@@ -614,7 +618,7 @@ class HomeController extends Controller
             $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
             $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
             $curl = curl_init();
-    
+          
             curl_setopt_array($curl, array(
               CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
               CURLOPT_RETURNTRANSFER => true,
@@ -638,7 +642,6 @@ class HomeController extends Controller
             ));
             
             $response = curl_exec($curl);
-           
             $json = json_decode($response, true);
             
             if ($json['query_state'] == "SUCCESS") {         
