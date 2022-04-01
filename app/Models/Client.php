@@ -34,7 +34,7 @@ class Client extends Model
     ];
   
 
-    protected $dates = ['active'];
+    //protected $dates = ['active'];
 
     public function city()
     {

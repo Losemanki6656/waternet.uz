@@ -68,6 +68,7 @@ class HomeController extends Controller
 
         $clients = Client::query()
         ->where('organization_id', $organ)
+        ->orderBy('updated_at', 'DESC')
         ->when(\Request::input('search'),function($query,$search){
             $query->where(function ($query) use ($search) {
                 $query->Orwhere('fullname','like','%'.$search.'%')
@@ -153,7 +154,7 @@ class HomeController extends Controller
         $client->login = $request->login;
         $client->password = $request->password;
         $client->location = $request->location;
-        $client->activated_at = now()->format('Y-m-d');
+        $client->activated_at = now();
         $client->phone = $request->phone1;
         $client->phone2 = $request->phone2 ?? '';
         $client->save();
@@ -218,6 +219,10 @@ class HomeController extends Controller
         $zakaz->status = 0;
         $zakaz->user_id = Auth::user()->id;
         $zakaz->save();
+
+        $client = Client::find($id);
+        $client->activated_at = now();
+        $client->save();
 
         return redirect()->back()->with('msg' ,'success');
     }
