@@ -14,6 +14,7 @@ use App\Models\EntryProduct;
 use App\Models\TakeContainer;
 use App\Models\EntryContainer;
 use App\Models\SuccessOrders;
+use App\Models\Traffic;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Sity;
@@ -840,9 +841,11 @@ class ClientController extends Controller
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-
+        $traffics = Traffic::all();
+        
         return view('clients.traffics',[
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'traffics' => $traffics
         ]);
      }
 }

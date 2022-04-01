@@ -286,7 +286,7 @@
                             </li>
                         @endcan
                         <li class="{{strpos(url()->current(),'admin-traffics')? 'active' : ''}}">
-                            <a href="{{route('admin_traffics')}}" ><i class="fa fa-cube"></i><span>Tariflar</span>
+                            <a href="{{route('admin_traffics')}}" ><i class="fa fa-warning"></i><span>Tariflar</span>
                             </a>
                         </li>
                         @can('admin')
