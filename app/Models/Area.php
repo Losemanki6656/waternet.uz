@@ -15,4 +15,9 @@ class Area extends Model
         return $this->belongsTo(Sity::class,'city_id');
     }
 
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
 }

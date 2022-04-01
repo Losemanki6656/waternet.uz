@@ -65,6 +65,7 @@
                                             <tr class="text-800 bg-200">
                                                 <th width="60">ID</th>
                                                 <th>Name</th>
+                                                <th>Mizojlar soni</th>
                                                 <th width="100">Action</th>
                                             </tr>
                                             </thead>
@@ -74,6 +75,9 @@
                                                         <td>{{$loop->index + 1}}</td>
                                                         <td>
                                                             {{$region->name}}
+                                                        </td>
+                                                        <td>
+                                                            {{$region->clients->count()}}
                                                         </td>
                                                         <td>
                                                             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#edit{{$region->id}}"><i class="fa fa-edit" ></i> <span></span></button>

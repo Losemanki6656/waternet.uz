@@ -74,6 +74,7 @@
                                             <th width="60">ID</th>
                                             <th>Region nomi</th>
                                             <th>Name</th>
+                                            <th>Mizojlar soni</th>
                                             <th width="100">Action</th>
                                         </tr>
                                         </thead>
@@ -86,6 +87,9 @@
                                                     </td>
                                                     <td>
                                                         {{$area->name}}
+                                                    </td>
+                                                    <td>
+                                                        {{$area->clients->count()}}
                                                     </td>
                                                     <td>
                                                         <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#edit{{$area->id}}"><i class="fa fa-edit"></i> <span></span></button>

@@ -11,6 +11,6 @@ class Sity extends Model
 
     public function clients()
     {
-        return $this->hasMany(Client::class);
+        return $this->hasMany(Client::class,'city_id');
     }
 }
