@@ -835,4 +835,14 @@ class ClientController extends Controller
              'info_org' => $info_org
          ]);
      }
+
+     public function admin_traffics(){
+
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('clients.traffics',[
+            'info_org' => $info_org
+        ]);
+     }
 }

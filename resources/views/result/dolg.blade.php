@@ -22,13 +22,11 @@
                 <table class="table m-b-0 table-bordered">
                     <thead>
                         <tr>
+                            <th>Mijoz</th>
+                            <th>Topshirdi</th>
                             <th>Maxsulot</th>
                             <th>Buyurtma miqdori</th>
-                            <th>Narxi </th>
-                            <th>Buyurtma vaqti</th>
                             <th>Olgan miqdori</th>
-                            <th>Olgan narxi</th>
-                            <th>Qaytargan idishlari</th>
                             <th>To'lov usuli</th>
                             <th>Umumiy summa</th>
                             <th>Yetkazildi izoh</th>
@@ -42,13 +40,11 @@
                         @foreach ($soldproducts as $soldproduct)
                             @if ($soldproduct->order_status == 1 || $soldproduct->order_status == 2)
                                 <tr>
+                                    <td>{{$soldproduct->client->fullname}}</td>
+                                    <td>{{$soldproduct->user->name}}</td>
                                     <td>{{$soldproduct->product->name}}</td>
                                     <td>{{$soldproduct->order_count}}</td>
-                                    <td>{{$soldproduct->order_price}}</td>
-                                    <td>{{$soldproduct->order_date}}</td>
                                     <td>{{$soldproduct->count}}</td>
-                                    <td>{{$soldproduct->price}}</td>
-                                    <td>{{$soldproduct->container}}</td>
                                     <td>
                                         @if ($soldproduct->payment == 1)
                                             Naqd

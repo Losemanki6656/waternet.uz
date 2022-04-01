@@ -201,7 +201,7 @@ class HomeController extends Controller
 
     public function add_order(Request $request, $id)
     {
-        $order = Order::where('client_id',$id)->where('product_id',$request->product_id)->get();
+        $order = Order::where('client_id',$id)->where('product_id',$request->product_id)->where('status',0)->get();
 
         if($order->count() > 0) {
             return redirect()->route('client_order_edit' , [ 'id' => $id ]);
@@ -599,12 +599,16 @@ class HomeController extends Controller
                 $successorder->price_sold = $request->product_count * $request->price;
             } else 
                 {
-                    $successorder->amount = $request->product_count * $request->price;
-                    $successorder->client_price = $y;
-                    if($y>=0)
+                    if($y >= 0) {
+                        $successorder->amount = $y;
+                        $successorder->client_price = $y;
                         $successorder->price_sold =  $y - $request->product_count * $request->price;
-                    else
+                    }
+                    else {
+                        $successorder->amount = 0;
+                        $successorder->client_price = $y;
                         $successorder->price_sold = (-1) * $request->product_count * $request->price;
+                    }
                 }
         else 
             $successorder->amount = $request->amount;
