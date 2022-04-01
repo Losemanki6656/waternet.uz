@@ -672,7 +672,13 @@ class ClientController extends Controller
 
     public function resulttakeproducts(){
 
-        $takeproduct = TakeProduct::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('received')->with('sent')->with('product')->get();
+        $takeproduct = TakeProduct::whereDate('created_at',now())
+        ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)
+        ->value('organization_id'))
+        ->with('received')
+        ->with('sent')
+        ->with('product')
+        ->get();
 
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
     
@@ -727,4 +733,106 @@ class ClientController extends Controller
             'info_org' => $info_org
         ]);
     }
+
+    public function resultentrycontainer(){
+
+        $entrycontainer = EntryContainer::whereDate('created_at',now())
+        ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+        ->with('user')
+        ->with('received')
+        ->with('product')->get();
+
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('result.resultentryontainer',[
+            'entrycontainer' => $entrycontainer,
+            'info_org' => $info_org
+        ]);
+     }
+
+     public function payment1(){
+
+        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        ->where('payment',1)
+        ->get();
+         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+ 
+         $summ = 0;
+         foreach ($soldproducts as $sold){
+             $summ = $summ + $sold->amount;
+         }
+         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+         $info_org = Organization::find($info_id);
+ 
+         return view('result.payment1',[
+             'soldproducts' => $soldproducts,
+             'summ' => $summ,
+             'clientprices' => $clientprices,
+             'info_org' => $info_org
+         ]);
+     }
+     public function payment2(){
+
+        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        ->where('payment',2)
+        ->get();
+         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+ 
+         $summ = 0;
+         foreach ($soldproducts as $sold){
+             $summ = $summ + $sold->amount;
+         }
+         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+         $info_org = Organization::find($info_id);
+ 
+         return view('result.payment2',[
+             'soldproducts' => $soldproducts,
+             'summ' => $summ,
+             'clientprices' => $clientprices,
+             'info_org' => $info_org
+         ]);
+     }
+
+     public function payment3(){
+
+        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        ->where('payment',3)
+        ->get();
+         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+ 
+         $summ = 0;
+         foreach ($soldproducts as $sold){
+             $summ = $summ + $sold->amount;
+         }
+         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+         $info_org = Organization::find($info_id);
+ 
+         return view('result.payment3',[
+             'soldproducts' => $soldproducts,
+             'summ' => $summ,
+             'clientprices' => $clientprices,
+             'info_org' => $info_org
+         ]);
+     }
+
+     public function dolgresult(){
+
+        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        ->where('price_sold','<',0)
+        ->get();
+ 
+         $summ = 0;
+         foreach ($soldproducts as $sold){
+             $summ = $summ + $sold->amount;
+         }
+         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+         $info_org = Organization::find($info_id);
+ 
+         return view('result.dolg',[
+             'soldproducts' => $soldproducts,
+             'summ' => $summ,
+             'info_org' => $info_org
+         ]);
+     }
 }

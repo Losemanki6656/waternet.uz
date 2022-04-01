@@ -596,15 +596,15 @@ class HomeController extends Controller
 
                 $successorder->amount = $request->product_count * $request->price;
                 $successorder->client_price = $y;
-                $successorder->price_sold = (-1) * $request->product_count * $request->price;
+                $successorder->price_sold = $request->product_count * $request->price;
             } else 
                 {
                     $successorder->amount = $request->product_count * $request->price;
                     $successorder->client_price = $y;
                     if($y>=0)
-                    $successorder->price_sold =  $y - $request->product_count * $request->price;
+                        $successorder->price_sold =  $y - $request->product_count * $request->price;
                     else
-                    $successorder->price_sold = (-1) * $request->product_count * $request->price;
+                        $successorder->price_sold = (-1) * $request->product_count * $request->price;
                 }
         else 
             $successorder->amount = $request->amount;

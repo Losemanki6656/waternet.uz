@@ -107,22 +107,22 @@
                                         <a href="{{route('summresult')}}">{{$soldsumm[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$entrycon[$user->id]}}</a>
+                                        <a href="{{route('resultentrycontainer')}}">{{$entrycon[$user->id]}}</a>
                                     </td>
                                     <td>
                                         0
                                     </td>
                                     <td>
-                                        <a href="">{{$payment1[$user->id]}}</a>
+                                        <a href="{{route('payment1')}}">{{$payment1[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$payment2[$user->id]}}</a>
+                                        <a href="{{route('payment2')}}">{{$payment2[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$payment3[$user->id]}}</a>
+                                        <a href="{{route('payment3')}}">{{$payment3[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="">{{$amount[$user->id]}}</a>
+                                        <a href="{{route('dolgresult')}}">{{$amount[$user->id]}}</a>
                                     </td>
                                 </tr>  
                             @endforeach

@@ -11,12 +11,12 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-5 col-md-8 col-sm-12">
-                    <h2>Region</h2>
+                    <h2>Tovar chiqarish</h2>
                 </div>            
                 <div class="col-lg-7 col-md-4 col-sm-12 text-right">
                     <ul class="breadcrumb justify-content-end">
                         <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>                            
-                        <li class="breadcrumb-item active">Regionlar</li>
+                        <li class="breadcrumb-item active">Tovar chiqarish</li>
                     </ul>
                 </div>
             </div>

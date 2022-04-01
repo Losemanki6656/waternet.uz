@@ -138,6 +138,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/results/resulttakeproducts', [App\Http\Controllers\ClientController::class, 'resulttakeproducts'])->name('result_take');
     Route::get('/results/resultsold', [App\Http\Controllers\ClientController::class, 'resultsold'])->name('resultsold');
     Route::get('/results/summresult', [App\Http\Controllers\ClientController::class, 'summresult'])->name('summresult');
+    Route::get('/results/resultentrycontainer', [App\Http\Controllers\ClientController::class, 'resultentrycontainer'])->name('resultentrycontainer');
+    
+    Route::get('/results/payment1', [App\Http\Controllers\ClientController::class, 'payment1'])->name('payment1');
+    Route::get('/results/payment2', [App\Http\Controllers\ClientController::class, 'payment2'])->name('payment2');
+    Route::get('/results/payment3', [App\Http\Controllers\ClientController::class, 'payment3'])->name('payment3');
+    Route::get('/results/resultlos', [App\Http\Controllers\ClientController::class, 'dolgresult'])->name('dolgresult');
 
     Route::post('/send-sms', [App\Http\Controllers\ClientController::class, 'send_sms'])->name('send_sms');
     Route::get('/reklama', [App\Http\Controllers\TrafficController::class, 'reklama'])->name('reklama');
