@@ -145,6 +145,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/results/payment2', [App\Http\Controllers\ClientController::class, 'payment2'])->name('payment2');
     Route::get('/results/payment3', [App\Http\Controllers\ClientController::class, 'payment3'])->name('payment3');
     Route::get('/results/resultlos', [App\Http\Controllers\ClientController::class, 'dolgresult'])->name('dolgresult');
+    Route::get('/results/qarzdorlar', [App\Http\Controllers\ClientController::class, 'dolgs'])->name('dolgs');
 
     Route::post('/send-sms', [App\Http\Controllers\ClientController::class, 'send_sms'])->name('send_sms');
     Route::get('/reklama', [App\Http\Controllers\TrafficController::class, 'reklama'])->name('reklama');

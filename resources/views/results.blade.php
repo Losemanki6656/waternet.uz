@@ -23,10 +23,10 @@
                 <ol class="dd-list">                 
                         <div class="dd-handle">
                              <ul class="list-unstyled team-info">
-                                <li><button class="btn btn-primary mr-3"><i class="fa fa-calendar"></i> Kunlik</button></li>
+                                <li><a href="{{route('results')}}" class="btn btn-primary mr-3"><i class="fa fa-calendar"></i> Xisobot</a></li>
                                 <li><button class="btn btn-warning mr-3"><i class="fa fa-money"></i> Tushum</button></li>
                                 <li><button class="btn btn-dark mr-3"><i class="fa fa-users"></i> Xodimlar</button></li>
-                                <li><button class="btn btn-danger mr-3"><i class="fa fa-info-circle"></i> Qarzdorlar</button></li>
+                                <li><a href="{{route('dolgs')}}" class="btn btn-danger mr-3"><i class="fa fa-info-circle"></i> Qarzdorlar</a></li>
                             </ul>
                         </div>
                     </li>
@@ -38,21 +38,22 @@
 
         <div class="card" style="margin-top: 20px">
             <div class="header" style="padding-bottom: 1">
-                <div class="row">
-                    <div class="col-lg-2 col-md-6">
-                        <input data-provide="datepicker" data-date-autoclose="true" value="{{now()->format('m/d/Y')}}" class="form-control">
+                <form action="{{route('results')}}">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-6">
+                            <input data-provide="datepicker" data-date-autoclose="true" value="{{request('date1')}}" name="date1" class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <input data-provide="datepicker" data-date-autoclose="true" value="{{request('date2')}}" name="date2" class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
+                        </div>
+                        <div class="col-lg-6 col-md-6 text-right">
+                            <button class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Export</button>
+                        </div>
                     </div>
-                    <div class="col-lg-2 col-md-6">
-                        <input data-provide="datepicker" data-date-autoclose="true" value="{{now()->format('m/d/Y')}}" class="form-control">
-                    </div>
-                    <div class="col-lg-2 col-md-6">
-                        <button class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
-                    </div>
-                    <div class="col-lg-6 col-md-6 text-right">
-                        <button class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Export</button>
-                    </div>
-                </div>
-                
+                </form>
             </div>
             
             <div class="body">

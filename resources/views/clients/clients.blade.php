@@ -104,10 +104,32 @@
                                         <span class="text-muted">{{$client->phone2}}</span>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="margin-0 text-center">{{$client->street}}, {{$client->home_number}},{{$client->entrance}}, {{$client->floor}}, {{$client->apartment_number}}</h6>
-                                        <h6 class="mb-0" style="font-size: 14px;">{{$client->address}}</h6>
-                                        <span class="text-muted">{{$client->city->name}} , {{$client->area->name}}</span>
-                                       
+                                        <h6 class="margin-0 text-center">
+                                            @if ($client->street != ' ')
+                                                {{$client->street}},
+                                            @endif
+                                            @if ($client->home_number != ' ')
+                                                {{$client->home_number}},     
+                                            @endif
+                                            @if ($client->entrance != ' ')
+                                                {{$client->entrance}},     
+                                            @endif
+                                            @if ($client->floor != ' ')
+                                                {{$client->floor}},  
+                                            @endif
+                                            @if ($client->apartment_number != ' ')
+                                                {{$client->apartment_number}} 
+                                            @endif
+                                        </h6>
+                                        <h6 class="mb-0" style="font-size: 14px;">
+                                            @if ($client->address != ' ')
+                                                {{$client->address}}
+                                            @endif
+                                        </h6>
+                                        <span class="text-muted">
+                                            {{$client->city->name}}, 
+                                            {{$client->area->name}}
+                                        </span>
                                     </td>
                                     <td class="text-center">{{$client->balance}}</td>
                                     <td class="text-center">{{$client->container}}</td>

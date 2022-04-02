@@ -848,4 +848,16 @@ class ClientController extends Controller
             'traffics' => $traffics
         ]);
      }
+
+     public function dolgs(){
+
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+        $clients = Client::where('balance','<',0);
+        
+        return view('but_results.dolg',[
+            'info_org' => $info_org,
+            'clients' => $clients->paginate(10)
+        ]);
+     }
 }

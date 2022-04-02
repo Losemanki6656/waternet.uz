@@ -459,7 +459,16 @@ class HomeController extends Controller
         return response()->json('success');
     }
 
-    public function results() {
+    public function results(Request $request) {
+    
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
@@ -484,10 +493,24 @@ class HomeController extends Controller
         $roles = [];
 
         foreach ( $data as $user ) {
-            $order[$user->id] = SuccessOrders::whereDate('created_at',now())->where('order_user_id', $user->id)->whereIn('order_status',[1,2])->sum('order_count');
-            $takeproduct[$user->id] = TakeProduct::whereDate('created_at',now())->where('received_id', $user->id)->sum('product_count');
-            $solds = SuccessOrders::whereDate('created_at',now())->where('user_id', $user->id)->whereIn('order_status',[1,2])->get();
-            $solds2 = ClientPrices::whereDate('created_at',now())->where('user_id', $user->id)->where('status',1)->get();
+            $order[$user->id] = SuccessOrders::
+            whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('order_user_id', $user->id)
+            ->whereIn('order_status',[1,2])
+            ->sum('order_count');
+            $takeproduct[$user->id] = TakeProduct::whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('received_id', $user->id)
+            ->sum('product_count');
+            $solds = SuccessOrders::whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('user_id', $user->id)
+            ->whereIn('order_status',[1,2])->get();
+            $solds2 = ClientPrices::whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('user_id', $user->id)
+            ->where('status',1)->get();
 
             $soldproducts[$user->id] = $solds->sum('count');
             $roles[$user->id] = UserOrganization::where('user_id',$user->id)->value('role');
@@ -525,10 +548,13 @@ class HomeController extends Controller
             $summpayment3 = array_sum($payment3);
             $dolgsumm = (-1)*array_sum($amount);
 
-            $entrycon[$user->id] = EntryContainer::where('received_id', $user->id)->sum('product_count');
+            $entrycon[$user->id] = EntryContainer::whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('received_id', $user->id)
+            ->sum('product_count');
+            //dd($entrycon,$date1,$date2);
             $amount[$user->id] = (-1)*$amount[$user->id];
         }
-         //dd($order);
         return view('results',[
             'info_org' => $info_org,
             'roles' => $roles,
