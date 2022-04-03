@@ -354,10 +354,10 @@ class HomeController extends Controller
 
         if ($request->order_status == 1 || $request->order_status == 2 ) {
 
-            $client_info->balance = $client_info->balance  - ($request->product_count * $request->price) + $request->amount;
+            $client_info->balance = $client_info->balance  - ($request->sold_product_count * $request->sold_product_price) + $request->amount;
        
             if(Product::find($orderinfo->product_id)->container_status != 1)
-                $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
+                $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
             
             $client_info->save();
         }
@@ -385,31 +385,31 @@ class HomeController extends Controller
         $successorder->payment = $request->payment;
 
         if($request->payment == 3) 
-            if( $y >= $request->product_count * $request->price){
+            if( $y >= $request->sold_product_count * $request->sold_product_price){
 
-                $successorder->amount = $request->product_count * $request->price;
+                $successorder->amount = $request->sold_product_count * $request->sold_product_price;
                 $successorder->client_price = $y;
-                $successorder->price_sold = $request->product_count * $request->price;
+                $successorder->price_sold = $request->sold_product_count * $request->sold_product_price;
             } else 
                 {
                     if($y >= 0) {
                         $successorder->amount = $y;
                         $successorder->client_price = $y;
-                        $successorder->price_sold =  $y - $request->product_count * $request->price;
+                        $successorder->price_sold =  $y - $request->sold_product_count * $request->sold_product_price;
                     }
                     else {
                         $successorder->amount = 0;
                         $successorder->client_price = $y;
-                        $successorder->price_sold = (-1) * $request->product_count * $request->price;
+                        $successorder->price_sold = (-1) * $request->sold_product_count * $request->sold_product_price;
                     }
                 }
         else 
             $successorder->amount = $request->amount;
             $successorder->client_price = $y;
             if($y>=0)
-                $successorder->price_sold = $y + $request->amount - $request->product_count * $request->price;
+                $successorder->price_sold = $y + $request->amount - $request->sold_product_count * $request->sold_product_price;
                     else 
-            $successorder->price_sold = $request->amount - $request->product_count * $request->price;
+            $successorder->price_sold = $request->amount - $request->sold_product_count * $request->sold_product_price;
 
         $successorder->comment = $request->comment?? '';
 
@@ -456,7 +456,7 @@ class HomeController extends Controller
             $char = ['(', ')', ' ','-','+'];
             $replace = ['', '', '','',''];
             $phone = str_replace($char, $replace, $client_info->phone);
-            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
+            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->sold_product_count.", Vozvrat tari ".
             $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
             $curl = curl_init();
           
