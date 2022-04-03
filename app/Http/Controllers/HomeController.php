@@ -203,13 +203,15 @@ class HomeController extends Controller
     public function add_order(Request $request, $id)
     {
         $order = Order::where('client_id',$id)->where('product_id',$request->product_id)->where('status',0)->get();
-
+        $client = Client::find($id);
         if($order->count() > 0) {
             return redirect()->route('client_order_edit' , [ 'id' => $id ]);
         }
 
         $zakaz = new Order();
-        $zakaz->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');;
+        $zakaz->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $zakaz->city_id = $client->city_id;
+        $zakaz->area_id = $client->area_id;
         $zakaz->client_id = $id;
         $zakaz->product_id = $request->product_id;
         $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
