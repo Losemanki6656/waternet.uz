@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserOrganization;
 use App\Models\Order;
 use Validator;
 
@@ -87,7 +88,10 @@ class AuthController extends Controller
     }
 
     public function orders(Request $request) {
-        return response()->json(Order::query()->with(['product' , 'client','client.city', 'client.area'])->get());
+        return response()->json(Order::query()->
+        where('status',0)
+        ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+        ->with(['product' , 'client','client.city', 'client.area'])->get());
     }
 
     public function order_status() {

@@ -342,7 +342,7 @@ class HomeController extends Controller
     }
     
     public function success_order_api(Request $request) {
-        
+
         $id = $request->order_id;
        
         $orderinfo = Order::find($id);
@@ -374,8 +374,8 @@ class HomeController extends Controller
         $successorder->address = $client_info->city->name.','.$client_info->area->name;
         $successorder->order_count = $orderinfo->product_count;
         $successorder->order_price = $orderinfo->price;
-        $successorder->count = $request->product_count;
-        $successorder->price = $request->price;
+        $successorder->count = $request->sold_product_count;
+        $successorder->price = $request->sold_product_price;
 
         $successorder->container = $request->container;
         $successorder->invalid_container_count = $request->invalid_container_count;
