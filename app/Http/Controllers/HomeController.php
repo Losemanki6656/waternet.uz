@@ -202,7 +202,7 @@ class HomeController extends Controller
     public function add_location(Request $request)
     {
         $client = Client::find($request->client_id);
-        $client->location = $request->lat.','.$request->lng;
+        $client->location = $request->lat.",".$request->lng;
         $client->save();
 
         return response()->json(['message' => 'success']);
