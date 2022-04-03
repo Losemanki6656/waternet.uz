@@ -505,20 +505,6 @@ class HomeController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function status_client($id)
-    {
-        $client_info = Client::find($id);
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
-
-        return view('clients.status_client',[
-            'client_info' => $client_info,
-            'info_org'  => $info_org
-        ]);
-
-        return response()->json(['message' => 'success']);
-    }
-
     public function results(Request $request) {
     
         if($request->date1 == null) {
