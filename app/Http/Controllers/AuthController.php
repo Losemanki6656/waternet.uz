@@ -87,10 +87,7 @@ class AuthController extends Controller
     }
 
     public function orders(Request $request) {
-        return response()->json(
-
-            Order::query()->with(['product' , 'client','client.city', 'client.area'])->get();
-
+        return response()->json(Order::query()->with(['product' , 'client','client.city', 'client.area'])->get());
     }
 
     public function order_status() {
