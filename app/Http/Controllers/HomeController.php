@@ -199,6 +199,14 @@ class HomeController extends Controller
         return redirect()->back()->with('msg' ,'success');
     }
 
+    public function add_location(Request $request)
+    {
+        $client = Client::find($request->client_id);
+        $client->location = $request->lat.','.$request->lng;
+        $client->save();
+
+        return response()->json(['message' => 'success']);
+    }
 
     public function add_order(Request $request, $id)
     {

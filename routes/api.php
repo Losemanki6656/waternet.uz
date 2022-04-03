@@ -35,6 +35,7 @@ Route::group([
     Route::get('/order/status', [AuthController::class, 'order_status']);   
     Route::get('/payment/types', [AuthController::class, 'payments']);   
     Route::post('/success-order', [HomeController::class, 'success_order_api']);
+    Route::post('/client/add-location', [HomeController::class, 'add_location']);
 });
 
 Route::get('/client-profile', [ClientController::class, 'client_profile']);
