@@ -50,7 +50,7 @@
                             <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
                         </div>
                         <div class="col-lg-6 col-md-6 text-right">
-                            <button class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Export</button>
+                            <button type="button" onclick="ExportToExcel('xlsx')" class="btn btn-primary" ><i class="fa fa-file-excel-o"></i> Export</button>
                         </div>
                     </div>
                 </form>
@@ -58,7 +58,7 @@
             
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table mb-0 table-bordered">
+                    <table class="table mb-0 table-bordered" id="table">
                         <thead>
                             <tr>
                                 <th>FIO</th>
@@ -152,44 +152,16 @@
 @endsection
 
 @section('scripts')
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-       function setlocation(event){ 
-      event.preventDefault(); 
-      var myWindow=window.open("{{route('location')}}", 'Select Client Location', 'width=auto,height=auto')
+    function ExportToExcel(type, fn, dl) {
+       var elt = document.getElementById('table');
+       var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+       return dl ?
+         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+         XLSX.writeFile(wb, fn || ('Results.' + (type || 'xlsx')));
     }
-
-      function setlocation1(event, l1, l2){ 
-            event.preventDefault(); 
-            var myWindow=window.open('set_location_edit.asp?lat='+l1+'&lng='+l2+'', 'Joylashuvni tanlash', 'width=800,height=500')
-        }
-
-    function dotReplace(event){
-                event.taget.value=event.target.value.replaceAll(",", ".")
-            }
-</script>
-
-<script>
-    // ---------horizontal-navbar-menu-----------
-		var tabsNewAnim = $('#navbar-animmenu');
-		var selectorNewAnim = $('#navbar-animmenu').find('li').length;
-		//var selectorNewAnim = $(".tabs").find(".selector");
-		var activeItemNewAnim = tabsNewAnim.find('.active');
-		var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
-		var itemPosNewAnimLeft = activeItemNewAnim.position();
-		$(".hori-selector").css({
-			"left":itemPosNewAnimLeft.left + "px",
-			"width": activeWidthNewAnimWidth + "px"
-		});
-		$("#navbar-animmenu").on("click","li",function(e){
-			$('#navbar-animmenu ul li').removeClass("active");
-			$(this).addClass('active');
-			var activeWidthNewAnimWidth = $(this).innerWidth();
-			var itemPosNewAnimLeft = $(this).position();
-			$(".hori-selector").css({
-				"left":itemPosNewAnimLeft.left + "px",
-				"width": activeWidthNewAnimWidth + "px"
-			});
-		});
 </script>
 @endsection
 
