@@ -344,16 +344,20 @@ class HomeController extends Controller
     public function success_order_api(Request $request) {
         
         $id = $request->order_id;
+       
         $orderinfo = Order::find($id);
 
         $client_info = Client::find($orderinfo->client_id);
         $x = $orderinfo->client_id;
         
+        $y = $client_info->balance;
+
         if ($request->order_status == 1 || $request->order_status == 2 ) {
 
             $client_info->balance = $client_info->balance  - ($request->product_count * $request->price) + $request->amount;
        
-            $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
+            if(Product::find($orderinfo->product_id)->container_status != 1)
+                $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
             
             $client_info->save();
         }
@@ -370,8 +374,8 @@ class HomeController extends Controller
         $successorder->address = $client_info->city->name.','.$client_info->area->name;
         $successorder->order_count = $orderinfo->product_count;
         $successorder->order_price = $orderinfo->price;
-        $successorder->count = $request->sold_product_count;
-        $successorder->price = $request->sold_product_price;
+        $successorder->count = $request->product_count;
+        $successorder->price = $request->price;
 
         $successorder->container = $request->container;
         $successorder->invalid_container_count = $request->invalid_container_count;
@@ -379,14 +383,44 @@ class HomeController extends Controller
         $successorder->order_date = $orderinfo->created_at;
 
         $successorder->payment = $request->payment;
-        $successorder->amount = $request->amount;
+
+        if($request->payment == 3) 
+            if( $y >= $request->product_count * $request->price){
+
+                $successorder->amount = $request->product_count * $request->price;
+                $successorder->client_price = $y;
+                $successorder->price_sold = $request->product_count * $request->price;
+            } else 
+                {
+                    if($y >= 0) {
+                        $successorder->amount = $y;
+                        $successorder->client_price = $y;
+                        $successorder->price_sold =  $y - $request->product_count * $request->price;
+                    }
+                    else {
+                        $successorder->amount = 0;
+                        $successorder->client_price = $y;
+                        $successorder->price_sold = (-1) * $request->product_count * $request->price;
+                    }
+                }
+        else 
+            $successorder->amount = $request->amount;
+            $successorder->client_price = $y;
+            if($y>=0)
+                $successorder->price_sold = $y + $request->amount - $request->product_count * $request->price;
+                    else 
+            $successorder->price_sold = $request->amount - $request->product_count * $request->price;
+
         $successorder->comment = $request->comment?? '';
 
         $successorder->status = 0;
 
         $successorder->save();
 
-        Order::find($id)->delete();
+        $or = Order::find($id);
+        $or->status = 1;
+        $or->save();
+        
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
@@ -400,20 +434,23 @@ class HomeController extends Controller
             $clientprice->payment = $request->payment;
             $clientprice->amount = $request->amount;
             $clientprice->comment = $request->comment ?? '';
-            $clientprice->status = 1;
+            $clientprice->status = 0;
             $clientprice->save();
 
-            $clientcontainer = new ClientContainer();
-            $clientcontainer->organization_id = $info_id;
-            $clientcontainer->success_order_id = $successorder->id;
-            $clientcontainer->client_id = $client_info->id;
-            $clientcontainer->user_id = Auth::user()->id;
-            $clientcontainer->product_id = $orderinfo->product_id;
-            $clientcontainer->count = $request->container;
-            $clientcontainer->invalid_count = $request->invalid_container_count; 
-            $clientcontainer->comment = $request->comment ?? ''; 
-            $clientcontainer->status = 1;
-            $clientcontainer->save();
+            if(Product::find($orderinfo->product_id)->container_status != 1) {
+                $clientcontainer = new ClientContainer();
+                $clientcontainer->organization_id = $info_id;
+                $clientcontainer->success_order_id = $successorder->id;
+                $clientcontainer->client_id = $client_info->id;
+                $clientcontainer->user_id = Auth::user()->id;
+                $clientcontainer->product_id = $orderinfo->product_id;
+                $clientcontainer->count = $request->container;
+                $clientcontainer->invalid_count = $request->invalid_container_count; 
+                $clientcontainer->comment = $request->comment ?? ''; 
+                $clientcontainer->status = 0;
+                $clientcontainer->save();
+            }
+          
 
 
             $char = ['(', ')', ' ','-','+'];
@@ -422,7 +459,7 @@ class HomeController extends Controller
             $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
             $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
             $curl = curl_init();
-    
+          
             curl_setopt_array($curl, array(
               CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
               CURLOPT_RETURNTRANSFER => true,
@@ -446,7 +483,6 @@ class HomeController extends Controller
             ));
             
             $response = curl_exec($curl);
-           
             $json = json_decode($response, true);
             
             if ($json['query_state'] == "SUCCESS") {         
@@ -466,7 +502,21 @@ class HomeController extends Controller
             
         }
 
-        return response()->json('success');
+        return response()->json(['message' => 'success']);
+    }
+
+    public function status_client($id)
+    {
+        $client_info = Client::find($id);
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_org = Organization::find($info_id);
+
+        return view('clients.status_client',[
+            'client_info' => $client_info,
+            'info_org'  => $info_org
+        ]);
+
+        return response()->json(['message' => 'success']);
     }
 
     public function results(Request $request) {
