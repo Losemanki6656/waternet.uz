@@ -235,7 +235,9 @@
                                                     </div>  
                                                     <div class="form-group">
                                                         <h6><label>Narxi:</label></h6>
-                                                        <input class="form-control" type="text" id="sena_product_order{{$client->id}}" name="sena" value="{{$products[0]->price}}"  required>
+                                                        <input class="form-control" type="text" id="sena_product_order{{$client->id}}" name="sena" @if ($products->count())
+                                                        value="{{$products[0]->price}}"
+                                                        @endif  required>
                                                     </div> 
                                                     <div class="form-group">
                                                         <h6><label>Soni:</label></h6>
