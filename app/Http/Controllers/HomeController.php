@@ -471,7 +471,7 @@ class HomeController extends Controller
               CURLOPT_CUSTOMREQUEST => 'POST',
               CURLOPT_POSTFIELDS =>"{
                        \"login\":\"sms0085ts\",
-                       \"pwd\":\"1986@max\",
+                       \"pwd\":\"01986max\",
                        \"CgPN\":\"WEBEST_UZ\",
                        \"CdPN\":\"998$phone\",
                        \"text\":\"$text\"
@@ -755,7 +755,7 @@ class HomeController extends Controller
               CURLOPT_CUSTOMREQUEST => 'POST',
               CURLOPT_POSTFIELDS =>"{
                        \"login\":\"sms0085ts\",
-                       \"pwd\":\"1986@max\",
+                       \"pwd\":\"01986max\",
                        \"CgPN\":\"WEBEST_UZ\",
                        \"CdPN\":\"998$phone\",
                        \"text\":\"$text\"
