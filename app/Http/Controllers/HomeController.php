@@ -281,7 +281,7 @@ class HomeController extends Controller
     public function client_order_edit($id)
     {
       
-        $orders = Order::where('client_id', $id)->with('client')->with('user')->with('product')->get();
+        $orders = Order::where('client_id', $id)->where('status',0)->with('client')->with('user')->with('product')->get();
   
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
@@ -932,15 +932,15 @@ class HomeController extends Controller
 
     public function areas_filter(Request $request)
     {
-        if(RegionUser::where('user_id',$request->user_id)->count() == 0) {
+        if(RegionUser::where('user_id',Auth::user()->id)->count() == 0) {
             $areas = new RegionUser();
-            $areas->user_id = $request->user_id;
+            $areas->user_id = Auth::user()->id;
             $areas->areas = $request->areas;
             $areas->save();
         } else
         {
-            $areas = RegionUser::find($request->user_id);
-            $areas->user_id = $request->user_id;
+            $areas = RegionUser::find(Auth::user()->id);
+            $areas->user_id = Auth::user()->id;
             $areas->areas = $request->areas;
             $areas->save();
         }
