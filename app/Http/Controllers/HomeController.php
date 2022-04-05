@@ -495,7 +495,7 @@ class HomeController extends Controller
     
                 $sms = new Sms();
                 $sms->organization_id = $organ;
-                $sms->client_id = $id;
+                $sms->client_id = $client_info->id;
                 $sms->user_id = Auth::user()->id;
                 $sms->sms_text = $text;
                 $sms->save();
@@ -779,7 +779,7 @@ class HomeController extends Controller
     
                 $sms = new Sms();
                 $sms->organization_id = $organ;
-                $sms->client_id = $id;
+                $sms->client_id = $client_info->id;
                 $sms->user_id = Auth::user()->id;
                 $sms->sms_text = $text;
                 $sms->save();
