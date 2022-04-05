@@ -90,11 +90,12 @@
                                 <td>{{(($orders->currentPage() * 10) - 10) + $loop->index + 1}}</td>
                                 <td>{{$order->client->fullname}}</td>
                                 <td>{{$order->client->phone}}</td>
-                                <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>
+                                <td class="text-center">{{$order->client->city->name}},{{$order->client->area->name}}
+                                    <span> <br> {{$order->client->address}}</span> </td>
                                 <td>{{$order->product->name}}</td>
                                 <td>{{$order->product_count}}</td>
                                 <td>{{$order->price}}</td>
-                                <td>{{$order->created_at}}</td>
+                                <td>{{$order->created_at->format('Y-m-d')}}</td>
                                 <td>{{$order->comment}}</td>
                                 <td>{{$order->user->name}}</td>
                                 <td>
