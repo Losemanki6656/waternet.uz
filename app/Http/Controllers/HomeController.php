@@ -15,6 +15,7 @@ use App\Models\ClientContainer;
 use App\Models\Area;
 use App\Models\OrderArchive;
 use App\Models\User;
+use App\Models\RegionUser;
 use App\Models\TakeProduct;
 use App\Models\EntryProduct;
 use App\Models\Sms;
@@ -919,4 +920,30 @@ class HomeController extends Controller
         return redirect()->back()->with('msg' ,'success');
     }
 
+    public function driver_regions()
+    {
+        return response()->json(Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get());
+    }
+    public function areas(Request $request)
+    {
+        return response()->json(Area::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+        ->where('city_id',$request->region_id)->with(['region'])->get());
+    }
+
+    public function areas_filter(Request $request)
+    {
+        if(RegionUser::where('user_id',$request->user_id)->count() == 0) {
+            $areas = new RegionUser();
+            $areas->user_id = $request->user_id;
+            $areas->areas = $request->areas;
+            $areas->save();
+        } else
+        {
+            $areas = RegionUser::find($request->user_id);
+            $areas->user_id = $request->user_id;
+            $areas->areas = $request->areas;
+            $areas->save();
+        }
+        return response()->json(['message' => 'success']);
+    }
 }

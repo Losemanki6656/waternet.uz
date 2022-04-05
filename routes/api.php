@@ -36,6 +36,10 @@ Route::group([
     Route::get('/payment/types', [AuthController::class, 'payments']);   
     Route::post('/success-order', [HomeController::class, 'success_order_api']);
     Route::post('/client/add-location', [HomeController::class, 'add_location']);
+    
+    Route::get('/driver/regions', [HomeController::class, 'driver_regions']);   
+    Route::post('/driver/areas', [HomeController::class, 'areas']);   
+    Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);   
 });
 
 Route::get('/client-profile', [ClientController::class, 'client_profile']);
