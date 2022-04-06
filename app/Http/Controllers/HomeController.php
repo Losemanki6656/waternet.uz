@@ -932,16 +932,18 @@ class HomeController extends Controller
 
     public function areas_filter(Request $request)
     {
+        $str = implode(',',$request->areas);
+
         if(RegionUser::where('user_id',Auth::user()->id)->count() == 0) {
             $areas = new RegionUser();
             $areas->user_id = Auth::user()->id;
-            $areas->areas = $request->areas;
+            $areas->areas = $str;
             $areas->save();
         } else
         {
             $areas = RegionUser::find(Auth::user()->id);
             $areas->user_id = Auth::user()->id;
-            $areas->areas = $request->areas;
+            $areas->areas = $str;
             $areas->save();
         }
         return response()->json(['message' => 'success']);
