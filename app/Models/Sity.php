@@ -13,4 +13,9 @@ class Sity extends Model
     {
         return $this->hasMany(Client::class,'city_id');
     }
+
+    public function areas()
+    {
+        return $this->hasMany(Area::class,'city_id');
+    }
 }

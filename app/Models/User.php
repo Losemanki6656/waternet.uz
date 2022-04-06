@@ -60,4 +60,8 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(UserOrganization::class,'user_id');
     }
 
+    public function regionUser()
+    {
+        return $this->hasOne(RegionUser::class);
+    }
 }

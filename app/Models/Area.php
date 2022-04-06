@@ -10,6 +10,8 @@ class Area extends Model
 {
     use HasFactory;
 
+    protected $appends = ['check'];
+
     public function region()
     {
         return $this->belongsTo(Sity::class,'city_id');
@@ -20,4 +22,25 @@ class Area extends Model
         return $this->hasMany(Client::class);
     }
 
+    public function getCheckAttribute()
+    {
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            
+            if ($region_user = $user->regionUser) {
+                
+                $areas = explode(',', $region_user->areas);
+                if (in_array($this->id, $areas)) {
+                    return true;
+                }
+
+                return false;
+            }
+            
+            return true;
+        }
+
+        return false;
+    }
 }

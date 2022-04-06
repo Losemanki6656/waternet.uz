@@ -922,7 +922,10 @@ class HomeController extends Controller
 
     public function driver_regions()
     {
-        return response()->json(Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get());
+        
+        return response()->json(
+            Sity::where('organization_id',UserOrganization::where('user_id', Auth::user()->id)->value('organization_id'))->with('areas')->get()
+        );
     }
     public function areas(Request $request)
     {

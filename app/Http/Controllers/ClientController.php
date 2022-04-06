@@ -755,7 +755,7 @@ class ClientController extends Controller
      public function payment1(){
 
         $soldproducts = SuccessOrders::whereDate('created_at',now())
-        ->where('payment',1)
+        ->with('client')->where('payment',1)
         ->get();
          $clientprices = ClientPrices::whereDate('created_at',now())->get();
  
