@@ -41,9 +41,14 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{(($orders->currentPage() * 10) - 10) + $loop->index + 1}}</td>
-                                <td>{{$order->client->fullname}}</td>
-                                <td>{{$order->client->phone}}</td>
-                                <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>
+                            
+                                    @if ($order->client)
+                                        <td>{{$order->client->fullname}}</td>
+                                        <td>{{$order->client->phone}}</td>
+                                        <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>
+                                    @else
+                                        <td colspan="3"> Mijoz topilmadi</td>
+                                    @endif
                                 <td>{{$order->product->name}}</td>
                                 <td>{{$order->product_count}}</td>
                                 <td>{{$order->price}}</td>

@@ -39,7 +39,13 @@
                         @foreach ($soldproducts as $soldproduct)
                             @if ($soldproduct->order_status == 1 || $soldproduct->order_status == 2)
                                 <tr>
-                                    <td>{{$soldproduct->client->fullname}}</td>
+                                    <td>
+                                        @if ($soldproduct->client)
+                                        {{$soldproduct->client->fullname}}
+                                        @else
+                                        Mijoz topilmadi
+                                        @endif
+                                    </td>
                                     <td>{{$soldproduct->user->name}}</td>
                                     <td>{{$soldproduct->product->name}}</td>
                                     <td>{{$soldproduct->order_count}}</td>

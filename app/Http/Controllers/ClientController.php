@@ -717,8 +717,8 @@ class ClientController extends Controller
 
     public function summresult(){
 
-       $soldproducts = SuccessOrders::whereDate('created_at',now())->get();
-        $clientprices = ClientPrices::whereDate('created_at',now())->get();
+       $soldproducts = SuccessOrders::where('organization_id',Auth::user()->id)->whereDate('created_at',now())->get();
+        $clientprices = ClientPrices::where('organization_id',Auth::user()->id)->whereDate('created_at',now())->get();
 
         $summ = 0;
         foreach ($soldproducts as $sold){
@@ -754,10 +754,10 @@ class ClientController extends Controller
 
      public function payment1(){
 
-        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        $soldproducts = SuccessOrders::where('organization_id',Auth::user()->id)->whereDate('created_at',now())
         ->with('client')->where('payment',1)
         ->get();
-         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+         $clientprices = ClientPrices::where('organization_id',Auth::user()->id)->whereDate('created_at',now())->get();
  
          $summ = 0;
          foreach ($soldproducts as $sold){
@@ -775,10 +775,10 @@ class ClientController extends Controller
      }
      public function payment2(){
 
-        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        $soldproducts = SuccessOrders::where('organization_id',Auth::user()->id)->whereDate('created_at',now())
         ->where('payment',2)
         ->get();
-         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+         $clientprices = ClientPrices::where('organization_id',Auth::user()->id)->whereDate('created_at',now())->get();
  
          $summ = 0;
          foreach ($soldproducts as $sold){
@@ -797,10 +797,10 @@ class ClientController extends Controller
 
      public function payment3(){
 
-        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        $soldproducts = SuccessOrders::where('organization_id',Auth::user()->id)->whereDate('created_at',now())
         ->where('payment',3)
         ->get();
-         $clientprices = ClientPrices::whereDate('created_at',now())->get();
+         $clientprices = ClientPrices::where('organization_id',Auth::user()->id)->whereDate('created_at',now())->get();
  
          $summ = 0;
          foreach ($soldproducts as $sold){
@@ -819,7 +819,7 @@ class ClientController extends Controller
 
      public function dolgresult(){
 
-        $soldproducts = SuccessOrders::whereDate('created_at',now())
+        $soldproducts = SuccessOrders::where('organization_id',Auth::user()->id)->whereDate('created_at',now())
         ->where('price_sold','<',0)
         ->get();
  
@@ -853,7 +853,7 @@ class ClientController extends Controller
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        $clients = Client::where('balance','<',0);
+        $clients = Client::where('organization_id',Auth::user()->id)->where('balance','<',0);
         
         return view('but_results.dolg',[
             'info_org' => $info_org,

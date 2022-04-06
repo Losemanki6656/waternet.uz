@@ -54,7 +54,12 @@
                         
                             @foreach ($smsmanagers as $smsmanager)
                                 <tr>
-                                    <td>{{$smsmanager->client->count()}}</td>
+                                    <td> @if ($smsmanager->client)
+                                        {{$smsmanager->client->fullname}}
+                                    @else
+                                    Mijoz topilmadi
+                                    @endif
+                                        </td>
                                     <td>{{$smsmanager->sms_text}}</td>
                                     <td>{{$smsmanager->user->name}}</td>
                                     <td>{{$smsmanager->created_at->format('Y-m-d')}}</td>
