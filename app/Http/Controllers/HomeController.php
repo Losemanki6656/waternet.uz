@@ -544,7 +544,7 @@ class HomeController extends Controller
             where('organization_id',$info_id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
-            ->sum('order_count');
+            ->sum('product_count');
             $takeproduct[$user->id] = TakeProduct::whereDate('created_at','>=',$date1)
             ->where('organization_id',$info_id)
             ->whereDate('created_at','<=',$date2)
