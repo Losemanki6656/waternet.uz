@@ -79,8 +79,8 @@
                                     <i class="fa fa-2x fa-thumbs-up text-col-yellow"></i>
                                 </div>
                                 <div class="number float-right text-right">
-                                    <h6>LIKES</h6>
-                                    <span class="font700">21,215</span>
+                                    <h6>Umumiy qarzdorlik</h6>
+                                    <span class="font700">{{number_format($dolg,2)}}</span>
                                 </div>
                             </div>
                             <div class="progress progress-xs progress-transparent custom-color-yellow mb-0 mt-3">

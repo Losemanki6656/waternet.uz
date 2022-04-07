@@ -56,9 +56,13 @@ class HomeController extends Controller
         $info_org = Organization::find($info_id);
 
         if(Auth::user()->id != 1)
+        {
+            $dolg = Client::where('organization_id',$info_id)->where('balance','<','0')->sum('balance');
             return view('statistics',[
-                'info_org' => $info_org
-            ]); 
+                'info_org' => $info_org,
+                'dolg' => $dolg
+            ]);     
+        }
         else
             return redirect()->route('organizations');
     }
@@ -935,6 +939,13 @@ class HomeController extends Controller
     {
         return response()->json(Area::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
         ->where('city_id',$request->region_id)->with(['region'])->get());
+    }
+
+    public function monitoring()
+    {
+        return response()->json(SuccessOrders::
+        where('user_id', Auth::user()->id)
+        ->where('created_at', now()));
     }
 
     public function areas_filter(Request $request)

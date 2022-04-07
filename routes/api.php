@@ -41,6 +41,7 @@ Route::group([
     Route::post('/driver/areas', [HomeController::class, 'areas']);   
     Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);   
     Route::get('/driver/order/filter', [AuthController::class, 'order_filter']);   
+    Route::get('/driver/monitoring', [HomeController::class, 'monitoring']);   
 });
 
 Route::get('/client-profile', [ClientController::class, 'client_profile']);
