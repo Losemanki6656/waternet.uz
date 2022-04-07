@@ -945,7 +945,7 @@ class HomeController extends Controller
     {
         return response()->json(SuccessOrders::
         where('user_id', Auth::user()->id)
-        ->where('created_at', now()));
+        ->whereDate('created_at', now()));
     }
 
     public function areas_filter(Request $request)
