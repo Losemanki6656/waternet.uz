@@ -540,12 +540,10 @@ class HomeController extends Controller
         $roles = [];
 
         foreach ( $data as $user ) {
-            $order[$user->id] = SuccessOrders::
+            $order[$user->id] = Order::
             where('organization_id',$info_id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
-            ->where('order_user_id', $user->id)
-            ->whereIn('order_status',[1,2])
             ->sum('order_count');
             $takeproduct[$user->id] = TakeProduct::whereDate('created_at','>=',$date1)
             ->where('organization_id',$info_id)
