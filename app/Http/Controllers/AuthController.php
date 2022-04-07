@@ -96,11 +96,16 @@ class AuthController extends Controller
             ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
             ->with(['product' , 'client','client.city', 'client.area'])->get());
         else
+        {
+            $str = explode(',',RegionUser::where('user_id',Auth::user()->id)->value('areas'));
+            $intareas = array_map('intval', $str);
             return response()->json(Order::query()
             ->where('status',0)
-            ->whereIn('area_id',RegionUser::where('user_id',Auth::user()->id)->pluck('areas')->toArray())
+            ->whereIn('area_id',$intareas)
             ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
             ->with(['product' , 'client','client.city', 'client.area'])->get());
+        }
+           
     }
 
     public function order_filter(Request $request) {
