@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\UserOrganization;
 use App\Models\Order;
+use App\Models\Area;
+use App\Models\RegionUser;
 use Validator;
 
 class AuthController extends Controller
@@ -88,10 +90,25 @@ class AuthController extends Controller
     }
 
     public function orders(Request $request) {
-        return response()->json(Order::query()->
-        where('status',0)
-        ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
-        ->with(['product' , 'client','client.city', 'client.area'])->get());
+        if(RegionUser::where('user_id',Auth::user()->id)->get()->count() == 0)
+            return response()->json(Order::query()
+            ->where('status',0)
+            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->with(['product' , 'client','client.city', 'client.area'])->get());
+        else
+            return response()->json(Order::query()
+            ->where('status',0)
+            ->whereIn('area_id',RegionUser::where('user_id',Auth::user()->id)->pluck('areas')->toArray())
+            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->with(['product' , 'client','client.city', 'client.area'])->get());
+    }
+
+    public function order_filter(Request $request) {
+            return response()->json(Order::query()
+            ->where('status',0)
+            ->where('area_id', $request->area_id)
+            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->with(['product' , 'client','client.city', 'client.area'])->get());
     }
 
     public function order_status() {
