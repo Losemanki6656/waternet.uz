@@ -90,20 +90,31 @@ class AuthController extends Controller
     }
 
     public function orders(Request $request) {
+
         if(RegionUser::where('user_id',Auth::user()->id)->get()->count() == 0)
-            return response()->json(Order::query()
+            return response()->json(
+            Order::query()
             ->where('status',0)
             ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
-            ->with(['product' , 'client','client.city', 'client.area'])->get());
+            ->with(['product' , 'client','client.city', 'client.area'])
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+             })
+            ->get());
         else
         {
             $str = explode(',',RegionUser::where('user_id',Auth::user()->id)->value('areas'));
             $intareas = array_map('intval', $str);
-            return response()->json(Order::query()
+            return response()->json(
+            Order::query()
             ->where('status',0)
             ->whereIn('area_id',$intareas)
             ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
-            ->with(['product' , 'client','client.city', 'client.area'])->get());
+            ->with(['product' , 'client','client.city', 'client.area'])
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+             })
+            ->get());
         }
            
     }
