@@ -88,13 +88,17 @@ class HomeController extends Controller
 
             $dolg = Client::where('organization_id',$info_id)->where('balance','<','0')->sum('balance');
             $pered = Client::where('organization_id',$info_id)->where('balance','>','0')->sum('balance');
-
+            $clients = Client::where('organization_id',$info_id)->get()->count();
+            $lastclients = Client::where('organization_id',$info_id)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get()->count();
+            
             return view('statistics',[
                 'info_org' => $info_org,
                 'dolg' => $dolg,
                 'pered' => $pered,
                 'soldsumm' => $soldsumm,
-                'x' => $x
+                'x' => $x,
+                'clients' => $clients,
+                'lastclients' => $lastclients
             ]);     
         }
         else

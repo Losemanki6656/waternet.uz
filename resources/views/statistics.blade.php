@@ -168,13 +168,13 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h4 class="font-22 text-col-green font-weight-bold">
                                 <small class="font-12 text-col-dark d-block m-b-10">Following</small>
-                                1255
+                                {{$lastclients}}
                             </h4>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h4 class="font-22 text-col-blue font-weight-bold">
-                                <small class="font-12 text-col-dark d-block m-b-10">Followers</small>
-                                3650
+                                <small class="font-12 text-col-dark d-block m-b-10">Umumiy Mijozlar</small>
+                                {{$clients}}
                             </h4>
                         </div>
                     </div>
