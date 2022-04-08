@@ -544,7 +544,10 @@ class HomeController extends Controller
                     }
                     
                 }
-                return response()->json(['message' => 'success']);
+
+                $client_info = Client::find($orderinfo->client_id);
+
+                return response()->json(['message' => 'success','balance' => $client_info->balance,'container' => $client_info->container]);
             }
     }
 
