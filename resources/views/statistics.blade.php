@@ -28,8 +28,8 @@
                                     <i class="fa fa-2x fa-dollar text-col-blue"></i>
                                 </div>
                                 <div class="number float-right text-right">
-                                    <h6>EARNINGS</h6>
-                                    <span class="font700">$22,500</span>
+                                    <h6>Bugungi balans</h6>
+                                    <span class="font700">{{number_format($soldsumm,2)}}</span>
                                 </div>
                             </div>
                             <div class="progress progress-xs progress-transparent custom-color-blue mb-0 mt-3">
@@ -45,8 +45,8 @@
                                     <i class="fa fa-2x fa-bar-chart-o text-col-green"></i>
                                 </div>
                                 <div class="number float-right text-right">
-                                    <h6>SALES</h6>
-                                    <span class="font700">$500</span>
+                                    <h6>Naqd va plastik savdolari</h6>
+                                    <span class="font700">{{number_format($x,2)}}</span>
                                 </div>
                             </div>
                             <div class="progress progress-xs progress-transparent custom-color-green mb-0 mt-3">
@@ -62,8 +62,8 @@
                                     <i class="fa fa-2x fa-shopping-cart text-col-red"></i>
                                 </div>
                                 <div class="number float-right text-right">
-                                    <h6>Orders</h6>
-                                    <span class="font700">215</span>
+                                    <h6>Oldindan to'lovlar</h6>
+                                    <span class="font700">{{number_format($pered,2)}}</span>
                                 </div>
                             </div>
                             <div class="progress progress-xs progress-transparent custom-color-red mb-0 mt-3">
@@ -158,7 +158,7 @@
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card text-center">
                 <div class="header">
-                    <h2>Connection</h2>
+                    <h2>Mijozlar</h2>
                 </div>
                 <div class="body pt-0">
                     <div class="row">
