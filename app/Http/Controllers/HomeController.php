@@ -397,7 +397,7 @@ class HomeController extends Controller
         $y = $client_info->balance;
 
         if(SuccessOrders::where('created_at',now())->where('client_id',$orderinfo->client_id)->get()->count() > 0) 
-            return response()->json(['message' => 'error']);
+            return response()->json(['message' => 'error', 429 ]);
             else {
                 if ($request->order_status == 1 || $request->order_status == 2 ) {
 
