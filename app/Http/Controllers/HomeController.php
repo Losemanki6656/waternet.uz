@@ -57,10 +57,48 @@ class HomeController extends Controller
 
         if(Auth::user()->id != 1)
         {
+
+            $solds = SuccessOrders::whereDate('created_at',now())
+            ->where('organization_id',$info_id)
+            ->whereIn('order_status',[1,2])->get();
+            $solds2 = ClientPrices::whereDate('created_at',now())
+            ->where('organization_id',$info_id)
+            ->where('status',1)->get();
+
+            $soldsumm= 0; 
+            $payment1 = 0; 
+            $payment2 = 0;
+
+            foreach ($solds as $sold) {
+                
+                $soldsumm = $soldsumm + $sold->count * $sold->price;
+                if($sold->price_sold < 0) $amount = $amount + $sold->price_sold;
+                
+                if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
+                if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
+            }
+
+            foreach ($solds2 as $sold) {
+                $soldsumm = $soldsumm + $sold->amount;
+
+                if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
+                if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
+            }
+            $x = $payment1+$payment2;
+
             $dolg = Client::where('organization_id',$info_id)->where('balance','<','0')->sum('balance');
+            $pered = Client::where('organization_id',$info_id)->where('balance','>','0')->sum('balance');
+            $clients = Client::where('organization_id',$info_id)->get()->count();
+            $lastclients = Client::where('organization_id',$info_id)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get()->count();
+            
             return view('statistics',[
                 'info_org' => $info_org,
-                'dolg' => $dolg
+                'dolg' => $dolg,
+                'pered' => $pered,
+                'soldsumm' => $soldsumm,
+                'x' => $x,
+                'clients' => $clients,
+                'lastclients' => $lastclients
             ]);     
         }
         else
@@ -347,167 +385,174 @@ class HomeController extends Controller
     }
     
     public function success_order_api(Request $request) {
-
+      
         $id = $request->order_id;
        
         $orderinfo = Order::find($id);
 
         $client_info = Client::find($orderinfo->client_id);
+        
         $x = $orderinfo->client_id;
         
         $y = $client_info->balance;
 
-        if ($request->order_status == 1 || $request->order_status == 2 ) {
+        if(SuccessOrders::where('created_at',now())->where('client_id',$orderinfo->client_id)->get()->count() > 0) 
+            return response()->json(['message' => 'error', 429 ]);
+            else {
+                if ($request->order_status == 1 || $request->order_status == 2 ) {
 
-            $client_info->balance = $client_info->balance  - ($request->sold_product_count * $request->sold_product_price) + $request->amount;
-       
-            if(Product::find($orderinfo->product_id)->container_status != 1)
-                $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
-            
-            $client_info->save();
-        }
-
-        $successorder = new SuccessOrders();
-        $successorder->organization_id = $orderinfo->organization_id;
-        $successorder->client_id = $orderinfo->client_id;
-        $successorder->product_id = $orderinfo->product_id;
-        $successorder->user_id = Auth::user()->id;
-        $successorder->order_user_id = $orderinfo->user_id;
-        $successorder->order_status = $request->order_status;
-        $successorder->fullname = $client_info->fullname;
-        $successorder->phone = $client_info->phone;
-        $successorder->address = $client_info->city->name.','.$client_info->area->name;
-        $successorder->order_count = $orderinfo->product_count;
-        $successorder->order_price = $orderinfo->price;
-        $successorder->count = $request->sold_product_count;
-        $successorder->price = $request->sold_product_price;
-
-        $successorder->container = $request->container;
-        $successorder->invalid_container_count = $request->invalid_container_count;
-
-        $successorder->order_date = $orderinfo->created_at;
-
-        $successorder->payment = $request->payment;
-
-        if($request->payment == 3) 
-            if( $y >= $request->sold_product_count * $request->sold_product_price){
-
-                $successorder->amount = $request->sold_product_count * $request->sold_product_price;
-                $successorder->client_price = $y;
-                $successorder->price_sold = $request->sold_product_count * $request->sold_product_price;
-            } else 
-                {
-                    if($y >= 0) {
-                        $successorder->amount = $y;
-                        $successorder->client_price = $y;
-                        $successorder->price_sold =  $y - $request->sold_product_count * $request->sold_product_price;
-                    }
-                    else {
-                        $successorder->amount = 0;
-                        $successorder->client_price = $y;
-                        $successorder->price_sold = (-1) * $request->sold_product_count * $request->sold_product_price;
-                    }
+                    $client_info->balance = $client_info->balance  - ($request->sold_product_count * $request->sold_product_price) + $request->amount;
+               
+                    if(Product::find($orderinfo->product_id)->container_status != 1)
+                        $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
+                    
+                    $client_info->save();
                 }
-        else 
-            $successorder->amount = $request->amount;
-            $successorder->client_price = $y;
-            if($y>=0)
-                $successorder->price_sold = $y + $request->amount - $request->sold_product_count * $request->sold_product_price;
-                    else 
-            $successorder->price_sold = $request->amount - $request->sold_product_count * $request->sold_product_price;
-
-        $successorder->comment = $request->comment?? '';
-
-        $successorder->status = 0;
-
-        $successorder->save();
-
-        $or = Order::find($id);
-        $or->status = 1;
-        $or->save();
         
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
+                $successorder = new SuccessOrders();
+                $successorder->organization_id = $orderinfo->organization_id;
+                $successorder->client_id = $orderinfo->client_id;
+                $successorder->product_id = $orderinfo->product_id;
+                $successorder->user_id = Auth::user()->id;
+                $successorder->order_user_id = $orderinfo->user_id;
+                $successorder->order_status = $request->order_status;
+                $successorder->fullname = $client_info->fullname;
+                $successorder->phone = $client_info->phone;
+                $successorder->address = $client_info->city->name.','.$client_info->area->name;
+                $successorder->order_count = $orderinfo->product_count;
+                $successorder->order_price = $orderinfo->price;
+                $successorder->count = $request->sold_product_count;
+                $successorder->price = $request->sold_product_price;
+        
+                $successorder->container = $request->container;
+                $successorder->invalid_container_count = $request->invalid_container_count;
+        
+                $successorder->order_date = $orderinfo->created_at;
+        
+                $successorder->payment = $request->payment;
+        
+                if($request->payment == 3) 
+                    if( $y >= $request->sold_product_count * $request->sold_product_price){
+        
+                        $successorder->amount = $request->sold_product_count * $request->sold_product_price;
+                        $successorder->client_price = $y;
+                        $successorder->price_sold = $request->sold_product_count * $request->sold_product_price;
+                    } else 
+                        {
+                            if($y >= 0) {
+                                $successorder->amount = $y;
+                                $successorder->client_price = $y;
+                                $successorder->price_sold =  $y - $request->sold_product_count * $request->sold_product_price;
+                            }
+                            else {
+                                $successorder->amount = 0;
+                                $successorder->client_price = $y;
+                                $successorder->price_sold = (-1) * $request->sold_product_count * $request->sold_product_price;
+                            }
+                        }
+                else 
+                    $successorder->amount = $request->amount;
+                    $successorder->client_price = $y;
+                    if($y>=0)
+                        $successorder->price_sold = $y + $request->amount - $request->sold_product_count * $request->sold_product_price;
+                            else 
+                    $successorder->price_sold = $request->amount - $request->sold_product_count * $request->sold_product_price;
+        
+                $successorder->comment = $request->comment?? '';
+        
+                $successorder->status = 0;
+        
+                $successorder->save();
+        
+                $or = Order::find($id);
+                $or->status = 1;
+                $or->save();
+                
+                $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                $info_org = Organization::find($info_id);
+        
+                if ($request->order_status == 1 || $request->order_status == 2 ) {
+        
+                    $clientprice = new ClientPrices();
+                    $clientprice->organization_id = $info_id;
+                    $clientprice->success_order_id = $successorder->id;
+                    $clientprice->client_id = $client_info->id;
+                    $clientprice->user_id = Auth::user()->id;
+                    $clientprice->payment = $request->payment;
+                    $clientprice->amount = $request->amount;
+                    $clientprice->comment = $request->comment ?? '';
+                    $clientprice->status = 0;
+                    $clientprice->save();
+        
+                    if(Product::find($orderinfo->product_id)->container_status != 1) {
+                        $clientcontainer = new ClientContainer();
+                        $clientcontainer->organization_id = $info_id;
+                        $clientcontainer->success_order_id = $successorder->id;
+                        $clientcontainer->client_id = $client_info->id;
+                        $clientcontainer->user_id = Auth::user()->id;
+                        $clientcontainer->product_id = $orderinfo->product_id;
+                        $clientcontainer->count = $request->container;
+                        $clientcontainer->invalid_count = $request->invalid_container_count; 
+                        $clientcontainer->comment = $request->comment ?? ''; 
+                        $clientcontainer->status = 0;
+                        $clientcontainer->save();
+                    }
+                  
+        
+        
+                    $char = ['(', ')', ' ','-','+'];
+                    $replace = ['', '', '','',''];
+                    $phone = str_replace($char, $replace, $client_info->phone);
+                    $text = "Poluchena ".$request->amount.", Dostavleno ".$request->sold_product_count.", Vozvrat tari ".
+                    $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+                    $curl = curl_init();
+                  
+                    curl_setopt_array($curl, array(
+                      CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+                      CURLOPT_RETURNTRANSFER => true,
+                      CURLOPT_ENCODING => '',
+                      CURLOPT_MAXREDIRS => 10,
+                      CURLOPT_TIMEOUT => 0,
+                      CURLOPT_FOLLOWLOCATION => true,
+                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                      CURLOPT_CUSTOMREQUEST => 'POST',
+                      CURLOPT_POSTFIELDS =>"{
+                               \"login\":\"sms0085ts\",
+                               \"pwd\":\"01986max\",
+                               \"CgPN\":\"WEBEST_UZ\",
+                               \"CdPN\":\"998$phone\",
+                               \"text\":\"$text\"
+                           }",
+                      CURLOPT_HTTPHEADER => array(
+                        'Accept: application/json',
+                        'Content-Type: application/json'
+                      ),
+                    ));
+                    
+                    $response = curl_exec($curl);
+                    $json = json_decode($response, true);
+                    
+                    if ($json['query_state'] == "SUCCESS") {         
+            
+                        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                        $count = Organization::find($organ);
+                        $count->sms_count = $count->sms_count + 1;
+                        $count->save();
+            
+                        $sms = new Sms();
+                        $sms->organization_id = $organ;
+                        $sms->client_id = $client_info->id;
+                        $sms->user_id = Auth::user()->id;
+                        $sms->sms_text = $text;
+                        $sms->save();
+                    }
+                    
+                }
 
-        if ($request->order_status == 1 || $request->order_status == 2 ) {
+                $client_info = Client::find($orderinfo->client_id);
 
-            $clientprice = new ClientPrices();
-            $clientprice->organization_id = $info_id;
-            $clientprice->success_order_id = $successorder->id;
-            $clientprice->client_id = $client_info->id;
-            $clientprice->user_id = Auth::user()->id;
-            $clientprice->payment = $request->payment;
-            $clientprice->amount = $request->amount;
-            $clientprice->comment = $request->comment ?? '';
-            $clientprice->status = 0;
-            $clientprice->save();
-
-            if(Product::find($orderinfo->product_id)->container_status != 1) {
-                $clientcontainer = new ClientContainer();
-                $clientcontainer->organization_id = $info_id;
-                $clientcontainer->success_order_id = $successorder->id;
-                $clientcontainer->client_id = $client_info->id;
-                $clientcontainer->user_id = Auth::user()->id;
-                $clientcontainer->product_id = $orderinfo->product_id;
-                $clientcontainer->count = $request->container;
-                $clientcontainer->invalid_count = $request->invalid_container_count; 
-                $clientcontainer->comment = $request->comment ?? ''; 
-                $clientcontainer->status = 0;
-                $clientcontainer->save();
+                return response()->json(['message' => 'success','balance' => $client_info->balance,'container' => $client_info->container]);
             }
-          
-
-
-            $char = ['(', ')', ' ','-','+'];
-            $replace = ['', '', '','',''];
-            $phone = str_replace($char, $replace, $client_info->phone);
-            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->sold_product_count.", Vozvrat tari ".
-            $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
-            $curl = curl_init();
-          
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_POSTFIELDS =>"{
-                       \"login\":\"sms0085ts\",
-                       \"pwd\":\"01986max\",
-                       \"CgPN\":\"WEBEST_UZ\",
-                       \"CdPN\":\"998$phone\",
-                       \"text\":\"$text\"
-                   }",
-              CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Content-Type: application/json'
-              ),
-            ));
-            
-            $response = curl_exec($curl);
-            $json = json_decode($response, true);
-            
-            if ($json['query_state'] == "SUCCESS") {         
-    
-                $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-                $count = Organization::find($organ);
-                $count->sms_count = $count->sms_count + 1;
-                $count->save();
-    
-                $sms = new Sms();
-                $sms->organization_id = $organ;
-                $sms->client_id = $client_info->id;
-                $sms->user_id = Auth::user()->id;
-                $sms->sms_text = $text;
-                $sms->save();
-            }
-            
-        }
-
-        return response()->json(['message' => 'success']);
     }
 
     public function results(Request $request) {
@@ -945,7 +990,9 @@ class HomeController extends Controller
     {
         return response()->json(SuccessOrders::
         where('user_id', Auth::user()->id)
-        ->whereDate('created_at', now())->get());
+        ->whereDate('created_at', now())
+        ->with(['product' , 'client','client.city', 'client.area'])
+        ->get());
     }
 
     public function areas_filter(Request $request)
