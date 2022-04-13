@@ -959,8 +959,8 @@ class HomeController extends Controller
             $areas->save();
         } else
         {
-            $areas = RegionUser::find(Auth::user()->id);
-            $areas->user_id = Auth::user()->id;
+            $id = RegionUser::where('user_id',Auth::user()->id)->value('id');
+            $areas = RegionUser::find($id);
             $areas->areas = $str;
             $areas->save();
         }
