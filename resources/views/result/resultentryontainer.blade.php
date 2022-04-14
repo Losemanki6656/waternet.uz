@@ -45,7 +45,7 @@
                                         {{$entrycon->product->name}}
                                     </td>
                                     <td>
-                                        {{$entrycon->client->name}}
+                                        {{$entrycon->client->fullname}}
                                     </td>
                                     <td>
                                         {{$entrycon->container}}

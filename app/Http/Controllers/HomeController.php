@@ -675,7 +675,7 @@ class HomeController extends Controller
             'soldproducts' => $soldproducts,
             'soldsumm' => $soldsumm,
             'dolgsumm' => $dolgsumm,
-            'entrycon' => $entrycon,
+            'takecon' => $takecon,
             'amount'   => $amount,
             'payment1' => $payment1,
             'payment2' => $payment2,
