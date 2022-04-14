@@ -227,6 +227,11 @@
                 </table>
             </div>
         </div>
+        <div class="d-flex justify-content mt-3">             
+            <ul class="pagination mb-0">
+                {{ $orders->withQueryString()->links() }}
+            </ul> 
+        </div>
     </div>
 </div>
 @endsection

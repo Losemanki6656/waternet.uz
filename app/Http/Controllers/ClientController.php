@@ -695,8 +695,6 @@ class ClientController extends Controller
 
     public function resultsold(){
 
-        
-
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 

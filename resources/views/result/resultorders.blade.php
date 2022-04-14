@@ -27,12 +27,11 @@
                             <th width="60">#</th>
                             <th>FIO</th>
                             <th>Tel raqami</th>
-                            <th>Manzil </th>
                             <th>Tovar nomi</th>
                             <th>Miqdori</th>
                             <th>Narxi</th>
                             <th>Vaqti</th>
-                            <th>Izoh</th>
+                            <th>Izoh </th>
                             <th>Operator</th>
                         </tr>
                     </thead>
@@ -45,9 +44,8 @@
                                     @if ($order->client)
                                         <td>{{$order->client->fullname}}</td>
                                         <td>{{$order->client->phone}}</td>
-                                        <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>
                                     @else
-                                        <td colspan="3"> Mijoz topilmadi</td>
+                                        <td colspan="2"> Mijoz topilmadi</td>
                                     @endif
                                 <td>{{$order->product->name}}</td>
                                 <td>{{$order->product_count}}</td>
