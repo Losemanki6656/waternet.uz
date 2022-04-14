@@ -32,7 +32,8 @@
                         <tr class="text-800 bg-200">
                             <th>Tovar nomi</th>
                             <th>Kimdan</th>
-                            <th>Qancha</th>
+                            <th>Miqdori</th>
+                            <th>Yaroqsiz</th>
                             <th>Qabul qildi</th>
                             <th>Qachon</th>
                         </tr>
@@ -44,12 +45,15 @@
                                         {{$entrycon->product->name}}
                                     </td>
                                     <td>
-                                        {{$entrycon->user->name}}
+                                        {{$entrycon->client->name}}
                                     </td>
                                     <td>
-                                        {{$entrycon->product_count}}
+                                        {{$entrycon->container}}
+                                    </td> 
+                                    <td>
+                                        {{$entrycon->invalid_container_count}}
                                     </td>                            
-                                    <td>{{$entrycon->received->name}}</td>
+                                    <td>{{$entrycon->user->name}}</td>
                                     <td>{{$entrycon->created_at}}</td>
                                 </tr> 
                             @endforeach         

@@ -741,10 +741,10 @@ class ClientController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
-        $entrycontainer = EntryContainer::whereDate('created_at',now())
+        $entrycontainer = SuccessOrders::whereDate('created_at',now())
         ->where('organization_id',$info_id)
         ->with('user')
-        ->with('received')
+        ->has('client')
         ->with('product')->get();
 
         return view('result.resultentryontainer',[

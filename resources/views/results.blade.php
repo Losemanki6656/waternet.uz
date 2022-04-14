@@ -111,7 +111,7 @@
                                         <a href="{{route('resultentrycontainer')}}">{{$entrycon[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        0
+                                        {{$takecon[$user->id]}}
                                     </td>
                                     <td>
                                         <a href="{{route('payment1')}}">{{$payment1[$user->id]}}</a>

@@ -650,13 +650,20 @@ class HomeController extends Controller
             $summpayment3 = array_sum($payment3);
             $dolgsumm = (-1)*array_sum($amount);
 
-            $entrycon[$user->id] = EntryContainer::
+            $entrycon[$user->id] = SuccessOrders::
+            where('organization_id',$info_id)
+            ->whereDate('created_at','>=',$date1)
+            ->whereDate('created_at','<=',$date2)
+            ->where('user_id', $user->id)
+            ->sum('container');
+
+            $takecon[$user->id] = EntryContainer::
             where('organization_id',$info_id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
             ->where('received_id', $user->id)
             ->sum('product_count');
-            //dd($entrycon,$date1,$date2);
+            
             $amount[$user->id] = (-1)*$amount[$user->id];
         }
         return view('results',[
