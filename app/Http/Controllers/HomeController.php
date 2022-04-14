@@ -304,7 +304,7 @@ class HomeController extends Controller
     {
         $orders = Order::where('status',0)
         ->where('organization_id', UserOrganization::where('user_id',Auth::user()->id)
-        ->value('organization_id'))->with('client')->with('user')->with('product');
+        ->value('organization_id'))->has('client')->with('user')->with('product');
         
         $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
