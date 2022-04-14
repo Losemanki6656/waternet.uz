@@ -891,6 +891,9 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        if($info_org->date_traffic < now()) 
+        return view('error');
+
         return view('products.products',[
             'products' => $products,
             'info_org'  => $info_org
@@ -937,6 +940,9 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        if($info_org->date_traffic < now()) 
+        return view('error');
+        
         return view('workers',[
             'workers' => $workers,
             'info_org' => $info_org
@@ -948,6 +954,9 @@ class HomeController extends Controller
         $regions = Sity::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
+
+        if($info_org->date_traffic < now()) 
+        return view('error');
 
         return view('regions',[
             'regions' => $regions,
