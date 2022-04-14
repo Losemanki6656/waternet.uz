@@ -246,7 +246,13 @@ class HomeController extends Controller
     public function delete_client($id)
     {
 
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+
         $client = Client::find($id)->delete();
+
+        $count = Organization::find($organ);
+        $count->clients_count = $count->clients_count - 1;
+        $count->save();
 
         return redirect()->back()->with('msg' ,'success');
     }
@@ -320,7 +326,7 @@ class HomeController extends Controller
         
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        
+
         if($info_org->date_traffic < now()) 
         return view('error');
 
