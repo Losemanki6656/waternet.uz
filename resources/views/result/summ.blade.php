@@ -70,6 +70,7 @@
                 <table class="table m-b-0 table-bordered">
                     <thead>
                         <tr>
+                            <th>Mijoz</th>
                             <th>Maxsulot</th>
                             <th>Buyurtma miqdori</th>
                             <th>Narxi </th>
@@ -88,6 +89,7 @@
                         @foreach ($soldproducts as $soldproduct)
                             @if ($soldproduct->order_status == 1 || $soldproduct->order_status == 2)
                                 <tr>
+                                    <td>{{$soldproduct->fullname}}</td>
                                     <td>{{$soldproduct->product->name}}</td>
                                     <td>{{$soldproduct->order_count}}</td>
                                     <td>{{$soldproduct->order_price}}</td>
