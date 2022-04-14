@@ -71,11 +71,10 @@ class HomeController extends Controller
             $soldsumm= 0; 
             $payment1 = 0; 
             $payment2 = 0;
-            dd($solds);
+            
             foreach ($solds as $sold) {
                 
                 $soldsumm = $soldsumm + $sold->count * $sold->price;
-                if($sold->price_sold < 0) $amount = $amount + $sold->price_sold;
                 
                 if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
                 if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
