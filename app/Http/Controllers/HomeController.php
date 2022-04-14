@@ -58,6 +58,9 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        if($info_org->date_traffic < now()) 
+        return view('error');
+
         if(Auth::user()->id != 1)
         {
 
@@ -71,7 +74,7 @@ class HomeController extends Controller
             $soldsumm= 0; 
             $payment1 = 0; 
             $payment2 = 0;
-            
+
             foreach ($solds as $sold) {
                 
                 $soldsumm = $soldsumm + $sold->count * $sold->price;
@@ -109,6 +112,7 @@ class HomeController extends Controller
 
     public function clients()
     {
+
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
 
         $clients = Client::query()
@@ -135,6 +139,9 @@ class HomeController extends Controller
         $products = Product::where('organization_id', $organ)->get();
         $info_id = $organ;
         $info_org = Organization::find($info_id);
+
+        if($info_org->date_traffic < now()) 
+        return view('error');
 
         return view('clients.clients',[
             'clients' => $clients->paginate(10),
@@ -313,6 +320,9 @@ class HomeController extends Controller
         
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
+        
+        if($info_org->date_traffic < now()) 
+        return view('error');
 
         return view('clients.orders',[
             'orders' => $orders->paginate(10),
