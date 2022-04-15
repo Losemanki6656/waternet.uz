@@ -128,7 +128,7 @@
                                         </h6>
                                         <span class="text-muted">
                                             @if ($client->city)
-                                                {{$client->city->name}}, {{$client->area->name}} 
+                                                {{$client->city->name}},
                                             @endif   
                                             @if ($client->area)
                                                 {{$client->area->name}} 
