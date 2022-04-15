@@ -127,8 +127,12 @@
                                             @endif
                                         </h6>
                                         <span class="text-muted">
-                                            {{$client->city->name}}, 
-                                            {{$client->area->name}}
+                                            @if ($client->city)
+                                                {{$client->city->name}}, {{$client->area->name}} 
+                                            @else   
+                                            @if ($client->area)
+                                                {{$client->area->name}} 
+                                            @else
                                         </span>
                                     </td>
                                     <td class="text-center">{{$client->balance}}</td>
