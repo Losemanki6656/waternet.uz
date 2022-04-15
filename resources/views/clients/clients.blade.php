@@ -129,10 +129,10 @@
                                         <span class="text-muted">
                                             @if ($client->city)
                                                 {{$client->city->name}}, {{$client->area->name}} 
-                                            @else   
+                                            @endif   
                                             @if ($client->area)
                                                 {{$client->area->name}} 
-                                            @else
+                                            @endif
                                         </span>
                                     </td>
                                     <td class="text-center">{{$client->balance}}</td>
