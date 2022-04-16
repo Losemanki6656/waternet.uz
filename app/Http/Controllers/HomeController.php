@@ -143,8 +143,11 @@ class HomeController extends Controller
         if($info_org->date_traffic < now()) 
         return view('error');
 
+        $page = request('page', session('clients_page', 1));
+        session(['clients_page' => $page]);
+
         return view('clients.clients',[
-            'clients' => $clients->paginate(10),
+            'clients' => $clients->paginate(10, ['*'], 'page', $page),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
