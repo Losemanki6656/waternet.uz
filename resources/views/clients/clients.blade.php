@@ -447,7 +447,7 @@
                 <div class="row">
                     <form action="{{route('clients')}}" method="get">
                         <div class="col d-flex justify-content mt-3">
-                            <input type="text" class="form-control" name="page" value="{{request()->query('page')}}" placeholder="Page ...">
+                            <input type="number" class="form-control" name="page" value="{{request()->query('page')}}" placeholder="Page ...">
                         </div>
                     </form>
                     <div class="col d-flex justify-content-end mt-3">
