@@ -36,6 +36,10 @@ class AuthController extends Controller
         if (! $token = auth('api')->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 422);
         }
+        $user_id = User::where('email',$request->email)->value('id');
+
+        if(UserOrganization::where('user_id',$user_id)->value('role') != 3)  return response()->json(['error' => 'Unauthorized'], 422);
+            else
         return $this->createNewToken($token);
     }
 
@@ -163,7 +167,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 3600,
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
             'user' => auth('api')->user()
         ]);
     }

@@ -207,6 +207,11 @@ class UserController extends Controller
         if($request->sklad == 'on') $user->givePermissionTo('sklad');
         if($request->users == 'on') $user->givePermissionTo('users');
     
+        $us =  UserOrganization::where('user_id',$id)->value('id');
+        $x =  UserOrganization::find($us);
+        $x->role = $request->role;
+        $x->save(); 
+
         return redirect()->route('users')
                         ->with('success','User updated successfully');
     }
