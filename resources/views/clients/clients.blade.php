@@ -444,10 +444,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content mt-3">             
-                    <ul class="pagination mb-0">
+                <div class="row">
+                    <form action="{{route('clients')}}" method="get">
+                        <div class="col d-flex justify-content mt-3">
+                            <input type="text" class="form-control" name="page" value="{{request()->query('page')}}">
+                        </div>
+                    </form>
+                    <div class="col d-flex justify-content-end mt-3">
                         {{ $clients->withQueryString()->links() }}
-                    </ul> 
+                    </div>
                 </div>
             </div>
         </div>
