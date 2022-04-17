@@ -14,6 +14,7 @@ use App\Models\EntryProduct;
 use App\Models\TakeContainer;
 use App\Models\EntryContainer;
 use App\Models\SuccessOrders;
+use App\Models\ActiveTraffic;
 use App\Models\Traffic;
 use App\Models\Product;
 use App\Models\User;
@@ -848,7 +849,7 @@ class ClientController extends Controller
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        $traffics = Traffic::all();
+        $traffics = Traffic::whereIn('id', explode(',', ActiveTraffic::find(1)->string1))->get();
         
         return view('clients.traffics',[
             'info_org' => $info_org,

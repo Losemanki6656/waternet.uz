@@ -26,6 +26,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
 
     Route::get('/statistics', [App\Http\Controllers\HomeController::class, 'statistics'])->name('statistics');
+    
+    Route::post('/administration/active-traffics', [App\Http\Controllers\HomeController::class, 'active_traffics'])->name('active_traffics');
+
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users_create');
 

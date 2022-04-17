@@ -20,6 +20,7 @@ use App\Models\TakeProduct;
 use App\Models\EntryProduct;
 use App\Models\Sms;
 use App\Models\EntryContainer;
+use App\Models\ActiveTraffic;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 
@@ -45,6 +46,7 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        if(Auth::user()->id != 1)
         if($info_org->date_traffic < now()) 
         return view('error');
 
@@ -110,6 +112,17 @@ class HomeController extends Controller
             return redirect()->route('organizations');
     }
 
+    public function active_traffics(Request $request)
+    {
+
+            $x = ActiveTraffic::find(1);
+            $x->string1 = $request->active_traffics;
+            $x->save();
+      
+
+        return redirect()->back()->with('msg' ,'ertraf');
+    }
+    
     public function clients()
     {
 

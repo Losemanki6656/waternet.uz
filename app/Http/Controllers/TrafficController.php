@@ -11,6 +11,7 @@ use App\Models\Organization;
 use Spatie\Permission\Models\Role;
 use App\Models\TrafficOrganization;
 use App\Models\PriceOrganization;
+use App\Models\ActiveTraffic;
 
 class TrafficController extends Controller
 {
@@ -48,9 +49,27 @@ class TrafficController extends Controller
     public function traffics()
     {
         $traffics = Traffic::all();
+
+        $x = explode(',',ActiveTraffic::find(1)->string1);
+
+            $q = [];
+            foreach ($traffics as $traffic) {
+                $q[$traffic->id] = false;
+                foreach ($x as $y) {
+                    if($traffic->id == $y) 
+                    {
+                        $q[$traffic->id] = true;
+                        break;
+                    }
+                   
+                }
+            }
+
         return view('administration.traffics',[
-            'traffics' => $traffics
+            'traffics' => $traffics,
+            'q' => $q
         ]);
+      
     }
     public function add_traffic(Request $request)
     {
