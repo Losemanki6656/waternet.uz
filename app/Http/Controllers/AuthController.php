@@ -36,10 +36,10 @@ class AuthController extends Controller
         if (! $token = auth('api')->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 422);
         }
-        $user_id = User::where('email',$request->email)->value('id');
+       // $user_id = User::where('email',$request->email)->value('id');
 
-        if(UserOrganization::where('user_id',$user_id)->value('role') != 3)  return response()->json(['error' => 'Unauthorized'], 422);
-            else
+        //if(UserOrganization::where('user_id',$user_id)->value('role') != 3)  return response()->json(['error' => 'Unauthorized'], 422);
+            //else
         return $this->createNewToken($token);
     }
 
