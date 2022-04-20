@@ -286,7 +286,7 @@
                                                     </div>                                        
                                                     <div class="form-group">
                                                         <h6><label>Izoh:</label></h6>
-                                                        <textarea class="form-control" name="comment" id="" rows="2" required></textarea>
+                                                        <textarea class="form-control" name="comment" id="" rows="2"></textarea>
                                                     </div>  
                                                 </div>
                                                 <div class="modal-footer">

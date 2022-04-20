@@ -66,20 +66,23 @@ class HomeController extends Controller
         if(Auth::user()->id != 1)
         {
 
-            $solds = SuccessOrders::whereDate('created_at',now())
+            $solds = SuccessOrders::whereDate('created_at', now())
             ->where('organization_id',$info_id)
             ->whereIn('order_status',[1,2])->get();
             $solds2 = ClientPrices::whereDate('created_at',now())
             ->where('organization_id',$info_id)
             ->where('status',1)->get();
 
-            $soldsumm= 0; 
+            $soldsumm = 0; 
             $payment1 = 0; 
             $payment2 = 0;
 
             foreach ($solds as $sold) {
-                
-                $soldsumm = $soldsumm + $sold->count * $sold->price;
+
+                if($sold->count * $sold->price >= $sold->amount)
+                    $soldsumm = $soldsumm + $sold->count * $sold->price;
+                else
+                $soldsumm = $soldsumm + $sold->amount;
                 
                 if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
                 if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
@@ -91,6 +94,7 @@ class HomeController extends Controller
                 if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
                 if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
             }
+
             $x = $payment1+$payment2;
 
             $dolg = Client::where('organization_id',$info_id)->where('balance','<','0')->sum('balance');
