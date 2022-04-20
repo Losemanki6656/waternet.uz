@@ -91,9 +91,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($takeproduct as $takeproduct)
+                                    @foreach ($takeproducts as $takeproduct)
                                         <tr>
-                                            <td>{{$loop->index + 1}}</td>   
+                                            <td>{{(($takeproducts->currentPage() * 10) - 10) + $loop->index + 1}}</td>  
                                             <td>
                                                 {{$takeproduct->received->name}}
                                             </td>
@@ -183,6 +183,11 @@
                                     @endforeach         
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content mt-3">             
+                            <ul class="pagination mb-0">
+                                {{ $takeproducts->withQueryString()->links() }}
+                            </ul> 
                         </div>
                     </div>
                 </div>

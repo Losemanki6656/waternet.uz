@@ -94,7 +94,7 @@
                                 <tbody>
                                     @foreach ($entryproduct as $enproduct)
                                         <tr>
-                                            <td>{{$loop->index + 1}}</td>   
+                                            <td>{{(($entryproduct->currentPage() * 10) - 10) + $loop->index + 1}}</td>  
                                             <td>
                                                 {{$enproduct->product->name}}
                                             </td>
@@ -181,6 +181,12 @@
                                     @endforeach         
                                 </tbody>
                             </table>
+                           
+                        </div>
+                        <div class="d-flex justify-content mt-3">             
+                            <ul class="pagination mb-0">
+                                {{ $entryproduct->withQueryString()->links() }}
+                            </ul> 
                         </div>
                     </div>
                 </div>

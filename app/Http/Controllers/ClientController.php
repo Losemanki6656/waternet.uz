@@ -202,20 +202,22 @@ class ClientController extends Controller
 
     public function take_products()
     {  
-        $takeproduct = TakeProduct::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('received')->with('sent')->with('product')->get();
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $takeproducts = TakeProduct::where('organization_id',$info_id)
+        ->orderBy('created_at', 'DESC')
+        ->with('received')->with('sent')->with('product');
 
-        $products = Product::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $products = Product::where('organization_id', $info_id)->get();
     
-        $arr = UserOrganization::where('organization_id', $organ)->pluck('user_id')->toArray();
+        $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
        
         $users = User::whereIn('id',$arr)->get();
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        
         $info_org = Organization::find($info_id);
 
 
         return view('sklad.take-product',[
-            'takeproduct' => $takeproduct,
+            'takeproducts' => $takeproducts->paginate(10),
             'products' => $products,
             'users' => $users,
             'info_org' => $info_org
@@ -224,14 +226,17 @@ class ClientController extends Controller
 
     public function entry_products()
     {  
-        $entryproduct = EntryProduct::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('user')->with('product')->get();
-
-        $products = Product::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $entryproduct = EntryProduct::where('organization_id',$info_id)
+        ->orderBy('created_at', 'DESC')
+        ->with('user')->with('product');
+
+        $products = Product::where('organization_id', $info_id)->get();
+       
         $info_org = Organization::find($info_id);
 
         return view('sklad.entry-product',[
-            'entryproduct' => $entryproduct,
+            'entryproduct' => $entryproduct->paginate(10),
             'products' => $products,
             'info_org' => $info_org
         ]);
@@ -239,22 +244,23 @@ class ClientController extends Controller
 
     public function entry_container()
     {  
-        $entrycontainer = EntryContainer::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $entrycontainer = EntryContainer::where('organization_id',$info_id)
+        ->orderBy('created_at', 'DESC')
         ->with('user')
         ->with('received')
-        ->with('product')->get();
+        ->with('product');
 
-        $products = Product::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $products = Product::where('organization_id', $info_id)->get();
     
-        $arr = UserOrganization::where('organization_id', $organ)->pluck('user_id')->toArray();
+        $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
        
         $users = User::whereIn('id',$arr)->get();
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+       
         $info_org = Organization::find($info_id);
 
         return view('sklad.entry-container',[
-            'entrycontainer' => $entrycontainer,
+            'entrycontainer' => $entrycontainer->paginate(10),
             'products' => $products,
             'users' => $users,
             'info_org' => $info_org
@@ -263,16 +269,19 @@ class ClientController extends Controller
 
     public function take_container()
     {  
-        $takecontainer = TakeContainer::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
-        ->with('user')
-        ->with('product')->get();
-
-        $products = Product::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+
+        $takecontainer = TakeContainer::where('organization_id',$info_id)
+        ->orderBy('created_at', 'DESC')
+        ->with('user')
+        ->with('product');
+
+        $products = Product::where('organization_id', $info_id)->get();
+        
         $info_org = Organization::find($info_id);
 
         return view('sklad.take-container',[
-            'takecontainer' => $takecontainer,
+            'takecontainer' => $takecontainer->paginate(10),
             'products' => $products,
             'info_org' => $info_org
         ]);

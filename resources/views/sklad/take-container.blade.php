@@ -89,7 +89,7 @@
                                 <tbody>
                                     @foreach ($takecontainer as $takecon)
                                         <tr>
-                                            <td>{{$loop->index + 1}}</td>   
+                                            <td>{{(($takecontainer->currentPage() * 10) - 10) + $loop->index + 1}}</td> 
                                             <td>
                                                 {{$takecon->user->name}}
                                             </td>
@@ -172,6 +172,11 @@
                                     @endforeach         
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content mt-3">             
+                            <ul class="pagination mb-0">
+                                {{ $takecontainer->withQueryString()->links() }}
+                            </ul> 
                         </div>
                     </div>
                 </div>
