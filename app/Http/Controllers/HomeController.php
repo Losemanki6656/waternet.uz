@@ -644,22 +644,19 @@ class HomeController extends Controller
 
         foreach ( $data as $user ) {
             $order[$user->id] = Order::
-            where('organization_id',$info_id)
+            where('user_id',$user_id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
             ->sum('product_count');
             $takeproduct[$user->id] = TakeProduct::whereDate('created_at','>=',$date1)
-            ->where('organization_id',$info_id)
             ->whereDate('created_at','<=',$date2)
             ->where('received_id', $user->id)
             ->sum('product_count');
             $solds = SuccessOrders::whereDate('created_at','>=',$date1)
-            ->where('organization_id',$info_id)
             ->whereDate('created_at','<=',$date2)
             ->where('user_id', $user->id)
             ->whereIn('order_status',[1,2])->get();
             $solds2 = ClientPrices::whereDate('created_at','>=',$date1)
-            ->where('organization_id',$info_id)
             ->whereDate('created_at','<=',$date2)
             ->where('user_id', $user->id)
             ->where('status',1)->get();
