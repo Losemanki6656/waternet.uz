@@ -18,6 +18,10 @@ class CreateSmsTable extends Migration
             $table->integer('organization_id');
             $table->integer('client_id');
             $table->integer('user_id');
+            $table->integer('city_id');
+            $table->integer('area_id');
+            $table->string('fullname');
+            $table->string('phone');
             $table->text('sms_text');
             $table->timestamps();
         });

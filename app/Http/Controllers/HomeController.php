@@ -145,9 +145,8 @@ class HomeController extends Controller
             return $query->where('area_id', $area_id);
         });
 
-
         $sities = Sity::where('organization_id',$organ)->get();
-        $areas = Area::where('organization_id',$organ)->get();
+        $areas = Area::where('city_id', request('city_id', 0))->get();
 
         $products = Product::where('organization_id', $organ)->get();
         $info_id = $organ;
@@ -333,15 +332,29 @@ class HomeController extends Controller
 
     public function orders()
     {
-        $orders = Order::where('status',0)
-        ->where('organization_id', UserOrganization::where('user_id',Auth::user()->id)
-        ->value('organization_id'))->has('client')->with('user')->with('product');
-        
-        $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+
+        $orders = Order::query()
+        ->where('status',0)
+        ->where('organization_id', $organ)
+        ->when(\Request::input('search'),function($query,$search){
+            $query->where(function ($query) use ($search) {
+                $query->Orwhere('fullname','like','%'.$search.'%')
+                    ->orWhere('phone','like','%'.$search.'%')
+                    ->orWhere('address','like','%'.$search.'%');
+            });
+        })
+        ->when(request('city_id'), function ($query, $city_id) {
+            return $query->where('city_id', $city_id);
+        })
+        ->when(request('area_id'), function ($query, $area_id) {
+            return $query->where('area_id', $area_id);
+        })->has('client')->with('user')->with('product');
+
+        $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
         
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
+        $info_org = Organization::find($organ);
 
         if($info_org->date_traffic < now()) 
         return view('error');
@@ -533,53 +546,60 @@ class HomeController extends Controller
                     }
                   
         
-        
-                    $char = ['(', ')', ' ','-','+'];
-                    $replace = ['', '', '','',''];
-                    $phone = str_replace($char, $replace, $client_info->phone);
-                    $text = "Poluchena ".$request->amount.", Dostavleno ".$request->sold_product_count.", Vozvrat tari ".
-                    $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
-                    $curl = curl_init();
-                  
-                    curl_setopt_array($curl, array(
-                      CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
-                      CURLOPT_RETURNTRANSFER => true,
-                      CURLOPT_ENCODING => '',
-                      CURLOPT_MAXREDIRS => 10,
-                      CURLOPT_TIMEOUT => 0,
-                      CURLOPT_FOLLOWLOCATION => true,
-                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                      CURLOPT_CUSTOMREQUEST => 'POST',
-                      CURLOPT_POSTFIELDS =>"{
-                               \"login\":\"sms0085ts\",
-                               \"pwd\":\"01986max\",
-                               \"CgPN\":\"WEBEST_UZ\",
-                               \"CdPN\":\"998$phone\",
-                               \"text\":\"$text\"
-                           }",
-                      CURLOPT_HTTPHEADER => array(
-                        'Accept: application/json',
-                        'Content-Type: application/json'
-                      ),
-                    ));
-                    
-                    $response = curl_exec($curl);
-                    $json = json_decode($response, true);
-                    
-                    if ($json['query_state'] == "SUCCESS") {         
-            
-                        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-                        $count = Organization::find($organ);
-                        $count->sms_count = $count->sms_count + 1;
-                        $count->save();
-            
-                        $sms = new Sms();
-                        $sms->organization_id = $organ;
-                        $sms->client_id = $client_info->id;
-                        $sms->user_id = Auth::user()->id;
-                        $sms->sms_text = $text;
-                        $sms->save();
+                    if($info_org->sms_count < $info_org->traffic->sms_count) {
+
+                        $char = ['(', ')', ' ','-','+'];
+                        $replace = ['', '', '','',''];
+                        $phone = str_replace($char, $replace, $client_info->phone);
+                        $text = "Poluchena ".$request->amount.", Dostavleno ".$request->sold_product_count.", Vozvrat tari ".
+                        $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+                        $curl = curl_init();
+                      
+                        curl_setopt_array($curl, array(
+                          CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+                          CURLOPT_RETURNTRANSFER => true,
+                          CURLOPT_ENCODING => '',
+                          CURLOPT_MAXREDIRS => 10,
+                          CURLOPT_TIMEOUT => 0,
+                          CURLOPT_FOLLOWLOCATION => true,
+                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                          CURLOPT_CUSTOMREQUEST => 'POST',
+                          CURLOPT_POSTFIELDS =>"{
+                                   \"login\":\"sms0085ts\",
+                                   \"pwd\":\"01986max\",
+                                   \"CgPN\":\"WEBEST_UZ\",
+                                   \"CdPN\":\"998$phone\",
+                                   \"text\":\"$text\"
+                               }",
+                          CURLOPT_HTTPHEADER => array(
+                            'Accept: application/json',
+                            'Content-Type: application/json'
+                          ),
+                        ));
+                        
+                        $response = curl_exec($curl);
+                        $json = json_decode($response, true);
+                        
+                        if ($json['query_state'] == "SUCCESS") {         
+                
+                            $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                            $count = Organization::find($organ);
+                            $count->sms_count = $count->sms_count + 1;
+                            $count->save();
+                
+                            $sms = new Sms();
+                            $sms->organization_id = $organ;
+                            $sms->client_id = $client_info->id;
+                            $sms->user_id = Auth::user()->id;
+                            $sms->city_id = $client_info->city_id;
+                            $sms->area_id = $client_info->area_id;
+                            $sms->fullname = $client_info->fullname;
+                            $sms->phone = $client_info->phone;
+                            $sms->sms_text = $text;
+                            $sms->save();
+                        }
                     }
+                    
                     
                 }
 
@@ -836,53 +856,60 @@ class HomeController extends Controller
             }
           
 
-
-            $char = ['(', ')', ' ','-','+'];
-            $replace = ['', '', '','',''];
-            $phone = str_replace($char, $replace, $client_info->phone);
-            $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
-            $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
-            $curl = curl_init();
-          
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'POST',
-              CURLOPT_POSTFIELDS =>"{
-                       \"login\":\"sms0085ts\",
-                       \"pwd\":\"01986max\",
-                       \"CgPN\":\"WEBEST_UZ\",
-                       \"CdPN\":\"998$phone\",
-                       \"text\":\"$text\"
-                   }",
-              CURLOPT_HTTPHEADER => array(
-                'Accept: application/json',
-                'Content-Type: application/json'
-              ),
-            ));
+            if($info_org->sms_count < $info_org->traffic->sms_count) {
+                $char = ['(', ')', ' ','-','+'];
+                $replace = ['', '', '','',''];
+                $phone = str_replace($char, $replace, $client_info->phone);
+                $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
+                $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+                $curl = curl_init();
             
-            $response = curl_exec($curl);
-            $json = json_decode($response, true);
-            
-            if ($json['query_state'] == "SUCCESS") {         
-    
-                $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-                $count = Organization::find($organ);
-                $count->sms_count = $count->sms_count + 1;
-                $count->save();
-    
-                $sms = new Sms();
-                $sms->organization_id = $organ;
-                $sms->client_id = $client_info->id;
-                $sms->user_id = Auth::user()->id;
-                $sms->sms_text = $text;
-                $sms->save();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS =>"{
+                        \"login\":\"sms0085ts\",
+                        \"pwd\":\"01986max\",
+                        \"CgPN\":\"WEBEST_UZ\",
+                        \"CdPN\":\"998$phone\",
+                        \"text\":\"$text\"
+                    }",
+                CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Content-Type: application/json'
+                ),
+                ));
+                
+                $response = curl_exec($curl);
+                $json = json_decode($response, true);
+                
+                if ($json['query_state'] == "SUCCESS") {         
+        
+                    $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+                    $count = Organization::find($organ);
+                    $count->sms_count = $count->sms_count + 1;
+                    $count->save();
+                    
+                    $sms = new Sms();
+                    $sms->organization_id = $organ;
+                    $sms->client_id = $client_info->id;
+                    $sms->user_id = Auth::user()->id;
+                    $sms->city_id = $client_info->city_id;
+                    $sms->area_id = $client_info->area_id;
+                    $sms->fullname = $client_info->fullname;
+                    $sms->phone = $client_info->phone;
+                    $sms->sms_text = $text;
+                    $sms->save();
+                }
             }
+
+            
             
         }
 

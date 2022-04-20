@@ -44,6 +44,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th width = "80">#</th>
                                 <th>Kimga</th>
                                 <th>Sms</th>
                                 <th>Kimdan</th>
@@ -54,10 +55,11 @@
                         
                             @foreach ($smsmanagers as $smsmanager)
                                 <tr>
+                                    <td>{{(($smsmanagers->currentPage() * 10) - 10) + $loop->index + 1}}</td>
                                     <td> @if ($smsmanager->client)
                                         {{$smsmanager->client->fullname}}
                                     @else
-                                    Mijoz topilmadi
+                                         Mijoz topilmadi
                                     @endif
                                         </td>
                                     <td>{{$smsmanager->sms_text}}</td>
@@ -67,6 +69,11 @@
                             @endforeach    
                         </tbody>
                     </table>
+                </div>
+                <div class="d-flex justify-content mt-3">             
+                    <ul class="pagination mb-0">
+                        {{ $smsmanagers->withQueryString()->links() }}
+                    </ul> 
                 </div>
             </div>
         </div>

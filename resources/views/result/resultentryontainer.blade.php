@@ -30,6 +30,7 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr class="text-800 bg-200">
+                            <th width = "80">#</th>
                             <th>Tovar nomi</th>
                             <th>Kimdan</th>
                             <th>Miqdori</th>
@@ -56,7 +57,20 @@
                                     <td>{{$entrycon->user->name}}</td>
                                     <td>{{$entrycon->created_at}}</td>
                                 </tr> 
-                            @endforeach         
+                            @endforeach   
+                            <tr>                
+                                <td colspan="3">
+                                    Jami:
+                                </td>
+                                <td>
+                                    {{$summ_con}}
+                                </td> 
+                                <td>
+                                    {{$summ_con_in}}
+                                </td>                            
+                                <td></td>
+                                <td></td>
+                            </tr>       
                         </tbody>
                     </table>
                 </div>

@@ -517,16 +517,16 @@ class ClientController extends Controller
 
     public function send_message()
     {  
-        $clients = Client::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)
-        ->value('organization_id'))->with('city')
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $clients = Client::where('organization_id', $organ)->with('city')
+        ->orderBy('created_at', 'DESC')
         ->with('user')
         ->with('area');
 
-        $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $areas = Area::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $products = Product::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
+        $sities = Sity::where('organization_id',)->get();
+        $areas = Area::where('organization_id', $organ)->get();
+        $products = Product::where('organization_id', $organ)->get();
+        $info_org = Organization::find($organ);
 
         return view('smsmanager.sendmessage',[
             'clients' => $clients->paginate(10),
@@ -549,16 +549,17 @@ class ClientController extends Controller
 
     public function success_message()
     {  
-        $smsmanagers = Sms::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)
-        ->value('organization_id'))
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+
+        $smsmanagers = Sms::where('organization_id', $organ)
+        ->orderBy('created_at', 'DESC')
         ->with('client')
-        ->with('user')
-        ->get();
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
+        ->with('user');
+
+        $info_org = Organization::find($organ);
 
         return view('smsmanager.successmessage',[
-            'smsmanagers' => $smsmanagers,
+            'smsmanagers' => $smsmanagers->paginate(10),
             'info_org' => $info_org
         ]);
     }
@@ -605,11 +606,17 @@ class ClientController extends Controller
             $count = Organization::find($organ);
             $count->sms_count = $count->sms_count + 1;
             $count->save();
+            
+            $cl = Client::find($id);
 
             $sms = new Sms();
             $sms->organization_id = $organ;
             $sms->client_id = $id;
             $sms->user_id = Auth::user()->id;
+            $sms->city_id = $cl->city_id;
+            $sms->area_id = $cl->area_id;
+            $sms->fullname = $cl->fullname;
+            $sms->phone = $cl->phone;
             $sms->sms_text = $text;
             $sms->save();
         }
@@ -627,14 +634,20 @@ class ClientController extends Controller
             $arr = $request->checkbox;
             $x = 0;
     
-            foreach ($arr as $key => $value) {  
+            foreach ($arr as $key => $value) { 
+
                 $phone_number = Client::find($key)->phone;
-    
                 if ( $this->send_client_message($request->text, $phone_number, $key) == 1 ) $x++;
+
+                $count = Organization::find($organ);
+                if($count->sms_count >= $count->traffic->sms_count ) break;
             }
-    
+
             return redirect()->back()->with('msg' , $x);
-        } else  return redirect()->back()->with('msg' , 0);
+
+        } else 
+        
+        return redirect()->back()->with('msg' , 0);
 
        
     }
@@ -736,9 +749,9 @@ class ClientController extends Controller
         ]);
     }
 
-    public function resultentrycontainer(){
+    public function resultentrycontainer(Request $request){
 
-       
+        dd($request->date1);
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
@@ -748,9 +761,14 @@ class ClientController extends Controller
         ->has('client')
         ->with('product')->get();
 
+        $summ_con = $entrycontainer->sum('container');
+        $summ_con_in = $entrycontainer->sum('invalid_container_count');
+
         return view('result.resultentryontainer',[
             'entrycontainer' => $entrycontainer,
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'summ_con' => $summ_con,
+            'summ_con_in' => $summ_con_in
         ]);
      }
 

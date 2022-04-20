@@ -92,6 +92,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
+                                            <th width = "80">#</th>
                                             <th>FIO</th>
                                             <th>Tel raqami</th>
                                             <th>Adres</th>
@@ -113,6 +114,7 @@
                                             @csrf
                                             @foreach ($clients as $client)
                                                 <tr>
+                                                    <td>{{(($clients->currentPage() * 10) - 10) + $loop->index + 1}}</td>
                                                     <td>{{$client->fullname}}</td>
                                                     <td>{{$client->phone}}</td>
                                                     <td>{{$client->city->name}}, {{$client->area->name}}</td>
