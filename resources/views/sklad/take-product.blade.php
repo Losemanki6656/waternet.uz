@@ -81,6 +81,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr class="text-800 bg-200">
+                                    <th width = "80">#</th>
                                     <th>Kimga</th>
                                     <th>Tovar nomi</th>
                                     <th>Miqdori</th>
@@ -92,7 +93,7 @@
                                 <tbody>
                                     @foreach ($takeproduct as $takeproduct)
                                         <tr>
-                                            
+                                            <td>{{$loop->index + 1}}</td>   
                                             <td>
                                                 {{$takeproduct->received->name}}
                                             </td>
@@ -125,7 +126,7 @@
                                                                 <h6><label>Kimga:</label></h6>
                                                                 <select class="form-control" name="user_id" >
                                                                     @foreach ($users as $user)   
-                                                                        @if ($takeproduct->user_id == $user->id)
+                                                                        @if ($takeproduct->received_id == $user->id)
                                                                             <option value="{{$user->id}}" selected>{{$user->name}}</option>
                                                                         @else
                                                                             <option value="{{$user->id}}">{{$user->name}}</option>  

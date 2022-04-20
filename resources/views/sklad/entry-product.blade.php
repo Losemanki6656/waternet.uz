@@ -81,6 +81,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr class="text-800 bg-200">
+                                    <th width = "80">#</th>
                                     <th>Tovar nomi</th>
                                     <th>Miqdori</th>
                                     <th>Narxi</th>
@@ -93,7 +94,7 @@
                                 <tbody>
                                     @foreach ($entryproduct as $enproduct)
                                         <tr>
-                                            
+                                            <td>{{$loop->index + 1}}</td>   
                                             <td>
                                                 {{$enproduct->product->name}}
                                             </td>

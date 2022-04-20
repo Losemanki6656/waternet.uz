@@ -81,6 +81,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr class="text-800 bg-200">
+                                    <th width = "80">#</th>
                                     <th>Tovar nomi</th>
                                     <th>Kimdan</th>
                                     <th>Qancha</th>
@@ -91,7 +92,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($entrycontainer as $entrycon)
-                                        <tr>                
+                                        <tr>  
+                                            <td>{{$loop->index + 1}}</td>              
                                             <td>
                                                 {{$entrycon->product->name}}
                                             </td>

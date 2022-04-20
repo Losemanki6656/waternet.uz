@@ -77,6 +77,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr class="text-800 bg-200">
+                                    <th width = "80">#</th>
                                     <th>Kim tomonidan</th>
                                     <th>Maxsulot nomi</th>
                                     <th>Soni</th>
@@ -88,7 +89,7 @@
                                 <tbody>
                                     @foreach ($takecontainer as $takecon)
                                         <tr>
-                                            
+                                            <td>{{$loop->index + 1}}</td>   
                                             <td>
                                                 {{$takecon->user->name}}
                                             </td>
