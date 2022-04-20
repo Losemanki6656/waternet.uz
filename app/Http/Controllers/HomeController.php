@@ -644,7 +644,7 @@ class HomeController extends Controller
 
         foreach ( $data as $user ) {
             $order[$user->id] = Order::
-            where('user_id',$user_id)
+            where('user_id',$user->id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
             ->sum('product_count');
