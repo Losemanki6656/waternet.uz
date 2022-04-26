@@ -341,19 +341,22 @@ class HomeController extends Controller
         $orders = Order::query()
         ->where('status',0)
         ->where('organization_id', $organ)
+        ->has('client')->with('user')->with('product')
+        
         ->when(\Request::input('search'),function($query,$search){
-            $query->where(function ($query) use ($search) {
-                $query->Orwhere('fullname','like','%'.$search.'%')
-                    ->orWhere('phone','like','%'.$search.'%')
-                    ->orWhere('address','like','%'.$search.'%');
+            $query->whereHas('client',function ($query) use ($search) {
+                $query->where('fullname','like','%'.$search.'%')
+                    ->Orwhere('phone','like','%'.$search.'%')
+                    ->Orwhere('address','like','%'.$search.'%');
             });
         })
+
         ->when(request('city_id'), function ($query, $city_id) {
             return $query->where('city_id', $city_id);
         })
         ->when(request('area_id'), function ($query, $area_id) {
             return $query->where('area_id', $area_id);
-        })->has('client')->with('user')->with('product');
+        });
 
         $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
