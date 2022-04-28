@@ -100,16 +100,16 @@
                                             {{$order[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('result_take')}}">{{$takeproduct[$user->id]}}</a>
+                                        <a href="{{route('result_take',['date1' => request('date1'),'date2' => request('date2')])}}">{{$takeproduct[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('resultsold')}}">{{$soldproducts[$user->id]}}</a>
+                                        <a href="{{route('resultsold',['date1' => request('date1'),'date2' => request('date2')])}}">{{$soldproducts[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('summresult')}}">{{$soldsumm[$user->id]}}</a>
+                                        <a href="{{route('summresult',['date1' => request('date1'),'date2' => request('date2')])}}">{{$soldsumm[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('resultentrycontainer')}}">{{$entrycon[$user->id]}}</a>
+                                        <a href="{{route('resultentrycontainer',['date1' => request('date1'),'date2' => request('date2')])}}">{{$entrycon[$user->id]}}</a>
                                     </td>
                                     <td>
                                         {{$takecon[$user->id]}}

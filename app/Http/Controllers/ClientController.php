@@ -712,14 +712,24 @@ class ClientController extends Controller
 
     }
 
-    public function resulttakeproducts(){
+    public function resulttakeproducts(Request $request){
+
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
         $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
 
-        $takeproduct = TakeProduct::whereDate('created_at',now())
+        $takeproduct = TakeProduct::whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)
         ->where('organization_id',$info_id)
         ->with('received')
         ->with('sent')
@@ -734,7 +744,16 @@ class ClientController extends Controller
 
     }
 
-    public function resultsold(){
+    public function resultsold(Request $request){
+
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
@@ -754,14 +773,24 @@ class ClientController extends Controller
         ]);
     }
 
-    public function summresult(){
+    public function summresult(Request $request){
 
-      
+       if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
+
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
-        $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at',now())->get();
-        $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at',now())->get();
+        $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)->get();
+        $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)->get();
 
         $summ = 0;
         foreach ($soldproducts as $sold){
@@ -778,11 +807,20 @@ class ClientController extends Controller
 
     public function resultentrycontainer(Request $request){
 
-        dd($request->date1);
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
+
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
-        $entrycontainer = SuccessOrders::whereDate('created_at',now())
+        $entrycontainer = SuccessOrders::whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)
         ->where('organization_id',$info_id)
         ->with('user')
         ->has('client')
@@ -799,16 +837,26 @@ class ClientController extends Controller
         ]);
      }
 
-     public function payment1(){
+     public function payment1(Request $request){
 
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
         
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at',now())
+         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+         ->whereDate('created_at','<=',$date2)
          ->with('client')->where('payment',1)
          ->get();
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at',now())->get();
+          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+          ->whereDate('created_at','<=',$date2)->get();
   
           $summ = 0;
           foreach ($soldproducts as $sold){
@@ -821,15 +869,26 @@ class ClientController extends Controller
              'info_org' => $info_org
          ]);
      }
-     public function payment2(){
+     public function payment2(Request $request){
+
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
 
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
  
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at',now())
+         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+         ->whereDate('created_at','<=',$date2)
          ->where('payment',2)
          ->get();
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at',now())->get();
+          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+          ->whereDate('created_at','<=',$date2)->get();
   
           $summ = 0;
           foreach ($soldproducts as $sold){
@@ -844,16 +903,26 @@ class ClientController extends Controller
          ]);
      }
 
-     public function payment3(){
+     public function payment3(Request $request){
 
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
        
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at',now())
+         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+         ->whereDate('created_at','<=',$date2)
          ->where('payment',3)
          ->get();
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at',now())->get();
+          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+          ->whereDate('created_at','<=',$date2)->get();
   
           $summ = 0;
           foreach ($soldproducts as $sold){
@@ -868,13 +937,22 @@ class ClientController extends Controller
          ]);
      }
 
-     public function dolgresult(){
+     public function dolgresult(Request $request){
 
-        
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
+
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at',now())
+         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
+         ->whereDate('created_at','<=',$date2)
         ->where('price_sold','<',0)
         ->get();
  
@@ -906,7 +984,7 @@ class ClientController extends Controller
 
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
-        $clients = Client::where('organization_id',$info_id)->where('balance','<',0);
+        $clients = Client::where('organization_id',$info_id)->where('balance','<',0)->orWhere('container','<',0);
         
         return view('but_results.dolg',[
             'info_org' => $info_org,
