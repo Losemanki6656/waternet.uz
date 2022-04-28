@@ -687,13 +687,22 @@ class ClientController extends Controller
             return json_decode($error, true); 
     }
 
-    public function resultorders(){
+    public function resultorders(Request $request){
 
-       
+        if($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d',strtotime($request->date1));
+            $date2 = date('Y-m-d',strtotime($request->date2));
+        }
+
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
-        $orders = Order::whereDate('created_at',now())
+        $orders = Order::whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)
         ->where('organization_id', $info_id)->with('client')->with('user')->with('product');
         
         return view('result.resultorders',[
