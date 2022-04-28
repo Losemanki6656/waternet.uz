@@ -703,7 +703,6 @@ class HomeController extends Controller
             $summsoldproducts = array_sum($soldproducts);
             $summsoldsumm = array_sum($soldsumm);
             
-            $summentrycon = array_sum($entrycon);
             $summpayment1 = array_sum($payment1);
             $summpayment2 = array_sum($payment2);
             $summpayment3 = array_sum($payment3);
@@ -723,6 +722,7 @@ class HomeController extends Controller
             ->where('received_id', $user->id)
             ->sum('product_count');
             
+            $summentrycon = array_sum($entrycon);
             $amount[$user->id] = (-1)*$amount[$user->id];
             $dolgsumm = array_sum($amount);
             $takesumm = array_sum($takecon);
