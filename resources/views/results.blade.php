@@ -96,11 +96,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{route('result_orders',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id)])}}">
+                                        <a href="{{route('result_orders',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">
                                             {{$order[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('result_take',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id)])}}">{{$takeproduct[$user->id]}}</a>
+                                        <a href="{{route('result_take',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$takeproduct[$user->id]}}</a>
                                     </td>
                                     <td>
                                         <a href="{{route('resultsold',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$soldproducts[$user->id]}}</a>
