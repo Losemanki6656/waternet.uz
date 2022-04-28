@@ -759,7 +759,8 @@ class ClientController extends Controller
         $info_org = Organization::find($info_id);
 
         $soldproducts = SuccessOrders::where('organization_id',$info_id)
-        ->whereDate('created_at',now())->get();
+        ->whereDate('created_at','>=',$date1)
+        ->whereDate('created_at','<=',$date2)->get();
        
         $summ = 0;
         foreach ($soldproducts as $sold){

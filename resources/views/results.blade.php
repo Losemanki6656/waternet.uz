@@ -115,16 +115,16 @@
                                         {{$takecon[$user->id]}}
                                     </td>
                                     <td>
-                                        <a href="{{route('payment1')}}">{{$payment1[$user->id]}}</a>
+                                        <a href="{{route('payment1',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment1[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('payment2')}}">{{$payment2[$user->id]}}</a>
+                                        <a href="{{route('payment2',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment2[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('payment3')}}">{{$payment3[$user->id]}}</a>
+                                        <a href="{{route('payment3',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment3[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('dolgresult')}}">{{$amount[$user->id]}}</a>
+                                        <a href="{{route('dolgresult',['date1' => request('date1'),'date2' => request('date2')])}}">{{$amount[$user->id]}}</a>
                                     </td>
                                 </tr>  
                             @endforeach
