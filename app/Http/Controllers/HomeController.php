@@ -725,6 +725,7 @@ class HomeController extends Controller
             
             $amount[$user->id] = (-1)*$amount[$user->id];
             $dolgsumm = array_sum($amount);
+            $takesumm = array_sum($takecon);
         }
         return view('results',[
             'info_org' => $info_org,
@@ -748,7 +749,8 @@ class HomeController extends Controller
             'summentrycon' => $summentrycon,
             'summpayment1' => $summpayment1,
             'summpayment2' => $summpayment2,
-            'summpayment3' => $summpayment3
+            'summpayment3' => $summpayment3,
+            'takesumm' => $takesumm
         ]);
     }
 

@@ -133,7 +133,7 @@
                             <td style="font-weight: bold;">{{$summsoldproducts}}</td>
                             <td style="font-weight: bold;">{{$summsoldsumm}}</td>
                             <td style="font-weight: bold;">{{$summentrycon}}</td>
-                            <td style="font-weight: bold;">0</td>
+                            <td style="font-weight: bold;">{{$takesumm}}</td>
                             <td style="font-weight: bold;">{{$summpayment1}}</td>
                             <td style="font-weight: bold;">{{$summpayment2}}</td>
                             <td style="font-weight: bold;">{{$summpayment3}}</td>
