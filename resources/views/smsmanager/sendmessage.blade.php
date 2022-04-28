@@ -37,30 +37,48 @@
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-6">
                                     <div class="input-group mb-3">
-                                        <select class="form-control show-tick select2" name="sity_id" data-placeholder="Regionni tanlang" required>
+                                        <select class="form-control show-tick select2" id="sity_select" name="city_id" data-placeholder="Regionni tanlang" required>
                                             <option value=""></option>
                                             @foreach ($sities as $sity)
-                                                <option value={{$sity->id}}>{{$sity->name}}</option> 
+                                                <option value={{$sity->id}} @if($sity->id == request('city_id')) selected @endif>{{$sity->name}}</option> 
                                             @endforeach
                                         </select>
                                     </div>     
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <div class="input-group mb-3">
-                                        <select class="form-control show-tick select2" name="area_id" data-placeholder="Adresni tanlang" required>
+                                        <select class="form-control show-tick select2" id="area_select" name="area_id" data-placeholder="Adresni tanlang" required>
                                             <option value=""></option>
                                             @foreach ($areas as $area)
-                                                <option value={{$area->id}}>{{$area->name}}</option>
+                                                <option value={{$area->id}} @if($area->id == request('area_id')) selected @endif >{{$area->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>    
                                 </div>
+
+                                @push('scripts')
+                                    <script>
+                                        $('#sity_select').change(function (e) {
+                                            let city_id = $(this).val();
+                                            let url = '{{ route('send_message') }}';
+                                            window.location.href = `${url}?city_id=${city_id}`;
+                                        })
+
+                                        $('#area_select').change(function (e) {
+                                            let area_id = $(this).val();
+                                            let city_id = $('#sity_select').val();
+                                            let url = '{{ route('send_message') }}';
+                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}`;
+                                        })
+                                    </script>                       
+                                @endpush
+
                                 <div class="col-lg-3 col-md-6">
                                     <div class="input-group mb-3">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#sendsms-modal"><i class="fa fa-send"></i> <span> Xabar yuborish</span></button>
                                     </div>    
                                 </div>
-
+                                
                                 <div class="modal fade" id="sendsms-modal" tabindex="-1" role="dialog">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">

@@ -56,10 +56,10 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                                 </div>
-                                                <select class="form-control show-tick select2" name="sity_id" data-placeholder="Regionni tanlang" required>
+                                                <select class="form-control show-tick select2" id="sity_select" name="sity_id" data-placeholder="Regionni tanlang" required>
                                                     <option value=""></option>
                                                     @foreach ($sities as $sity)
-                                                        <option value={{$sity->id}}>{{$sity->name}}</option> 
+                                                        <option value={{$sity->id}} @if($sity->id == request('city_id')) selected @endif>{{$sity->name}}</option> 
                                                     @endforeach
                                                 </select>
                                                 
@@ -71,14 +71,24 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                                 </div>
-                                                <select class="form-control show-tick select2" name="area_id"  data-placeholder="Adresni tanlang" required>
+                                                <select class="form-control show-tick select2" id="area_select" name="area_id" data-placeholder="Shaharni tanlang" required>
                                                     <option value=""></option>
                                                     @foreach ($areas as $area)
-                                                        <option value={{$area->id}}>{{$area->name}}</option>
+                                                        <option value={{$area->id}} @if($area->id == request('area_id')) selected @endif >{{$area->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                     </div>
+                                    @push('scripts')
+                                        <script>
+                                            $('#sity_select').change(function (e) {
+                                                let city_id = $(this).val();
+                                                let url = '{{ route('add_client_page') }}';
+                                                window.location.href = `${url}?city_id=${city_id}`;
+                                            })
+                                        </script>                       
+                                    @endpush
+
                                 </div>
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6">

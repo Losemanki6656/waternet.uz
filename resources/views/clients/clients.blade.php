@@ -64,8 +64,6 @@
                         let city_id = $(this).val();
                         let url = '{{ route('clients') }}';
                         window.location.href = `${url}?city_id=${city_id}`;
-
-
                     })
 
                     $('#area_select').change(function (e) {

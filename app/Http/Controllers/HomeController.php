@@ -178,10 +178,11 @@ class HomeController extends Controller
 
         if($count->clients_count < $count->traffic->clients_count) { 
             $clients = Client::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('city')->with('user')->get();
-            $sities = Sity::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-            $areas = Area::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-            $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-            $info_org = Organization::find($info_id);
+            
+            $sities = Sity::where('organization_id',$organ)->get();
+            $areas = Area::where('city_id', request('city_id', 0))->get();
+            
+            $info_org = Organization::find($organ);
     
             return view('clients.addclient',[
                 'clients' => $clients,

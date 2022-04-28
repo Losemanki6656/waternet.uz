@@ -527,13 +527,22 @@ class ClientController extends Controller
     public function send_message()
     {  
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $clients = Client::where('organization_id', $organ)->with('city')
+        $clients = Client::query()
+        ->where('organization_id', $organ)
+        ->when(request('city_id'), function ($query, $city_id) {
+            return $query->where('city_id', $city_id);
+        })
+        ->when(request('area_id'), function ($query, $area_id) {
+            return $query->where('area_id', $area_id);
+        })
+        ->with('city')
         ->orderBy('created_at', 'DESC')
         ->with('user')
         ->with('area');
 
-        $sities = Sity::where('organization_id',)->get();
-        $areas = Area::where('organization_id', $organ)->get();
+        $sities = Sity::where('organization_id',$organ)->get();
+        $areas = Area::where('city_id', request('city_id', 0))->get();
+
         $products = Product::where('organization_id', $organ)->get();
         $info_org = Organization::find($organ);
 
