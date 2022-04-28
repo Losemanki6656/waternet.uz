@@ -96,35 +96,35 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{route('result_orders',['date1' => request('date1'),'date2' => request('date2')])}}">
+                                        <a href="{{route('result_orders',['date1' => request('date1'),'date2' => request('date2','id' => $user->id)])}}">
                                             {{$order[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('result_take',['date1' => request('date1'),'date2' => request('date2')])}}">{{$takeproduct[$user->id]}}</a>
+                                        <a href="{{route('result_take',['date1' => request('date1'),'date2' => request('date2','id' => $user->id)])}}">{{$takeproduct[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('resultsold',['date1' => request('date1'),'date2' => request('date2')])}}">{{$soldproducts[$user->id]}}</a>
+                                        <a href="{{route('resultsold',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$soldproducts[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('summresult',['date1' => request('date1'),'date2' => request('date2')])}}">{{$soldsumm[$user->id]}}</a>
+                                        <a href="{{route('summresult',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$soldsumm[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('resultentrycontainer',['date1' => request('date1'),'date2' => request('date2')])}}">{{$entrycon[$user->id]}}</a>
+                                        <a href="{{route('resultentrycontainer',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$entrycon[$user->id]}}</a>
                                     </td>
                                     <td>
                                         {{$takecon[$user->id]}}
                                     </td>
                                     <td>
-                                        <a href="{{route('payment1',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment1[$user->id]}}</a>
+                                        <a href="{{route('payment1',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$payment1[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('payment2',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment2[$user->id]}}</a>
+                                        <a href="{{route('payment2',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$payment2[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('payment3',['date1' => request('date1'),'date2' => request('date2')])}}">{{$payment3[$user->id]}}</a>
+                                        <a href="{{route('payment3',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$payment3[$user->id]}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{route('dolgresult',['date1' => request('date1'),'date2' => request('date2')])}}">{{$amount[$user->id]}}</a>
+                                        <a href="{{route('dolgresult',['date1' => request('date1'),'date2' => request('date2'),'id' => $user->id])}}">{{$amount[$user->id]}}</a>
                                     </td>
                                 </tr>  
                             @endforeach
