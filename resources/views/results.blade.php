@@ -96,7 +96,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{route('result_orders',['date1' => {{request('date1')}},'date2' => {{request('date2')}}])}}">
+                                        <a href="{{route('result_orders',['date1' => request('date1'),'date2' => request('date2')])}}">
                                             {{$order[$user->id]}}</a>
                                     </td>
                                     <td>
