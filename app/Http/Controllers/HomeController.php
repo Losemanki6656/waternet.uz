@@ -707,7 +707,7 @@ class HomeController extends Controller
             $summpayment1 = array_sum($payment1);
             $summpayment2 = array_sum($payment2);
             $summpayment3 = array_sum($payment3);
-            $dolgsumm = (-1)*array_sum($amount);
+            
 
             $entrycon[$user->id] = SuccessOrders::
             where('organization_id',$info_id)
@@ -724,6 +724,7 @@ class HomeController extends Controller
             ->sum('product_count');
             
             $amount[$user->id] = (-1)*$amount[$user->id];
+            $dolgsumm = array_sum($amount);
         }
         return view('results',[
             'info_org' => $info_org,
