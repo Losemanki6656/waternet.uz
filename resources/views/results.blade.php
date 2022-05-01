@@ -45,7 +45,7 @@
                             @if (request('date1'))
                                 value="{{request('date1')}}"
                             @else
-                                value="{{now()}}"
+                                value="{{now()->format('Y-m-d')}}"
                             @endif 
                              name="date1" class="form-control">
                         </div>
@@ -54,7 +54,7 @@
                             @if (request('date2'))
                                 value="{{request('date2')}}"
                             @else
-                                value="{{now()}}"
+                                value="{{now()->format('Y-m-d')}}"
                             @endif 
                                 name="date2" class="form-control">
                         </div>
