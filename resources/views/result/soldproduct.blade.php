@@ -22,6 +22,7 @@
                 <table class="table m-b-0 table-bordered">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Mijoz</th>
                             <th>Tel</th>
                             <th>Maxsulot</th>
@@ -42,6 +43,7 @@
                         @foreach ($soldproducts as $soldproduct)
                             @if ($soldproduct->order_status == 1 || $soldproduct->order_status == 2)
                                 <tr>
+                                    <td>{{$loop->index + 1}}</td>
                                     <td>{{$soldproduct->fullname}}</td>
                                     <td>{{$soldproduct->phone}}</td>
                                     <td>{{$soldproduct->product->name}}</td>
@@ -66,6 +68,19 @@
                                 </tr>      
                             @endif
                         @endforeach    
+                        <tr>
+                            <td colspan="4">Jami</td>
+                            <td>{{$soldproducts->sum('order_count')}}</td>
+                            <td>{{$soldproducts->sum('order_price')}}</td>
+                            <td></td>
+                            <td>{{$soldproducts->sum('count')}}</td>
+                            <td>{{$soldproducts->sum('price')}}</td>
+                            <td>{{$soldproducts->sum('container')}}</td>
+                            <td></td>
+                            <td>{{$soldproducts->sum('amount')}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr> 
                     </tbody>
                 </table>
             </div>
