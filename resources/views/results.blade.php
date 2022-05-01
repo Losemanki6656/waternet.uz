@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-6">
                             <input type="date" 
-                            @if ({{request('date1')}})
+                            @if (request('date1'))
                                 value="{{request('date1')}}"
                             @else
                                 value="{{now()}}"
@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-lg-2 col-md-6">
                             <input type="date" 
-                            @if ({{request('date2')}})
+                            @if (request('date2'))
                                 value="{{request('date2')}}"
                             @else
                                 value="{{now()}}"
