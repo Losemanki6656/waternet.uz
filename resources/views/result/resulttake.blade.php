@@ -25,6 +25,7 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr class="text-800 bg-200">
+                            <th>#</th>
                             <th>Kimga</th>
                             <th>Tovar nomi</th>
                             <th>Miqdori</th>
@@ -35,7 +36,7 @@
                         <tbody>
                             @foreach ($takeproduct as $takeproduct)
                                 <tr>
-                                    
+                                    <td>{{ $loop->index + 1 }}</td>
                                     <td>
                                         {{$takeproduct->received->name}}
                                     </td>
@@ -49,7 +50,22 @@
                                     
                                     <td>{{$takeproduct->sent->name}}</td>
                                 </tr> 
-                            @endforeach         
+                            @endforeach   
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>
+                                        {{$takeproduct->received->name}}
+                                    </td>
+                                    <td>
+                                        {{$takeproduct->product->name}}
+                                    </td>
+                                    <td>
+                                        {{$takeproduct->product_count}}
+                                    </td>                            
+                                    <td>{{$takeproduct->created_at}}</td>
+                                    
+                                    <td>{{$takeproduct->sent->name}}</td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>
