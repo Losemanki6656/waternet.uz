@@ -41,7 +41,8 @@
                         </thead>
                         <tbody>
                             @foreach ($entrycontainer as $entrycon)
-                                <tr>                
+                                <tr>          
+                                    <td>{{$loop->index + 1}}</td>      
                                     <td>
                                         {{$entrycon->product->name}}
                                     </td>
