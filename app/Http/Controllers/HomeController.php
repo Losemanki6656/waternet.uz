@@ -470,7 +470,6 @@ class HomeController extends Controller
                 $successorder->organization_id = $orderinfo->organization_id;
                 $successorder->client_id = $orderinfo->client_id;
                 $successorder->product_id = $orderinfo->product_id;
-                $successorder->order_id = $orderinfo->order_id;
                 $successorder->user_id = Auth::user()->id;
                 $successorder->order_user_id = $orderinfo->user_id;
                 $successorder->order_status = $request->order_status;
@@ -783,7 +782,6 @@ class HomeController extends Controller
         $successorder->product_id = $orderinfo->product_id;
         $successorder->user_id = Auth::user()->id;
         $successorder->order_user_id = $orderinfo->user_id;
-        $successorder->order_id = $id;
         $successorder->order_status = $request->order_status;
         $successorder->fullname = $client_info->fullname;
         $successorder->phone = $client_info->phone;

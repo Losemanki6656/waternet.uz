@@ -19,7 +19,6 @@ class CreateSuccessOrdersTable extends Migration
             $table->integer('client_id');
             $table->integer('product_id');
             $table->integer('user_id');
-            $table->integer('order_id');
             $table->integer('order_user_id');
             $table->integer('order_status');
             $table->string('fullname');
