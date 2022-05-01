@@ -297,10 +297,7 @@ class TrafficController extends Controller
         $organizations = Organization::find($id);
         $organizations->traffic_id = $request->traffic_id; 
         $organizations->balance = $organizations->balance + (-1 * $traffic->price);
-        $organizations->clients_count = $traffic->clients_count;
-        $organizations->sms_count = $traffic->sms_count;
-        $organizations->products_count = $traffic->products_count;
-        $organizations->users_count = $traffic->users_count;
+        $organizations->sms_count = 0;
         $organizations->date_traffic = $request->date_to;
         $organizations->save();
      

@@ -73,7 +73,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td>{{$soldproducts->sum('price_sold')}}</td>
                         </tr>  
                     </tbody>
                 </table>
