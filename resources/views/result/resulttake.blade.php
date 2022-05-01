@@ -52,19 +52,12 @@
                                 </tr> 
                             @endforeach   
                                 <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td colspan="3">Jami:</td>
                                     <td>
-                                        {{$takeproduct->received->name}}
-                                    </td>
-                                    <td>
-                                        {{$takeproduct->product->name}}
-                                    </td>
-                                    <td>
-                                        {{$takeproduct->product_count}}
+                                        {{$takeproduct->summ('product_count')}}
                                     </td>                            
-                                    <td>{{$takeproduct->created_at}}</td>
-                                    
-                                    <td>{{$takeproduct->sent->name}}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                         </tbody>
                     </table>
