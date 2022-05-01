@@ -54,7 +54,7 @@
                                 <tr>
                                     <td colspan="3">Jami:</td>
                                     <td>
-                                        {{$takeproduct->summ('product_count')}}
+                                        {{$takeproduct->sum('product_count')}}
                                     </td>                            
                                     <td></td>
                                     <td></td>
