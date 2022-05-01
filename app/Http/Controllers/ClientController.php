@@ -92,7 +92,6 @@ class ClientController extends Controller
             $succ->amount = $request->amount;
             $succ->price_sold = $request->amount - ($succ->count * $succ->price);
             $succ->save();
-            dd($succ);
         }
         
 
