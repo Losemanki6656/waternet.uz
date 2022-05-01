@@ -668,8 +668,7 @@ class HomeController extends Controller
             ->whereIn('order_status',[1,2])->get();
             $solds2 = ClientPrices::whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
-            ->where('user_id', $user->id)
-            ->where('status',1)->get();
+            ->where('user_id', $user->id)->get();
 
             $soldproducts[$user->id] = $solds->sum('count');
             $roles[$user->id] = UserOrganization::where('user_id',$user->id)->value('role');
@@ -694,7 +693,7 @@ class HomeController extends Controller
             }
 
             foreach ($solds2 as $sold) {
-                $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
+               if($sold->status == 1) $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
 
                 if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
                 if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
