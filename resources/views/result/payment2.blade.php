@@ -41,7 +41,7 @@
                                 @foreach ($clientprices as $prices)
                                     <tr>
                                         <td>{{ $loop->index + 1}}</td>
-                                        <td>{{ $prices->client->fullname}}</td>
+                                        <td>{{ $prices->client->fullname ?? ''}}</td>
                                         <td>{{$prices->amount}}</td>
                                         <td>
                                             @if ($prices->payment == 1)
