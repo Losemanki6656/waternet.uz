@@ -57,6 +57,14 @@
                                         <td>{{$prices->created_at->format('Y-m-d')}}</td>
                                     </tr>
                                 @endforeach    
+                                <tr>
+                                    <td colspan="2"> Jami:</td>
+                                    <td>{{$clientprices->sum('amount')}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
