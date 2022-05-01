@@ -851,7 +851,7 @@ class ClientController extends Controller
          $info_org = Organization::find($info_id);
 
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',1)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',1)->where('user_id',$request->id)->get();
   
           $summ = 0;
           foreach ($clientprices as $clientprice){
@@ -878,7 +878,7 @@ class ClientController extends Controller
          $info_org = Organization::find($info_id);
  
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',2)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',2)->where('user_id',$request->id)->get();
   
           $summ = 0;
           foreach ($clientprices as $clientprice){
@@ -907,7 +907,7 @@ class ClientController extends Controller
          $info_org = Organization::find($info_id);
 
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',3)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',3)->where('user_id',$request->id)->get();
   
           $summ = 0;
           foreach ($clientprices as $clientprice){
@@ -937,7 +937,7 @@ class ClientController extends Controller
 
          $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
          ->whereDate('created_at','<=',$date2)
-        ->where('price_sold','<',0)
+        ->where('price_sold','<',0)->where('user_id',$request->id)
         ->get();
  
          $summ = 0;
