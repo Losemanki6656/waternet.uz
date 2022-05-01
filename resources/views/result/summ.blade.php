@@ -65,20 +65,21 @@
                                     <td>{{$soldproduct->created_at}}</td>
                                 </tr>      
                             @endif
-                            <tr>
-                                <td colspan="4">Jami</td>
-                                <td>{{$soldproducts->sum('order_count')}}</td>
-                                <td>{{$soldproducts->sum('order_price')}}</td>
-                                <td></td>
-                                <td>{{$soldproducts->sum('count')}}</td>
-                                <td>{{$soldproducts->sum('price')}}</td>
-                                <td>{{$soldproducts->sum('container')}}</td>
-                                <td></td>
-                                <td>{{$soldproducts->sum('amount')}}</td>
-                                <td></td>
-                                <td></td>
-                            </tr> 
                         @endforeach    
+                        
+                        <tr>
+                            <td colspan="3">Jami</td>
+                            <td>{{$soldproducts->sum('order_count')}}</td>
+                            <td>{{$soldproducts->sum('order_price')}}</td>
+                            <td></td>
+                            <td>{{$soldproducts->sum('count')}}</td>
+                            <td>{{$soldproducts->sum('price')}}</td>
+                            <td>{{$soldproducts->sum('container')}}</td>
+                            <td></td>
+                            <td>{{$soldproducts->sum('amount')}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr> 
                     </tbody>
                 </table>
             </div>
