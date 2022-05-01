@@ -790,8 +790,6 @@ class ClientController extends Controller
 
         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
         ->whereDate('created_at','<=',$date2)->get();
-        $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)->get();
 
         $summ = 0;
         foreach ($soldproducts as $sold){
@@ -801,7 +799,6 @@ class ClientController extends Controller
         return view('result.summ',[
             'soldproducts' => $soldproducts,
             'summ' => $summ,
-            'clientprices' => $clientprices,
             'info_org' => $info_org
         ]);
     }
@@ -852,19 +849,14 @@ class ClientController extends Controller
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-         ->whereDate('created_at','<=',$date2)
-         ->with('client')->where('payment',1)
-         ->get();
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',1)->get();
   
           $summ = 0;
-          foreach ($soldproducts as $sold){
-              $summ = $summ + $sold->amount;
+          foreach ($clientprices as $clientprice){
+              $summ = $summ + $clientprice->amount;
           }
          return view('result.payment1',[
-             'soldproducts' => $soldproducts,
              'summ' => $summ,
              'clientprices' => $clientprices,
              'info_org' => $info_org
@@ -884,20 +876,15 @@ class ClientController extends Controller
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
  
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-         ->whereDate('created_at','<=',$date2)
-         ->where('payment',2)
-         ->get();
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',2)->get();
   
           $summ = 0;
-          foreach ($soldproducts as $sold){
-              $summ = $summ + $sold->amount;
+          foreach ($clientprices as $clientprice){
+              $summ = $summ + $clientprice->amount;
           }
 
          return view('result.payment2',[
-             'soldproducts' => $soldproducts,
              'summ' => $summ,
              'clientprices' => $clientprices,
              'info_org' => $info_org
@@ -918,20 +905,15 @@ class ClientController extends Controller
          $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
          $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-         ->whereDate('created_at','<=',$date2)
-         ->where('payment',3)
-         ->get();
           $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->get();
+          ->whereDate('created_at','<=',$date2)->where('payment',3)->get();
   
           $summ = 0;
-          foreach ($soldproducts as $sold){
-              $summ = $summ + $sold->amount;
+          foreach ($clientprices as $clientprice){
+              $summ = $summ + $clientprice->amount;
           }
  
          return view('result.payment3',[
-             'soldproducts' => $soldproducts,
              'summ' => $summ,
              'clientprices' => $clientprices,
              'info_org' => $info_org

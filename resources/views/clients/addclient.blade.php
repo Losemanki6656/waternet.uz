@@ -335,12 +335,6 @@
       event.preventDefault(); 
       var myWindow=window.open("{{route('location')}}", 'Select Client Location', 'width=auto,height=auto')
     }
-
-      function setlocation1(event, l1, l2){ 
-            event.preventDefault(); 
-            var myWindow=window.open('set_location_edit.asp?lat='+l1+'&lng='+l2+'', 'Joylashuvni tanlash', 'width=800,height=500')
-        }
-
     function dotReplace(event){
                 event.taget.value=event.target.value.replaceAll(",", ".")
             }

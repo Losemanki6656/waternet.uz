@@ -470,6 +470,7 @@ class HomeController extends Controller
                 $successorder->organization_id = $orderinfo->organization_id;
                 $successorder->client_id = $orderinfo->client_id;
                 $successorder->product_id = $orderinfo->product_id;
+                $successorder->order_id = $orderinfo->order_id;
                 $successorder->user_id = Auth::user()->id;
                 $successorder->order_user_id = $orderinfo->user_id;
                 $successorder->order_status = $request->order_status;
@@ -537,7 +538,7 @@ class HomeController extends Controller
                     $clientprice->user_id = Auth::user()->id;
                     $clientprice->payment = $request->payment;
                     $clientprice->amount = $request->amount;
-                    $clientprice->comment = $request->comment ?? '';
+                    $clientprice->comment = 'Dostavka vaqtida';
                     $clientprice->status = 0;
                     $clientprice->save();
         
@@ -550,7 +551,7 @@ class HomeController extends Controller
                         $clientcontainer->product_id = $orderinfo->product_id;
                         $clientcontainer->count = $request->container;
                         $clientcontainer->invalid_count = $request->invalid_container_count; 
-                        $clientcontainer->comment = $request->comment ?? ''; 
+                        $clientcontainer->comment = 'Dostavka vaqtida'; 
                         $clientcontainer->status = 0;
                         $clientcontainer->save();
                     }
@@ -721,7 +722,7 @@ class HomeController extends Controller
             where('organization_id',$info_id)
             ->whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
-            ->where('received_id', $user->id)
+            ->where('user_id', $user->id)
             ->sum('product_count');
             
             $summentrycon = array_sum($entrycon);
@@ -782,6 +783,7 @@ class HomeController extends Controller
         $successorder->product_id = $orderinfo->product_id;
         $successorder->user_id = Auth::user()->id;
         $successorder->order_user_id = $orderinfo->user_id;
+        $successorder->order_id = $id;
         $successorder->order_status = $request->order_status;
         $successorder->fullname = $client_info->fullname;
         $successorder->phone = $client_info->phone;
