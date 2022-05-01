@@ -151,6 +151,7 @@ class HomeController extends Controller
 
         $sities = Sity::where('organization_id',$organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
+        $ars = Area::where('organization_id', $organ)->get();
 
         $products = Product::where('organization_id', $organ)->get();
         $info_id = $organ;
@@ -167,7 +168,8 @@ class HomeController extends Controller
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'ars'   => $ars
         ]);
     }
 

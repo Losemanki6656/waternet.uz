@@ -326,19 +326,18 @@
                                                                 <label style="margin-bottom: 0">Shahar:</label>
                                                                 <select class="form-control" name="area_id">
                                                                     <option value="">--Tanlash--</option>
-                                                                    @foreach ($areas as $area)
-                                                                        <option value="{{$area->id}}" @if($area->id == $client->area_id) selected @endif>{{$area->name}}</option>
+                                                                    @foreach ($ars as $ar)
+                                                                        <option value="{{$ar->id}}" @if($ar->id == $client->area_id) selected @endif>{{$ar->name}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>  
                                                         </div>
                                                     </div> 
-
                                                     <div class="row">
                                                         <div class="col">
                                                             <div class="form-group">
                                                                 <label style="margin-bottom: 0">Ko'cha:</label>
-                                                                <input class="form-control" type="input" value="{{$client->street}}" name="street" required>
+                                                                <input class="form-control" type="input" value="{{$client->street}}" name="street">
                                                             </div> 
                                                         </div>
                                                         <div class="col">
@@ -354,25 +353,25 @@
                                                         <div class="col">
                                                             <div class="form-group">
                                                                 <label style="margin-bottom: 0">Dom:</label>
-                                                                <input class="form-control" type="input" value="{{$client->home_number}}" name="home_number" required>
+                                                                <input class="form-control" type="input" value="{{$client->home_number}}" name="home_number">
                                                             </div> 
                                                         </div>
                                                         <div class="col">
                                                             <div class="form-group">
                                                                 <label style="margin-bottom: 0">Xonadon:</label>
-                                                                <input class="form-control" type="input" value="{{$client->apartment_number}}" name="apartment_number" required>
+                                                                <input class="form-control" type="input" value="{{$client->apartment_number}}" name="apartment_number">
                                                             </div> 
                                                         </div>
                                                         <div class="col">
                                                             <div class="form-group">
                                                                 <label style="margin-bottom: 0">Podezd:</label>
-                                                                <input class="form-control" type="input" value="{{$client->entrance}}" name="entrance" required>
+                                                                <input class="form-control" type="input" value="{{$client->entrance}}" name="entrance">
                                                             </div> 
                                                         </div>
                                                         <div class="col">
                                                             <div class="form-group">
                                                                 <label style="margin-bottom: 0">Etaj:</label>
-                                                                <input class="form-control" type="input" value="{{$client->floor}}" name="floor" required>
+                                                                <input class="form-control" type="input" value="{{$client->floor}}" name="floor">
                                                             </div> 
                                                         </div>
                                                     </div> 
