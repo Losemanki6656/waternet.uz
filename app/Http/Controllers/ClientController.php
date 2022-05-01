@@ -90,7 +90,9 @@ class ClientController extends Controller
 
             $succ = SuccessOrders::find($clientprice->success_order_id);
             $succ->amount = $request->amount;
+            $succ->price_sold = $request->amount - ($succ->count * $succ->price);
             $succ->save();
+            dd($succ);
         }
         
 
