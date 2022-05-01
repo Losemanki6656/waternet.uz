@@ -41,10 +41,10 @@
                 <form action="{{route('results')}}">
                     <div class="row">
                         <div class="col-lg-2 col-md-6">
-                            <input data-provide="datepicker" data-date-autoclose="true" value="{{request('date1')}}" name="date1" class="form-control">
+                            <input type="date" data-date-autoclose="true" value="{{request('date1')}}" name="date1" class="form-control">
                         </div>
                         <div class="col-lg-2 col-md-6">
-                            <input data-provide="datepicker" data-date-autoclose="true" value="{{request('date2')}}" name="date2" class="form-control">
+                            <input type="date" data-date-autoclose="true" value="{{request('date2')}}" name="date2" class="form-control">
                         </div>
                         <div class="col-lg-2 col-md-6">
                             <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
