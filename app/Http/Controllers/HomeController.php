@@ -687,9 +687,6 @@ class HomeController extends Controller
 
                 if($sold->price_sold < 0) $amount[$user->id] = $amount[$user->id] + $sold->price_sold;
                 
-                if($sold->payment == 1) $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
-                if($sold->payment == 2) $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
-                if($sold->payment == 3) $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
             }
 
             foreach ($solds2 as $sold) {
