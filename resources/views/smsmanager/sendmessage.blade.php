@@ -165,6 +165,15 @@
                                 <div class="col d-flex justify-content-end mt-3">
                                     {{ $clients->withQueryString()->links() }}
                                 </div>
+                                @push('scripts')
+                                    <script>
+                                        $('#select_paginate').change(function (e) {
+                                            let paginate = $(this).val();
+                                            let url = '{{ route('send_message') }}';
+                                            window.location.href = `${url}?paginate=${paginate}`;
+                                        })
+                                    </script>                       
+                                @endpush
                             </div>
                         </div>
                 </div>

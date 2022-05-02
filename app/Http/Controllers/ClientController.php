@@ -525,7 +525,7 @@ class ClientController extends Controller
         return redirect()->back()->with('msg' ,'success');
     }
 
-    public function send_message()
+    public function send_message(Request $request)
     {  
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $clients = Client::query()
@@ -548,7 +548,7 @@ class ClientController extends Controller
         $info_org = Organization::find($organ);
 
         return view('smsmanager.sendmessage',[
-            'clients' => $clients->paginate(10),
+            'clients' => $clients->paginate($request->paginate),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
