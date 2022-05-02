@@ -60,15 +60,17 @@
                                     <script>
                                         $('#sity_select').change(function (e) {
                                             let city_id = $(this).val();
+                                            let paginate = $('#select_paginate').val();
                                             let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?city_id=${city_id}`;
+                                            window.location.href = `${url}?city_id=${city_id}&paginate=${paginate}`;
                                         })
 
                                         $('#area_select').change(function (e) {
                                             let area_id = $(this).val();
                                             let city_id = $('#sity_select').val();
+                                            let paginate = $('#select_paginate').val();
                                             let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}`;
+                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
                                         })
                                     </script>                       
                                 @endpush
@@ -157,9 +159,10 @@
                                 <div class="col d-flex justify-content mt-3">
                                     <h6 class="mt-2 mr-2">Show</h6>
                                     <select class="form-control" style="width: 80px" name="select_paginate" id="select_paginate">
-                                        <option value="10">10</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
+                                        <option value="10" @if (request('paginate') == 10) selected @endif>10</option>
+                                        <option value="50" @if (request('paginate') == 50) selected @endif>50</option>
+                                        <option value="100" @if (request('paginate') == 100) selected @endif>100</option>
+                                        <option value="{{$client_count}}" @if (request('paginate') == $client_count) selected @endif>All</option>
                                     </select> <h6 class="mt-2 ml-2">entries</h6>
                                 </div>
                                 <div class="col d-flex justify-content-end mt-3">
@@ -168,9 +171,11 @@
                                 @push('scripts')
                                     <script>
                                         $('#select_paginate').change(function (e) {
+                                            let area_id = $('#area_select').val();
+                                            let city_id = $('#sity_select').val();
                                             let paginate = $(this).val();
                                             let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?paginate=${paginate}`;
+                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
                                         })
                                     </script>                       
                                 @endpush

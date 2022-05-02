@@ -546,13 +546,15 @@ class ClientController extends Controller
 
         $products = Product::where('organization_id', $organ)->get();
         $info_org = Organization::find($organ);
-
+        $client_count = $clients->count();
+        if(!$request->paginate) $paginate = 10; else $paginate = $request->paginate;
         return view('smsmanager.sendmessage',[
-            'clients' => $clients->paginate($request->paginate),
+            'clients' => $clients->paginate($paginate),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'client_count' => $client_count
         ]);
     }
 
