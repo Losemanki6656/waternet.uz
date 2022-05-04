@@ -320,7 +320,7 @@
 <script>
     function check(id) {
     var checkBox = document.getElementById('tr_check' + id);
-    var text = document.getElementById("active_traffics").value;
+    var text = document.getElementById("active_traffics_a").value;
         if (checkBox.checked == true){
             $("#active_traffics_a").val(text + "," + id);
         }
