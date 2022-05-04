@@ -296,7 +296,7 @@
                                               
                                             </ul>
                                             <label class="fancy-checkbox">
-                                                <input type="checkbox" name="tras[{{$traffic->id}}]"
+                                                <input type="checkbox" name="tras2[{{$traffic->id}}]"
                                                 @if ($q[$traffic->id] == true)
                                                     checked
                                                 @endif>
