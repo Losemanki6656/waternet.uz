@@ -129,13 +129,10 @@ class HomeController extends Controller
             $i ++;
             $a[$i] = $key;
         }
-        dd($a);
-
-            $x = ActiveTraffic::find(1);
-            $x->string1 = $request->active_traffics;
-            $x->save();
-      
-
+        $x = ActiveTraffic::find(1);
+        $x->string1 = implode(',',$a);
+        $x->save();   
+        
         return redirect()->back()->with('msg' ,'ertraf');
     }
     
