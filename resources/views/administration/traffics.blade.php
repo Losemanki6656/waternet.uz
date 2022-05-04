@@ -137,7 +137,7 @@
                                     <li>Tovar: {{$traffic->products_count}} ta</li>
                                     <li>Xodim: {{$traffic->users_count}} ta</li>
                                     <label class="fancy-checkbox">
-                                        <input type="checkbox" id="tr_check{{$traffic->id}}" onclick="check({{$traffic->id}})"
+                                        <input type="checkbox" name="tras[]" id="tr_check{{$traffic->id}}" onclick="check({{$traffic->id}})"
                                          @if ($q[$traffic->id] == true)
                                             checked
                                          @endif>
@@ -296,7 +296,7 @@
                                           
                                         </ul>
                                         <label class="fancy-checkbox">
-                                            <input type="checkbox" id="tr_check{{$traffic->id}}" onclick="check({{$traffic->id}})"
+                                            <input type="checkbox" name="tras[]" id="tr_check{{$traffic->id}}" onclick="check({{$traffic->id}})"
                                             @if ($q[$traffic->id] == true)
                                                 checked
                                             @endif>
