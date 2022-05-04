@@ -118,7 +118,7 @@ class HomeController extends Controller
 
     public function active_traffics(Request $request)
     {
-            dd($request->tras);
+            dd($request->all());
             $x = ActiveTraffic::find(1);
             $x->string1 = $request->active_traffics;
             $x->save();
