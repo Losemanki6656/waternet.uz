@@ -17,7 +17,7 @@
                             <i class="fa fa-plus-circle"></i> Tarif qo'shish
                         </button>
 
-                        <input type="hidden" name="active_traffics" id="active_traffics">
+                        <input type="text" name="active_traffics" id="active_traffics">
                         <button type="submit" class="btn btn-success">
                             <i class="fa fa-check"></i> Submit Active
                         </button>          
