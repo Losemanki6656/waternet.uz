@@ -119,10 +119,12 @@ class HomeController extends Controller
     public function active_traffics(Request $request)
     {
         $i = 0; $a= [];
+        if($request->tras)
         foreach($request->tras as $key => $value) {
             $i ++;
             $a[$i] = $key;
         }
+        if($request->tras2)
         foreach($request->tras2 as $key => $value) {
             $i ++;
             $a[$i] = $key;
