@@ -975,7 +975,7 @@ class ClientController extends Controller
         ->where(function ($query) {
             $query->where('balance', '<', 0)
                   ->orWhere('container', '<', 0);
-                });
+                })->orderBy('balance','ASC');
         
         return view('but_results.dolg',[
             'info_org' => $info_org,
