@@ -11,13 +11,13 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-10 col-md-8 col-sm-12">
-                    <form id="sendsms-modal">
+                    <form action="{{route('active_traffics')}}" method="post" id="sendsms">
                         @csrf
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addtask">
                             <i class="fa fa-plus-circle"></i> Tarif qo'shish
                         </button>
 
-                        <button type="submit" class="btn btn-success" form="sendsms">
+                        <button type="submit" class="btn btn-success" >
                             <i class="fa fa-check"></i> Submit Active
                         </button>          
                     </form>
@@ -118,8 +118,6 @@
                 <h5 class="text-center">  Asosiy tariflar </h5>
             </div>   
         </div>
-            <form action="{{route('active_traffics')}}" method="post" id="sendsms">
-                @csrf
                 <div class="row clearfix">
                     @foreach ($traffics as $traffic)
                         @if ($traffic->status == 0)
@@ -137,7 +135,7 @@
                                         <li>Tovar: {{$traffic->products_count}} ta</li>
                                         <li>Xodim: {{$traffic->users_count}} ta</li>
                                         <label class="fancy-checkbox">
-                                            <input type="checkbox" name="tras[{{$traffic->id}}]"
+                                            <input type="checkbox" name="tras[{{$traffic->id}}]" form="sendsms"
                                              @if ($q[$traffic->id] == true)
                                                 checked
                                              @endif>
@@ -296,7 +294,7 @@
                                               
                                             </ul>
                                             <label class="fancy-checkbox">
-                                                <input type="checkbox" name="tras2[{{$traffic->id}}]"
+                                                <input type="checkbox" name="tras2[{{$traffic->id}}]" form="sendsms"
                                                 @if ($q[$traffic->id] == true)
                                                     checked
                                                 @endif>
@@ -313,7 +311,6 @@
                         @endif
                     @endforeach
                 </div>
-            </form>
     </div>
 
 @endsection
