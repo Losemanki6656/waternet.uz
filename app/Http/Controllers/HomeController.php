@@ -118,9 +118,16 @@ class HomeController extends Controller
 
     public function active_traffics(Request $request)
     {
-            $values = array_map('array_pop', $request->tras);
-            $ids = implode(',', $values);
-            dd($ids);
+        $i = 0; $a= [];
+        foreach($request->tras as $key->value) {
+            $i ++;
+            $a[$i] = $key;
+        }
+        foreach($request->tras2 as $key->value) {
+            $i ++;
+            $a[$i] = $key;
+        }
+        dd($a);
 
             $x = ActiveTraffic::find(1);
             $x->string1 = $request->active_traffics;
