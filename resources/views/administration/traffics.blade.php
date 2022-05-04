@@ -17,7 +17,7 @@
                             <i class="fa fa-plus-circle"></i> Tarif qo'shish
                         </button>
 
-                        <input type="text" name="active_traffics" id="active_traffics">
+                        <input type="text" name="active_traffics" id="active_traffics_a">
                         <button type="submit" class="btn btn-success">
                             <i class="fa fa-check"></i> Submit Active
                         </button>          
@@ -322,7 +322,7 @@
     var checkBox = document.getElementById('tr_check' + id);
     var text = document.getElementById("active_traffics").value;
         if (checkBox.checked == true){
-            $("#active_traffics").val(text + "," + id);
+            $("#active_traffics_a").val(text + "," + id);
         }
     }
 </script> 
