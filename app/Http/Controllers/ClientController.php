@@ -971,7 +971,11 @@ class ClientController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
-        $clients = Client::where('organization_id',$info_id)->where('balance','<',0);
+        $clients = Client::where('organization_id',$info_id)
+        ->where(function ($query) {
+            $query->where('balance', '<', 0)
+                  ->orWhere('container', '<', 0);
+                });
         
         return view('but_results.dolg',[
             'info_org' => $info_org,
