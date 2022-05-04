@@ -17,7 +17,7 @@
                             <i class="fa fa-plus-circle"></i> Tarif qo'shish
                         </button>
 
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success" form="sendsms">
                             <i class="fa fa-check"></i> Submit Active
                         </button>          
                     </form>
