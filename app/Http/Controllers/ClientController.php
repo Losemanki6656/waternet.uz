@@ -650,7 +650,7 @@ class ClientController extends Controller
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $count = Organization::find($organ);
 
-        if($count->sms_count < $count->traffic->sms_count) {
+        if($count->sms_count < $count->traffic->sms_count + $count->location) {
             
             $arr = $request->checkbox;
             $x = 0;

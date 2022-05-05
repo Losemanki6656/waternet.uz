@@ -565,7 +565,7 @@ class HomeController extends Controller
                     }
                   
         
-                    if($info_org->sms_count < $info_org->traffic->sms_count) {
+                    if($info_org->sms_count < $info_org->traffic->sms_count  + $info_org->location) {
 
                         $char = ['(', ')', ' ','-','+'];
                         $replace = ['', '', '','',''];
@@ -871,7 +871,7 @@ class HomeController extends Controller
             }
           
 
-            if($info_org->sms_count < $info_org->traffic->sms_count) {
+            if($info_org->sms_count < $info_org->traffic->sms_count + $info_org->location) {
                 $char = ['(', ')', ' ','-','+'];
                 $replace = ['', '', '','',''];
                 $phone = str_replace($char, $replace, $client_info->phone);

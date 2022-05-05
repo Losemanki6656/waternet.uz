@@ -284,23 +284,93 @@ class TrafficController extends Controller
     public function add_traffic_organization(Request $request, $id)
     {
         $traffic = Traffic::find($request->traffic_id);
+        if($traffic->status == 1) {
 
-        $trafficorgan = new TrafficOrganization(); 
-        $trafficorgan->traffic_id = $request->traffic_id; 
-        $trafficorgan->organization_id = $id;
-        $trafficorgan->date_from = $request->date_from; 
-        $trafficorgan->date_to = $request->date_to; 
-        $trafficorgan->price = $traffic->price; 
-        $trafficorgan->comment = $request->comment ?? ''; 
-        $trafficorgan->save();
-
-        $organizations = Organization::find($id);
-        $organizations->traffic_id = $request->traffic_id; 
-        $organizations->balance = $organizations->balance + (-1 * $traffic->price);
-        $organizations->sms_count = 0;
-        $organizations->date_traffic = $request->date_to;
-        $organizations->save();
+            $trafficorgan = new TrafficOrganization(); 
+            $trafficorgan->traffic_id = $request->traffic_id; 
+            $trafficorgan->organization_id = $id;
+            $trafficorgan->date_from = $request->date_from; 
+            $trafficorgan->date_to = $request->date_to; 
+            $trafficorgan->price = $traffic->price; 
+            $trafficorgan->comment = $request->comment ?? ''; 
+            $trafficorgan->save(); 
+            
+            $organizations = Organization::find($id);
+            $organizations->location = $traffic->sms_count;
+            $organizations->date_traffic = $request->date_to;
+            $organizations->save();
+        }
+        else
+        {
+            $trafficorgan = new TrafficOrganization(); 
+            $trafficorgan->traffic_id = $request->traffic_id; 
+            $trafficorgan->organization_id = $id;
+            $trafficorgan->date_from = $request->date_from; 
+            $trafficorgan->date_to = $request->date_to; 
+            $trafficorgan->price = $traffic->price; 
+            $trafficorgan->comment = $request->comment ?? ''; 
+            $trafficorgan->save();
+    
+            $organizations = Organization::find($id);
+            $organizations->location = 0;
+            $organizations->traffic_id = $request->traffic_id; 
+            $organizations->balance = $organizations->balance + (-1 * $traffic->price);
+            $organizations->sms_count = 0;
+            $organizations->date_traffic = $request->date_to;
+            $organizations->save();
+        }
      
+        return redirect()->back()->with('msg' ,'success');
+    }
+
+    public function edit_traffic_organization(Request $request, $id)
+    {
+        //dd($request->all());
+        $traffic = Traffic::find($request->traffic_id);
+        if($traffic->status == 1) {
+
+            $trafficorgan = TrafficOrganization::find($id);
+            $tr = $trafficorgan->traffic_id;
+            $trafficorgan->traffic_id = $request->traffic_id; 
+            $trafficorgan->date_to = $request->date_to; 
+            $trafficorgan->price = $traffic->price; 
+            $trafficorgan->comment = $request->comment ?? ''; 
+            $trafficorgan->save();
+
+            $tr_tr = Traffic::find($tr);
+            $organizations = Organization::find($trafficorgan->organization_id);
+            $organizations->balance = $organizations->balance + $tr_tr->price + (-1 * $traffic->price);
+            $organizations->location = $traffic->sms_count;
+            $organizations->date_traffic = $request->date_to;
+            $organizations->save();
+        }
+        else
+        {
+            $trafficorgan = TrafficOrganization::find($id);
+            $tr = $trafficorgan->traffic_id;
+            $trafficorgan->traffic_id = $request->traffic_id; 
+            $trafficorgan->date_to = $request->date_to; 
+            $trafficorgan->price = $traffic->price; 
+            $trafficorgan->comment = $request->comment ?? ''; 
+            $trafficorgan->save();
+    
+            $tr_tr = Traffic::find($tr);
+            $organizations = Organization::find($trafficorgan->organization_id);
+            $organizations->location = 0;
+            $organizations->traffic_id = $request->traffic_id; 
+            $organizations->balance = $organizations->balance + $tr_tr->price + (-1 * $traffic->price);
+            $organizations->date_traffic = $request->date_to;
+            $organizations->save();
+        }
+        
+     
+        return redirect()->back()->with('msg' ,'success');
+    }
+
+    public function delete_traffic_organ($id)
+    {
+        $trafficorgan = TrafficOrganization::find($id)->delete();
+
         return redirect()->back()->with('msg' ,'success');
     }
 

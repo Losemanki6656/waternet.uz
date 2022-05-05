@@ -158,4 +158,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/organization/add-success-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'add_traffic_organization'])->name('add_traffic_organization');
     Route::post('/organization/edit-success-price-org/{id}', [App\Http\Controllers\TrafficController::class, 'edit_price_organization'])->name('edit_price_organization');
     Route::post('/organization/delete-success-price-org/{id}', [App\Http\Controllers\TrafficController::class, 'delete_price_organization'])->name('delete_price_organization');
+    Route::post('/organization/edit-success-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'edit_traffic_organization'])->name('edit_traffic_organization');
+    Route::get('/organization/delete-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'delete_traffic_organ'])->name('delete_traffic_organ');
 });

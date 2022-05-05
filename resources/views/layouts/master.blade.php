@@ -115,7 +115,7 @@
                                                         </div>
                                                         <div class="media-body">
                                                             <p class="text">Smslar soni: <strong> {{$info_org->sms_count}} ta yuborilgan</strong></p>
-                                                            <span class="timestamp">Tarif bo'yicha: {{$info_org->traffic->sms_count}} ta</span>
+                                                            <span class="timestamp">Tarif bo'yicha: {{$info_org->traffic->sms_count + $info_org->location}} ta</span>
                                                         </div>
                                                     </div>
                                                 </a>
