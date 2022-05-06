@@ -123,13 +123,13 @@
             infoWindow.open(map);
 
             if (confirm("Do you want to mark this location?")){
+                //console.log({!! $id_client !!});
+                window.opener.document.getElementById("location" + {!! $id_client !!}).value = mapsMouseEvent.latLng.lat() + "," + mapsMouseEvent.latLng.lng();
 
-                window.opener.document.getElementById("location").value = mapsMouseEvent.latLng.lat() + "," + mapsMouseEvent.latLng.lng();
+                window.opener.document.getElementById("select_location" + {!! $id_client !!}).classList.remove("btn-warning");
+                window.opener.document.getElementById("select_location" + {!! $id_client !!}).classList.add("btn-success");
 
-                window.opener.document.getElementById("select_location").classList.remove("btn-warning");
-                window.opener.document.getElementById("select_location").classList.add("btn-success");
-
-                window.opener.document.getElementById("select_location").innerText="Selected location!"
+                window.opener.document.getElementById("select_location" + {!! $id_client !!}).innerText="Selected location!"
                 window.close()
     }
         });

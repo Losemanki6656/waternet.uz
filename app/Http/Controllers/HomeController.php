@@ -210,6 +210,12 @@ class HomeController extends Controller
     {
         return view('clients.location');
     }
+    public function location_id($id)
+    {
+        return view('clients.location_id',[
+            'id_client' => $id
+        ]);
+    }
 
     public function add_client(Request $request)
     {

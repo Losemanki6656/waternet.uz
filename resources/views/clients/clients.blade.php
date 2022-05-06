@@ -342,9 +342,9 @@
                                                         </div>
                                                         <div class="col">
                                                             <div class="form-group">
-                                                                <button type="button" class="btn btn-warning" onclick="setlocation(event)" id="select_location" style="margin-top: 20px">
+                                                                <button type="button" class="btn btn-warning" onclick="setlocation(event,{{$client->id}})" id="select_location{{$client->id}}" style="margin-top: 20px">
                                                                     <i class="fa fa-map-marker"></i> Lokatsiya</button>
-                                                                <input type="hidden" onchange="dotReplace(event)" value="0" class="form-control" id="location" name="location">
+                                                                <input type="hidden" onchange="dotReplace(event)" value="0" class="form-control" id="location{{$client->id}}" name="location">
                                                             </div> 
                                                         </div>
                                                     </div> 
@@ -459,13 +459,17 @@
 
 @section('scripts')
 <script>
-       function setlocation(event){ 
+       function setlocation(event,id){ 
       event.preventDefault(); 
-      var myWindow=window.open("{{route('location')}}", 'Select Client Location', 'width=auto,height=auto')
+      let url = '{{route("location_id", ["id" => ":id:"])}}';
+
+      url = url.replaceAll(':id:', id);
+      var myWindow = window.open(url , 'Select Client Location', 'width=auto,height=auto')
+      
     }
     
     function dotReplace(event){
-                event.taget.value=event.target.value.replaceAll(",", ".")
+                event.taget.value=event.target.value.replaceAll(",", ".");
             }
 </script>
 <script>
