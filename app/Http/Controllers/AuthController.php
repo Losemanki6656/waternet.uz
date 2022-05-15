@@ -7,6 +7,7 @@ use App\Models\UserOrganization;
 use App\Models\Order;
 use App\Models\Area;
 use App\Models\RegionUser;
+use App\Models\Client;
 use Validator;
 
 class AuthController extends Controller
@@ -17,7 +18,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','clientlogin']]);
     }
     /**
      * Get a JWT via given credentials.
@@ -41,6 +42,17 @@ class AuthController extends Controller
         //if(UserOrganization::where('user_id',$user_id)->value('role') != 3)  return response()->json(['error' => 'Unauthorized'], 422);
             //else
         return $this->createNewToken($token);
+    }
+
+    public function clientlogin(Request $request){
+
+       $client = Client::where('login',$request->login)->where('password',$request->password)->get();
+       
+       if($client->count())  { 
+           $finClient = Client::find($client[0]->id);
+           return response()->json($finClient,200);
+       } else  return response()->json(['error' => 'Unauthorized'], 422);
+
     }
 
     /**

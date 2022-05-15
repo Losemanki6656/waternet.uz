@@ -21,7 +21,6 @@ use App\Models\User;
 use App\Models\Sity;
 use App\Models\Area;
 use App\Models\Sms;
-
 use Auth;
 
 class ClientController extends Controller
