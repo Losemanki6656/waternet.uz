@@ -45,10 +45,10 @@
                         <thead>
                             <tr>
                                 <th width = "80">#</th>
-                                <th>Kimga</th>
-                                <th style="max-width: 400px">Sms</th>
-                                <th>Kimdan</th>
-                                <th>Qachon</th>
+                                <th width="200px" class="text-center">Kimga</th>
+                                <th class="text-center" style="max-width: 300px">Sms</th>
+                                <th width="200px">Kimdan</th>
+                                <th width="200px">Qachon</th>
                             </tr>
                         </thead>
                         <tbody>
