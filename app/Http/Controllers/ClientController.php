@@ -990,4 +990,47 @@ class ClientController extends Controller
 
          return response()->json($products, 200);
      }
+
+     public function client_add_order(Request $request) 
+     {
+        $order = Order::
+        where('client_id',$request->client_id)
+        ->where('product_id',$request->product_id)
+        ->where('status',0)
+        ->get();
+
+        $client = Client::find($request->client_id);
+        $product = Product::findOrFail($request->product_id);
+        if($order->count() > 0) {
+            return response()->json(['error' => 'Unauthorized'], 422);
+        }
+
+        $zakaz = new Order();
+        $zakaz->organization_id = $client->organization_id;
+        $zakaz->city_id = $client->city_id;
+        $zakaz->area_id = $client->area_id;
+        $zakaz->client_id = $request->client_id;
+        $zakaz->product_id = $request->product_id;
+        $zakaz->container_status = $product->container_status;
+        $zakaz->product_count = $request->count;
+        $zakaz->price = $product->price;
+        $zakaz->comment = 'Mijoz dastur orqali';
+        $zakaz->status = 0;
+        $zakaz->user_id = $client->user_id;
+        $zakaz->save();
+
+        $client->activated_at = now();
+        $client->save();
+        
+        $orders = Order::where('client_id',$request->client_id)->get();
+
+        return response()->json($orders, 200);
+     }
+     public function client_order(Request $request) 
+     {
+        
+        $orders = Order::where('client_id',$request->client_id)->get();
+        
+        return response()->json($orders, 200);
+     }
 }
