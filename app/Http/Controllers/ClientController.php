@@ -644,6 +644,7 @@ class ClientController extends Controller
         return 1;
     }
     
+
     public function send_sms(Request $request)
     {
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
@@ -980,5 +981,13 @@ class ClientController extends Controller
             'info_org' => $info_org,
             'clients' => $clients->paginate(10)
         ]);
+     }
+
+     public function client_products(Request $request) 
+     {
+         $org_id = Client::find($request->client_id)->organization_id;
+         $products = Product::where('organization_id',$org_id)->get();
+
+         return response()->json($products, 200);
      }
 }

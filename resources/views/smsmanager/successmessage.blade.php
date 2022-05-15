@@ -46,7 +46,7 @@
                             <tr>
                                 <th width = "80">#</th>
                                 <th>Kimga</th>
-                                <th>Sms</th>
+                                <th style="max-width: 400px">Sms</th>
                                 <th>Kimdan</th>
                                 <th>Qachon</th>
                             </tr>
