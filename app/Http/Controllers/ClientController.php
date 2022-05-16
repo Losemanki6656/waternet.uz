@@ -1062,4 +1062,16 @@ class ClientController extends Controller
 
         return response()->json(['message' => 'success'], 200);
      }
+
+     public function cl_succ_orders(Request $request)
+     {
+         $orders = SuccessOrders::
+         where('client_id',$request->client_id)
+         ->whereIn('order_status',[1,2])
+         ->with('product')
+         ->orderBy('created_at','asc')
+         ->get();
+
+         return response()->json($orders, 200);
+     }
 }
