@@ -1039,15 +1039,6 @@ class ClientController extends Controller
 
      public function client_order_edit(Request $request) 
      {
-        $order = Order::
-            where('client_id',$request->client_id)
-            ->where('product_id',$request->product_id)
-            ->where('status',0)
-            ->get();
-
-        if($order->count() > 0) {
-            return response()->json(['error' => 'error'], 422);
-        }
 
         $product = Product::findOrFail($request->product_id);
 
@@ -1058,6 +1049,14 @@ class ClientController extends Controller
         $zakaz->price = $product->price;
         $zakaz->comment = 'Mijoz mobil ilova orqali taxrirladi';
         $zakaz->save();
+
+        return response()->json(['message' => 'success'], 200);
+     }
+
+     public function client_order_edit(Request $request) 
+     {
+
+        Order::find($request->order_id)->delete();
 
         return response()->json(['message' => 'success'], 200);
      }

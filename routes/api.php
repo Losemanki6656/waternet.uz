@@ -50,5 +50,6 @@ Route::get('/client/products', [ClientController::class, 'client_products']);
 Route::get('/client/add-order', [ClientController::class, 'client_add_order']);
 Route::get('/client/orders', [ClientController::class, 'client_order']);
 Route::get('/client/edit-order', [ClientController::class, 'client_order_edit']);
+Route::get('/client/delete-order', [ClientController::class, 'client_order_delete']);
 
 Route::get('/client-profile', [ClientController::class, 'client_profile']);
