@@ -1029,7 +1029,10 @@ class ClientController extends Controller
      public function client_order(Request $request) 
      {
         
-        $orders = Order::where('client_id',$request->client_id)->with('product')->get();
+        $orders = Order::
+        where('client_id',$request->client_id)
+        ->where('status',0)
+        ->with('product')->get();
         
         return response()->json($orders, 200);
      }
