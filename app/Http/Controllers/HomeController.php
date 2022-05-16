@@ -310,7 +310,7 @@ class HomeController extends Controller
         if($order->count() > 0) {
             return redirect()->route('client_order_edit' , [ 'id' => $id ]);
         }
-        ///dd($client);
+
         $zakaz = new Order();
         $zakaz->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $zakaz->city_id = $client->city_id;
@@ -411,7 +411,6 @@ class HomeController extends Controller
 
     public function order_edit(Request $request, $id)
     {
-       
         $zakaz = Order::find($id);
         $zakaz->product_id = $request->product_id;
         $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
@@ -419,11 +418,6 @@ class HomeController extends Controller
         $zakaz->price = $request->sena;
         $zakaz->comment = $request->izoh ?? '';
         $zakaz->save();
-
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
-        
-        $products = Product::where('organization_id', $info_id)->get();
 
         return redirect()->back()->with('msg' ,'success');
      

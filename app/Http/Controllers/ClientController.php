@@ -999,11 +999,12 @@ class ClientController extends Controller
         ->where('status',0)
         ->get();
 
-        $client = Client::find($request->client_id);
-        $product = Product::findOrFail($request->product_id);
         if($order->count() > 0) {
             return response()->json(['error' => 'Unauthorized'], 422);
         }
+
+        $client = Client::find($request->client_id);
+        $product = Product::findOrFail($request->product_id);
 
         $zakaz = new Order();
         $zakaz->organization_id = $client->organization_id;
@@ -1014,7 +1015,7 @@ class ClientController extends Controller
         $zakaz->container_status = $product->container_status;
         $zakaz->product_count = $request->count;
         $zakaz->price = $product->price;
-        $zakaz->comment = 'Mijoz dastur orqali';
+        $zakaz->comment = 'Mijoz mobil ilova orqali';
         $zakaz->status = 0;
         $zakaz->user_id = $client->user_id;
         $zakaz->save();
@@ -1028,12 +1029,36 @@ class ClientController extends Controller
      }
      public function client_order(Request $request) 
      {
-        
         $orders = Order::
         where('client_id',$request->client_id)
         ->where('status',0)
         ->with('product')->get();
         
         return response()->json($orders, 200);
+     }
+
+     public function client_order_edit(Request $request) 
+     {
+        $order = Order::
+            where('client_id',$request->client_id)
+            ->where('product_id',$request->product_id)
+            ->where('status',0)
+            ->get();
+
+        if($order->count() > 0) {
+            return response()->json(['error' => 'error'], 422);
+        }
+
+        $product = Product::findOrFail($request->product_id);
+
+        $zakaz = Order::find($request->order_id);
+        $zakaz->product_id = $request->product_id;
+        $zakaz->container_status = $product->container_status;
+        $zakaz->product_count = $request->count;
+        $zakaz->price = $product->price;
+        $zakaz->comment = 'Mijoz mobil ilova orqali taxrirladi';
+        $zakaz->save();
+
+        return response()->json(['message' => 'success'], 200);
      }
 }
