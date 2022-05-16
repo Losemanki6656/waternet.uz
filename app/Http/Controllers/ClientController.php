@@ -1053,10 +1053,13 @@ class ClientController extends Controller
         return response()->json(['message' => 'success'], 200);
      }
 
-     public function client_order_edit(Request $request) 
+     public function client_order_delete(Request $request) 
      {
 
-        Order::find($request->order_id)->delete();
+        $order = Order::find($request->order_id);
+        $order->status = 1;
+        $order->comment = "Mijoz mobil ilova orqali o'chirdi";
+        $order->save();
 
         return response()->json(['message' => 'success'], 200);
      }
