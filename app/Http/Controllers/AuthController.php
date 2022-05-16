@@ -49,7 +49,7 @@ class AuthController extends Controller
        $client = Client::where('login',$request->login)->where('password',$request->password)->get();
        
        if($client->count())  { 
-           $finClient = Client::find($client[0]->id);
+           $finClient = Client::find($client[0]->id)->with('organization');
            return response()->json($finClient,200);
        } else  return response()->json(['error' => 'Unauthorized'], 422);
 

@@ -1055,7 +1055,6 @@ class ClientController extends Controller
 
      public function client_order_delete(Request $request) 
      {
-
         $order = Order::find($request->order_id);
         $order->status = 1;
         $order->comment = "Mijoz mobil ilova orqali o'chirdi";
