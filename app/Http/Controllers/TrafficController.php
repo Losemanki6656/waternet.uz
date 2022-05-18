@@ -374,4 +374,9 @@ class TrafficController extends Controller
         return redirect()->back()->with('msg' ,'success');
     }
 
+    public function client_app()
+    {
+        return view('client_app.index');
+    }
+
 }

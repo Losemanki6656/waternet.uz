@@ -309,6 +309,10 @@
                                 <a href="{{route('users_admin')}}" ><i class="fa fa-users"></i><span>Users</span>
                                 </a>
                             </li>
+                            <li class="{{strpos(url()->current(),'client-app')? 'active' : ''}}">
+                                <a href="{{route('client_app')}}" ><i class="fa fa-users"></i><span>Client App</span>
+                                </a>
+                            </li>
                         @endcan
                    
                 </ul>
