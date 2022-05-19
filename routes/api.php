@@ -56,5 +56,6 @@ Route::get('/client/success/orders', [ClientController::class, 'cl_succ_orders']
 Route::get('/client/admin/carts', [TrafficController::class, 'admin_carts_api']);
 
 Route::get('/client/admin/swipers', [TrafficController::class, 'admin_swipers_api']);
+Route::get('/client/admin/orgswipers', [TrafficController::class, 'admin_orgswipers_api']);
 
 Route::get('/client-profile', [TrafficController::class, 'client_profile']);

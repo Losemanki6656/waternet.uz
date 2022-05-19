@@ -14,6 +14,7 @@ use App\Models\PriceOrganization;
 use App\Models\ActiveTraffic;
 use App\Models\AdminPhotoSlider;
 use App\Models\SwiperPhoto;
+use App\Models\OrganizationSwiper;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Response;
@@ -528,5 +529,88 @@ class TrafficController extends Controller
         $photosNew = SwiperPhoto::all();
 
         return response()->json($photosNew,200);
+    }
+
+    public function admin_orgswipers_api()
+    {
+        $photosNew = OrganizationSwiper::all();
+
+        return response()->json($photosNew,200);
+    }
+
+    public function organization_app()
+    {
+        $photos = OrganizationSwiper::all();
+        $organizations = Organization::all();
+
+        return view('client_app.org-index',[
+            'photos' => $photos,
+            'organizations' => $organizations
+        ]);
+    }
+
+    public function organization_app_swiper_add(Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('organizations/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/organizations/' . $fileName;
+
+            $newPhoto = new OrganizationSwiper();
+            $newPhoto->organization_id = $request->organization_id;
+            $newPhoto->name = $request->name ?? '';
+            $newPhoto->lg_name = $request->lg_name ?? '';
+            $newPhoto->photo = $filePath;
+            $newPhoto->price = $request->price ?? '';
+            $newPhoto->phone = $request->phone  ?? '';
+            $newPhoto->comment = $request->comment ?? '';
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->other = '';
+            $newPhoto->status = 0;
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+
+    public function organization_app_swiper_edit($id,Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('organizations/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/organizations/' . $fileName;
+
+            $newPhoto = OrganizationSwiper::find($id);
+            $newPhoto->organization_id = $request->organization_id;
+            $newPhoto->name = $request->name ?? '';
+            $newPhoto->lg_name = $request->lg_name ?? '';
+            $newPhoto->photo = $filePath;
+            $newPhoto->price = $request->price;
+            $newPhoto->phone = $request->phone;
+            $newPhoto->comment = $request->comment;
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->other = '';
+            $newPhoto->status = 0;
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+    public function organization_app_swiper_delete($id,Request $request) 
+    {
+        $newPhoto = OrganizationSwiper::find($id)->delete();
+        return redirect()->back()->with('msg' , 1);
     }
 }

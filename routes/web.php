@@ -171,4 +171,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/organization/client-app-swiper', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_add'])->name('client_app_swiper_add');
     Route::post('/organization/client-app-swiper/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_edit'])->name('client_app_swiper_edit');
     Route::post('/organization/client-app-swiper-delete/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_delete'])->name('client_app_swiper_delete');
+
+    
+    
+    Route::get('/organization/organization-app', [App\Http\Controllers\TrafficController::class, 'organization_app'])->name('organization_app');
+    Route::post('/organization/organization-app-swiper', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_add'])->name('organization_app_swiper_add');
+    Route::post('/organization/organization-app-swiper/{id}', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_edit'])->name('organization_app_swiper_edit');
+    Route::post('/organization/organization-app-swiper-delete/{id}', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_delete'])->name('organization_app_swiper_delete');
 });

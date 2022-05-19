@@ -313,7 +313,12 @@
                                 </a>
                             </li>
                             <li class="{{strpos(url()->current(),'client-app')? 'active' : ''}}">
-                                <a href="{{route('client_app')}}" ><i class="fa fa-users"></i><span>Client App</span>
+                                <a href="{{route('client_app')}}" ><i class="fa fa-users"></i><span>App Photos</span>
+                                </a>
+                            </li>
+                            
+                            <li class="{{strpos(url()->current(),'organization-app')? 'active' : ''}}">
+                                <a href="{{route('organization_app')}}" ><i class="fa fa-users"></i><span>App Orgnization Swipers</span>
                                 </a>
                             </li>
                         @endcan

@@ -141,7 +141,7 @@
                                     </div>
                                     <div class="product_details">
                                         <br>
-                                        <h5><a href="javascript:void(0);">Simple Black Clock</a></h5>
+                                        <h5><a href="javascript:void(0);">{{$item->name}}</a></h5>
                                     </div>
                                 </div>
                             </div>
