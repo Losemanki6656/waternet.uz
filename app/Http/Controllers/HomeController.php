@@ -165,7 +165,7 @@ class HomeController extends Controller
         $products = Product::where('organization_id', $organ)->get();
         $info_id = $organ;
         $info_org = Organization::find($info_id);
-        dd($organ);
+        //dd($organ);
         if($info_org->date_traffic < now()) 
         return view('error');
 
