@@ -7,6 +7,7 @@ use Auth;
 use App\Models\UserOrganization;
 use App\Models\User;
 use App\Models\Traffic;
+use App\Models\Client;
 use App\Models\Organization;
 use Spatie\Permission\Models\Role;
 use App\Models\TrafficOrganization;
@@ -531,9 +532,11 @@ class TrafficController extends Controller
         return response()->json($photosNew,200);
     }
 
-    public function admin_orgswipers_api()
+    public function admin_orgswipers_api(Request $request)
     {
-        $photosNew = OrganizationSwiper::all();
+        $org = Client::find($request->client_id)->organization_id;
+
+        $photosNew = OrganizationSwiper::where('organization_id',$org)->get();
 
         return response()->json($photosNew,200);
     }
