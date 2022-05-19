@@ -401,11 +401,6 @@ class TrafficController extends Controller
             $file_type  = $request->photo->getClientOriginalExtension();
             $filePath   = 'storage/users/' . $fileName;
 
-            $file = File::get($filePath);
-            $type = File::mimeType($filePath);
-            $response = Response::make($file, 200);
-            $response->header("Content-Type", $type);
-
             $newPhoto = new AdminPhotoSlider();
             $newPhoto->name = $request->name ?? '';
             $newPhoto->lg_name = $request->lg_name ?? '';
@@ -433,11 +428,6 @@ class TrafficController extends Controller
             $file_name  = $request->photo->getClientOriginalName();
             $file_type  = $request->photo->getClientOriginalExtension();
             $filePath   = 'storage/users/' . $fileName;
-
-            $file = File::get($filePath);
-            $type = File::mimeType($filePath);
-            $response = Response::make($file, 200);
-            $response->header("Content-Type", $type);
 
             $newPhoto = AdminPhotoSlider::find($id);
             $newPhoto->name = $request->name ?? '';
@@ -473,11 +463,6 @@ class TrafficController extends Controller
             $file_type  = $request->photo->getClientOriginalExtension();
             $filePath   = 'storage/swipers/' . $fileName;
 
-            $file = File::get($filePath);
-            $type = File::mimeType($filePath);
-            $response = Response::make($file, 200);
-            $response->header("Content-Type", $type);
-
             $newPhoto = new SwiperPhoto();
             $newPhoto->name = $request->name ?? '';
             $newPhoto->lg_name = $request->lg_name ?? '';
@@ -506,11 +491,6 @@ class TrafficController extends Controller
             $file_name  = $request->photo->getClientOriginalName();
             $file_type  = $request->photo->getClientOriginalExtension();
             $filePath   = 'storage/swipers/' . $fileName;
-
-            $file = File::get($filePath);
-            $type = File::mimeType($filePath);
-            $response = Response::make($file, 200);
-            $response->header("Content-Type", $type);
 
             $newPhoto = SwiperPhoto::find($id);
             $newPhoto->name = $request->name ?? '';
