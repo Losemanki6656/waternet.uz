@@ -164,4 +164,5 @@ Route::group(['middleware' => ['auth']], function() {
 
     
     Route::get('/organization/client-app', [App\Http\Controllers\TrafficController::class, 'client_app'])->name('client_app');
+    Route::post('/organization/client-app-carts', [App\Http\Controllers\TrafficController::class, 'client_app_carts_add'])->name('client_app_carts_add');
 });

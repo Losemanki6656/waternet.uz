@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TrafficController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,5 +53,6 @@ Route::get('/client/orders', [ClientController::class, 'client_order']);
 Route::get('/client/edit-order', [ClientController::class, 'client_order_edit']);
 Route::get('/client/delete-order', [ClientController::class, 'client_order_delete']);
 Route::get('/client/success/orders', [ClientController::class, 'cl_succ_orders']);
+Route::get('/client/admin/carts', [TrafficController::class, 'admin_carts_api']);
 
-Route::get('/client-profile', [ClientController::class, 'client_profile']);
+Route::get('/client-profile', [TrafficController::class, 'client_profile']);

@@ -15,6 +15,15 @@ class CreateAdminPhotoSlidersTable extends Migration
     {
         Schema::create('admin_photo_sliders', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('lg_name');
+            $table->string('photo');
+            $table->string('phone');
+            $table->string('price');
+            $table->text('comment');
+            $table->text('photo_url');
+            $table->string('other');
+            $table->integer('status');
             $table->timestamps();
         });
     }
