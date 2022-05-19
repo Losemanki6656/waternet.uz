@@ -13,6 +13,7 @@ use App\Models\TrafficOrganization;
 use App\Models\PriceOrganization;
 use App\Models\ActiveTraffic;
 use App\Models\AdminPhotoSlider;
+use App\Models\SwiperPhoto;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Response;
@@ -381,8 +382,10 @@ class TrafficController extends Controller
     public function client_app()
     {
         $photos = AdminPhotoSlider::all();
+        $swiperphotos = SwiperPhoto::all();
         return view('client_app.index',[
-            'photos' => $photos
+            'photos' => $photos,
+            'swiperphotos' => $swiperphotos
         ]);
     }
 
@@ -420,9 +423,129 @@ class TrafficController extends Controller
         }
     }
 
+    public function client_app_carts_edit($id,Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('users/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/users/' . $fileName;
+
+            $file = File::get($filePath);
+            $type = File::mimeType($filePath);
+            $response = Response::make($file, 200);
+            $response->header("Content-Type", $type);
+
+            $newPhoto = AdminPhotoSlider::find($id);
+            $newPhoto->name = $request->name ?? '';
+            $newPhoto->lg_name = $request->lg_name ?? '';
+            $newPhoto->photo = $filePath;
+            $newPhoto->price = $request->price;
+            $newPhoto->phone = $request->phone;
+            $newPhoto->comment = $request->comment;
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->other = '';
+            $newPhoto->status = 0;
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+    public function client_app_carts_delete($id,Request $request) 
+    {
+        $newPhoto = AdminPhotoSlider::find($id)->delete();
+        return redirect()->back()->with('msg' , 1);
+    }
+
+    public function client_app_swiper_add(Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('swipers/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/swipers/' . $fileName;
+
+            $file = File::get($filePath);
+            $type = File::mimeType($filePath);
+            $response = Response::make($file, 200);
+            $response->header("Content-Type", $type);
+
+            $newPhoto = new SwiperPhoto();
+            $newPhoto->name = $request->name ?? '';
+            $newPhoto->lg_name = $request->lg_name ?? '';
+            $newPhoto->photo = $filePath;
+            $newPhoto->price = $request->price;
+            $newPhoto->phone = $request->phone;
+            $newPhoto->comment = $request->comment;
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->other = '';
+            $newPhoto->status = 0;
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+
+    public function client_app_swiper_edit($id,Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('swipers/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/swipers/' . $fileName;
+
+            $file = File::get($filePath);
+            $type = File::mimeType($filePath);
+            $response = Response::make($file, 200);
+            $response->header("Content-Type", $type);
+
+            $newPhoto = SwiperPhoto::find($id);
+            $newPhoto->name = $request->name ?? '';
+            $newPhoto->lg_name = $request->lg_name ?? '';
+            $newPhoto->photo = $filePath;
+            $newPhoto->price = $request->price;
+            $newPhoto->phone = $request->phone;
+            $newPhoto->comment = $request->comment;
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->other = '';
+            $newPhoto->status = 0;
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+    public function client_app_swiper_delete($id,Request $request) 
+    {
+        $newPhoto = SwiperPhoto::find($id)->delete();
+        return redirect()->back()->with('msg' , 1);
+    }
+
+
     public function admin_carts_api()
     {
         $photosNew = AdminPhotoSlider::all();
+
+        return response()->json($photosNew,200);
+    }
+
+    public function admin_swipers_api()
+    {
+        $photosNew = SwiperPhoto::all();
 
         return response()->json($photosNew,200);
     }

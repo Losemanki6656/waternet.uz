@@ -165,4 +165,10 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::get('/organization/client-app', [App\Http\Controllers\TrafficController::class, 'client_app'])->name('client_app');
     Route::post('/organization/client-app-carts', [App\Http\Controllers\TrafficController::class, 'client_app_carts_add'])->name('client_app_carts_add');
+    Route::post('/organization/client-app-carts/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_carts_edit'])->name('client_app_carts_edit');
+    Route::post('/organization/client-app-cart-delete/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_carts_delete'])->name('client_app_carts_delete');
+
+    Route::post('/organization/client-app-swiper', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_add'])->name('client_app_swiper_add');
+    Route::post('/organization/client-app-swiper/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_edit'])->name('client_app_swiper_edit');
+    Route::post('/organization/client-app-swiper-delete/{id}', [App\Http\Controllers\TrafficController::class, 'client_app_swiper_delete'])->name('client_app_swiper_delete');
 });

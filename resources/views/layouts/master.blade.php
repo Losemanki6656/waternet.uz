@@ -26,6 +26,9 @@
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/blog.css')}}">
+
+<link rel="stylesheet" href="{{asset('assets/css/ecommerce.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 
 <!-- Demo CSS not Include in project -->
