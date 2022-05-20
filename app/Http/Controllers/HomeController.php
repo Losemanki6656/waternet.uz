@@ -257,7 +257,6 @@ class HomeController extends Controller
 
     public function client_edit(Request $request, $id)
     {
-        //dd($request->all());
 
         $client = Client::find($id);
         $client->fullname = $request->fullname;
