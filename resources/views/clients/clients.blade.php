@@ -137,13 +137,13 @@
                                     <td class="text-center">{{$client->container}}</td>
                                     <td class="text-center">{{$client->user->name}}</td>
                                     <td class="text-center">
-                                            @if ($client->updated_at->diffInDays() > 14)
-                                                <div class="p-2 bg-danger text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</div>
+                                            @if ($client->activated_at->diffInDays() > 14)
+                                                <div class="p-2 bg-danger text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->activated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->activated_at->format('d-m-Y')}}</div>
                                             @else 
-                                                @if ($client->updated_at->diffInDays() >= 7 && $client->updated_at->diffInDays() <= 14)
-                                                    <div class="p-2 bg-warning text-dark" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas"> {{$client->updated_at->format('d-m-Y')}}</div>    
+                                                @if ($client->activated_at->diffInDays() >= 7 && $client->activated_at->diffInDays() <= 14)
+                                                    <div class="p-2 bg-warning text-dark" data-toggle="tooltip" data-placement="bottom" title="{{$client->activated_at->diffInDays() + 1}} kun davomida aktiv emas"> {{$client->activated_at->format('d-m-Y')}}</div>    
                                                 @else
-                                                    <div class="p-2 bg-success text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->updated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->updated_at->format('d-m-Y')}}</div>
+                                                    <div class="p-2 bg-success text-white" data-toggle="tooltip" data-placement="bottom" title="{{$client->activated_at->diffInDays() + 1}} kun davomida aktiv emas">{{$client->activated_at->format('d-m-Y')}}</div>
                                                 @endif        
                                             @endif
 
