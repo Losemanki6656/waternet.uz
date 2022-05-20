@@ -143,7 +143,6 @@ class HomeController extends Controller
 
         $clients = Client::query()
         ->where('organization_id', $organ)
-        ->orderBy('updated_at', 'DESC')
         ->when(\Request::input('search'),function($query,$search){
             $query->where(function ($query) use ($search) {
                 $query->Orwhere('fullname','like','%'.$search.'%')
@@ -156,7 +155,7 @@ class HomeController extends Controller
         })
         ->when(request('area_id'), function ($query, $area_id) {
             return $query->where('area_id', $area_id);
-        });
+        })->orderBy('activated_at', 'DESC');
 
         $sities = Sity::where('organization_id',$organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
