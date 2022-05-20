@@ -29,13 +29,15 @@
             <div class="header">
                 <div class="row clearfix">
                     <div class="col-lg-3 col-md-6">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="icon-calendar"></i></span>
-                            </div>
-                            <input data-provide="datepicker" data-date-autoclose="true" value="{{now()->format('m/d/Y')}}" class="form-control">
-                            <button class="btn btn-primary"><i class="fa fa-filter"></i></button>
-                        </div>     
+                        <form action="{{route('success_message')}}" method="get">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                </div>
+                                <input type="date" name="data" value="{{request('data')}}" class="form-control">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i></button>
+                            </div>   
+                        </form>
                     </div>
                 </div>
             </div>

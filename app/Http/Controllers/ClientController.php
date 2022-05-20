@@ -571,10 +571,13 @@ class ClientController extends Controller
     {  
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
 
-        $smsmanagers = Sms::where('organization_id', $organ)
-        ->orderBy('created_at', 'DESC')
+        $smsmanagers = Sms::query()
+        ->when(request('data'), function ($query, $data) {
+            return $query->whereDate('created_at', $data);
+        })->orderBy('created_at', 'DESC')
         ->with('client')
         ->with('user');
+        
 
         $info_org = Organization::find($organ);
 
