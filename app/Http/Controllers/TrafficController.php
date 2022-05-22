@@ -14,6 +14,7 @@ use App\Models\TrafficOrganization;
 use App\Models\PriceOrganization;
 use App\Models\ActiveTraffic;
 use App\Models\AdminPhotoSlider;
+use App\Models\CartPhoto;
 use App\Models\SwiperPhoto;
 use App\Models\OrganizationSwiper;
 use Illuminate\Support\Facades\Storage;
@@ -615,5 +616,44 @@ class TrafficController extends Controller
     {
         $newPhoto = OrganizationSwiper::find($id)->delete();
         return redirect()->back()->with('msg' , 1);
+    }
+
+    public function organization_app_cart()
+    {
+        $photos = CartPhoto::all();
+        $carts = AdminPhotoSlider::all();
+        return view('client_app.add_cart',[
+            'photos' => $photos,
+            'carts' => $carts
+        ]);
+    }
+
+    public function admin_app_cart_add(Request $request) 
+    {
+
+        if($request->photo) {
+
+            $fileName   = time() . $request->photo->getClientOriginalName();
+            Storage::disk('public')->put('carts/' . $fileName, File::get($request->photo));
+            $file_name  = $request->photo->getClientOriginalName();
+            $file_type  = $request->photo->getClientOriginalExtension();
+            $filePath   = 'storage/carts/' . $fileName;
+
+            $newPhoto = new CartPhoto();
+            $newPhoto->cart_id = $request->cart_id;
+            $newPhoto->photo = $filePath;
+            $newPhoto->photo_url = url($filePath);
+            $newPhoto->save();
+
+            return redirect()->back()->with('msg' , 1);
+
+        }
+    }
+
+    public function cart_photo(Request $request) 
+    {
+        $pt = CartPhoto::where('cart_id',$request->cart_id)->get();
+        
+        return response()->json($pt, 200);
     }
 }

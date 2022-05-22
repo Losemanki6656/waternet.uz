@@ -321,6 +321,11 @@
                                 <a href="{{route('organization_app')}}" ><i class="fa fa-users"></i><span>App Orgnization Swipers</span>
                                 </a>
                             </li>
+
+                            <li class="{{strpos(url()->current(),'admin-app-cart')? 'active' : ''}}">
+                                <a href="{{route('organization_app_cart')}}" ><i class="fa fa-users"></i><span>App Orgnization Swipers</span>
+                                </a>
+                            </li>
                         @endcan
                    
                 </ul>

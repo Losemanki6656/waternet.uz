@@ -178,4 +178,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/organization/organization-app-swiper', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_add'])->name('organization_app_swiper_add');
     Route::post('/organization/organization-app-swiper/{id}', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_edit'])->name('organization_app_swiper_edit');
     Route::post('/organization/organization-app-swiper-delete/{id}', [App\Http\Controllers\TrafficController::class, 'organization_app_swiper_delete'])->name('organization_app_swiper_delete');
+
+    
+    Route::get('/organization/admin-app-cart', [App\Http\Controllers\TrafficController::class, 'organization_app_cart'])->name('organization_app_cart');
+    Route::post('/organization/admin-app-cart', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_add'])->name('admin_app_cart_add');
+    Route::post('/organization/admin-app-cart/{id}', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_edit'])->name('admin_app_cart_edit');
+    Route::post('/organization/admin-app-cart-delete/{id}', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_delete'])->name('admin_app_cart_delete');
 });
