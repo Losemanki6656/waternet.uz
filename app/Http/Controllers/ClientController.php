@@ -1072,7 +1072,7 @@ class ClientController extends Controller
          where('client_id',$request->client_id)
          ->whereIn('order_status',[1,2])
          ->with('product')
-         ->orderBy('created_at','asc')
+         ->orderBy('created_at','desc')
          ->get();
 
          return response()->json($orders, 200);
