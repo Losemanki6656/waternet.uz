@@ -47,6 +47,7 @@ Route::group([
     
 });
 
+Route::get('/client/client-info', [ClientController::class, 'client_info']);
 Route::get('/client/products', [ClientController::class, 'client_products']);
 Route::get('/client/add-order', [ClientController::class, 'client_add_order']);
 Route::get('/client/orders', [ClientController::class, 'client_order']);

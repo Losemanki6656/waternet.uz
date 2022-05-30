@@ -1077,4 +1077,11 @@ class ClientController extends Controller
 
          return response()->json($orders, 200);
      }
+
+     public function client_info(Request $request)
+     {
+         $client = Client::find($request->client_id);
+
+         return response()->json($client, 200);
+     }
 }
