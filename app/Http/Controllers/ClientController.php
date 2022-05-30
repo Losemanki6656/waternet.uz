@@ -1080,8 +1080,8 @@ class ClientController extends Controller
 
      public function client_info(Request $request)
      {
-         $client = Client::find($request->client_id);
+         $client = Client::where('id',$request->client_id)->with('organization')->get();
 
-         return response()->json($client, 200);
+         return response()->json($client[0], 200);
      }
 }
