@@ -100,7 +100,7 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#edit{{$product->id}}"><i class="fa fa-edit"></i> <span></span></button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{$product->id}}"><i class="fa fa-trash-o"></i> <span></span></button>
+                                    <button type="button" class="btn btn-danger" disabled><i class="fa fa-trash-o"></i> <span></span></button>
                                 </td>
                             </tr> 
                             <div class="modal fade" id="edit{{$product->id}}" tabindex="-1" role="dialog">
