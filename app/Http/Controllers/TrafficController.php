@@ -656,4 +656,9 @@ class TrafficController extends Controller
         
         return response()->json($pt, 200);
     }
+
+    public function politica()
+    {
+        return view('politica');
+    }
 }

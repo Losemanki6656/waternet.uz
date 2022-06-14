@@ -19,6 +19,7 @@ use App\Http\Controllers\ClientController;
 Auth::routes(['register' => false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/privace', [App\Http\Controllers\TrafficController::class, 'politica'])->name('politica');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
