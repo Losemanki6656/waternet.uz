@@ -45,7 +45,7 @@
                             <tr>
                                 <td>{{$order->client->fullname}}</td>
                                 <td>{{$order->client->phone}}</td>
-                                <td>{{$order->client->city->name}}, {{$order->client->area->name}}, {{$order->client->address}}</td>
+                                <td>{{$order->client->city->name ?? ''}}, {{$order->client->area->name ?? ''}}, {{$order->client->address ?? ''}}</td>
                                 <td>{{$order->product->name}}</td>
                                 <td>{{$order->product_count}}</td>
                                 <td>{{$order->price}}</td>
