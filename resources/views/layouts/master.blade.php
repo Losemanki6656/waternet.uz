@@ -23,6 +23,7 @@
 
 <!-- Select2 -->
 <link rel="stylesheet" href="{{asset('assets/vendor/select2/select2.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert/sweetalert.css')}}" />
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
@@ -365,6 +366,7 @@
 <script src="{{asset('assets/vendor/select2/select2.min.js')}}"></script> <!-- Select2 Js -->
 
 <script src="{{asset('assets/js/pages/forms/advanced-form-elements.js')}}"></script>
+<script src="{{asset('assets/vendor/sweetalert/sweetalert.min.js')}}"></script> 
 
 <script src="{{asset('assets/bundles/mainscripts.bundle.js')}}"></script>
 <script src="{{asset('assets/bundles/morrisscripts.bundle.js')}}"></script>

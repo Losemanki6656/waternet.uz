@@ -136,9 +136,8 @@ class HomeController extends Controller
         return redirect()->back()->with('msg' ,'ertraf');
     }
     
-    public function clients()
+    public function clients(Request $request)
     {
-
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
 
         $clients = Client::query()
@@ -171,8 +170,13 @@ class HomeController extends Controller
         $page = request('page', session('clients_page', 1));
         session(['clients_page' => $page]);
 
+        
+        if($request->paginate) {
+                $paginate = $request->paginate; 
+        } else $paginate = 10;
+
         return view('clients.clients',[
-            'clients' => $clients->paginate(10, ['*'], 'page', $page),
+            'clients' => $clients->paginate($paginate, ['*'], 'page', $page),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
@@ -330,6 +334,13 @@ class HomeController extends Controller
         return redirect()->back()->with('msg' ,'success');
     }
 
+    public function delete_Order($id)
+    {
+        Order::find($id)->delete();
+
+        return redirect()->back();
+    }
+
     public function add_region(Request $request)
     {
         $sity = new Sity();
@@ -377,6 +388,7 @@ class HomeController extends Controller
         $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
         
+        $products = Product::where('organization_id', $organ)->get();
         $info_org = Organization::find($organ);
 
         if($info_org->date_traffic < now()) 
@@ -386,7 +398,8 @@ class HomeController extends Controller
             'orders' => $orders->paginate(10),
             'sities' => $sities,
             'areas'  => $areas,
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'products' => $products
         ]);
     }
 
@@ -1020,10 +1033,23 @@ class HomeController extends Controller
         ]);
     }
 
-    public function cities()
+    public function cities(Request $request)
     {
         $regions = Sity::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
-        $areas = Area::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->with('region')->get();
+        if($request->filter) {
+           
+
+            $areas = Area::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+                ->with('clients')
+                ->get()->sortBy(function($areas)
+                {
+                    return $areas->clients->count();
+                });
+        } else
+        $areas = Area::where('organization_id', UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->with('region')->orderBy('city_id', 'asc')
+            ->get();
+
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 

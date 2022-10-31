@@ -162,12 +162,14 @@ class UserController extends Controller
         foreach ($user->permissions as $per) {
             $p[$per->id] = $per->name;
         }
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $info_org = Organization::find($info_id);
+        $info_id = UserOrganization::where('user_id',Auth::user()->id);
+        
+        $rol = UserOrganization::where('user_id', $id)->first()->role;
+        $info_org = Organization::find($info_id->value('organization_id'));
 
         $roles = array(1 => 'Operator',2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
 
-        return view('users.edit',compact('user','p','info_org','roles'));
+        return view('users.edit',compact('user','p','info_org','roles','rol'));
     }
     
     /**

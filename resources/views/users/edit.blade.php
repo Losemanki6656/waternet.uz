@@ -60,7 +60,10 @@
                                         <label for="middlename"> Roli: </label>
                                         <select class="form-control" name="role" required>
                                             @foreach ($roles as $key => $value)
-                                                <option value={{$key}}>{{$value}}</option> 
+                                                <option value={{$key}} 
+                                                @if ($key == $rol)
+                                                    selected
+                                                @endif>{{$value}}</option> 
                                             @endforeach
                                         </select>
                                     </div>

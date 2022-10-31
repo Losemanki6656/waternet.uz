@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="row clearfix">
-            <div class="col-lg-9 col-md-12">
+            <div class="col-lg-7 col-md-12">
                 <div class="card">   
                     <ul class="nav nav-tabs">
                         <li class="nav-item"><a class="nav-link active show" href="{{route('regions')}}"><i class="fa fa-home"></i> Regionlar</a></li>

@@ -572,6 +572,7 @@ class ClientController extends Controller
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
 
         $smsmanagers = Sms::query()
+        ->where('organization_id',$organ)
         ->when(request('data'), function ($query, $data) {
             return $query->whereDate('created_at', $data);
         })->orderBy('created_at', 'DESC')
@@ -1083,5 +1084,17 @@ class ClientController extends Controller
          $client = Client::where('id',$request->client_id)->with('organization')->get();
 
          return response()->json($client[0], 200);
+     }
+
+     public function sms_text_new(Request $request)
+     {
+        if(!$request->a) {
+            return response()->json([
+                'message' => "Text ko'rinishini kiriting!"
+            ],400);
+        } else {
+            return response()->json($arr);
+        }
+        
      }
 }
