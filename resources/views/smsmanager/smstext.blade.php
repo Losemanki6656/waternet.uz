@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card animate__animated animate__fadeInUp">
             <ul class="nav nav-tabs">
                 <li class="nav-item"><a class="nav-link" href="{{ route('send_message') }}"><i class="fa fa-home"></i> Sms
                         yuborish</a></li>
@@ -70,7 +70,11 @@
 
                                 <div class="col-lg-6 col-md-12">
                                     <h6 style="font-weight: bold">Sms Text ko'rinishi:</h6>
-                                    <textarea class="form-control mb-3" name="viewText" id="viewText" cols="30" rows="10" disabled></textarea>
+                                    <textarea class="form-control mb-3" name="viewText" id="viewText" cols="30" rows="10" disabled>{{$smsText->full_sms_text ?? ''}}</textarea>
+                                    <div class="alert alert-warning alert-dismissible mb-3" role="alert">
+                                        <i class="fa fa-warning"></i> Example: Qabul qilingan summa ((qabul-qilingan-summa)), 
+                                        Yetqazilgan taralar soni ((yetqazilgan-taralar-soni)).
+                                    </div>
                                     <div class="row">
                                         <div class="col">
                                             <button class="btn btn-primary" onclick="clearText()" style="width: 100%"><i
@@ -82,6 +86,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <textarea style="display: none" class="form-control mb-3" name="sendText" id="sendText" cols="30" rows="10" disabled></textarea>
 
                             </div>
 
@@ -97,65 +102,69 @@
 
 @section('scripts')
     <script>
-        let a = [];
-        var x = -1;
-
+        
         function AddText() {
             let txt = $('#textNew').val();
             let viewText = $('#viewText').val();
             $('#viewText').val(viewText + txt);
 
-            x++;
-            a[x] = txt;
+            let sendText = $('#sendText').val();
+            $('#sendText').val(sendText + '&'+ txt);
         }
 
         function summa() {
             let txt = "((qabul-qilingan-summa))";
             let viewText = $('#viewText').val();
 
-            x++;
-            a[x] = txt;
             $('#viewText').val(viewText + txt);
+            let sendText = $('#sendText').val();
+            $('#sendText').val(sendText + '&'+ txt);
         }
 
         function yetqazilgan() {
             let txt = "((yetqazilgan-taralar-soni))";
             let viewText = $('#viewText').val();
 
-            x++;
-            a[x] = txt;
             $('#viewText').val(viewText + txt);
+            let sendText = $('#sendText').val();
+            $('#sendText').val(sendText + '&'+ txt);
         }
 
         function tara() {
             let txt = "((qabul-qilingan-taralar-soni))";
-            let viewText = $('#viewText').val();
+            $('#sendText').val(sendText + '&'+ txt);
 
-            x++;
-            a[x] = txt;
             $('#viewText').val(viewText + txt);
+            let sendText = $('#sendText').val();
+            $('#sendText').val(sendText + '&'+ txt);
         }
 
         function oldindan() {
             let txt = "((oldindan-tulov))";
             let viewText = $('#viewText').val();
 
-            x++;
-            a[x] = txt;
             $('#viewText').val(viewText + txt);
+            let sendText = $('#sendText').val();
+            $('#sendText').val(sendText + '&'+ txt);
         }
 
         function sendNewText() {
+            let sendText = $('#sendText').val();
+            let viewText = $('#viewText').val();
+
+            if(sendText!='')
+                sendText = sendText + '&';
+
             $.ajax({
                 type: 'POST',
                 url: "{{ route('sms_text_new') }}",
                 data: {
-                    "a": a,
+                    "a": sendText,
+                    "b": viewText,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
                     swal("Muvaffaqqiyatli!", "You clicked the button!", "success");
-                    console.log(response);
                 },
                 error: function(error) {
                     swal({
@@ -169,8 +178,17 @@
 
         function clearText() {
             $('#viewText').val('');
-            a = [];
-            a.splice(0, a.length);
+            $('#sendText').val('');
+
+            Toastify({
+                text: "Muvaffaqqiyatli tozalandi!",
+                className: "info",
+                gravity: "bottom",
+                style: {
+                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                }
+            }).showToast();
+
             console.log(a);
         }
     </script>

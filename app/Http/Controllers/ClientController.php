@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\Sity;
 use App\Models\Area;
 use App\Models\Sms;
+use App\Models\SmsText;
 use Auth;
 
 class ClientController extends Controller
@@ -562,8 +563,11 @@ class ClientController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        $smsText = SmsText::where('organization_id', $info_id)->first();
+
         return view('smsmanager.smstext',[
-            'info_org' => $info_org
+            'info_org' => $info_org,
+            'smsText' => $smsText
         ]);
     }
 
@@ -1093,7 +1097,25 @@ class ClientController extends Controller
                 'message' => "Text ko'rinishini kiriting!"
             ],400);
         } else {
-            return response()->json($arr);
+            $txt = $request->a;
+            $arr = explode('&',$txt);
+
+            $org_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+            SmsText::where('organization_id', $org_id)->delete();
+
+            foreach ($arr as $key => $value)
+            {
+                if($value != null || $value!='') 
+                
+                SmsText::create([
+                    'organization_id' => $org_id,
+                    'sms_text' => $value,
+                    'full_sms_text' => $request->b
+                ]);
+            }
+            return response()->json([
+                'message' => "Muvaffaqqiyatli qo'shildi!"
+            ]);
         }
         
      }

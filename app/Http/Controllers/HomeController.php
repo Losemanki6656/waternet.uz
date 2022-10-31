@@ -21,6 +21,7 @@ use App\Models\EntryProduct;
 use App\Models\Sms;
 use App\Models\EntryContainer;
 use App\Models\ActiveTraffic;
+use App\Models\SmsText;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 
@@ -886,8 +887,26 @@ class HomeController extends Controller
                 $char = ['(', ')', ' ','-','+'];
                 $replace = ['', '', '','',''];
                 $phone = str_replace($char, $replace, $client_info->phone);
-                $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
-                $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+
+                $text = "";
+                $texts = SmsText::where('organization_id',$info_id)->get();
+                if($texts) {
+                    foreach($texts as $value)
+                    {
+                        if($value->sms_text == "((qabul-qilingan-summa))") $text = $text . $request->amount;
+                          else 
+                            if($value->sms_text == "((yetqazilgan-taralar-soni))") $text = $text . $request->product_count;
+                              else 
+                                if($value->sms_text == "((qabul-qilingan-taralar-soni))") $text = $text . $request->container;
+                                    else
+                                        if($value->sms_text == "((oldindan-tulov))") $text = $text . Client::find($x)->balance;
+                                        else
+                                            $text = $text . $value->sms_text;
+                    }
+                } else
+                    $text = "Poluchena ".$request->amount.", Dostavleno ".$request->product_count.", Vozvrat tari ".
+                    $request->container.", Predoplata ".Client::find($x)->balance.". Spasibo za pokupku";
+
                 $curl = curl_init();
             
                 curl_setopt_array($curl, array(
