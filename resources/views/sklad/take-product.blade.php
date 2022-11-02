@@ -22,14 +22,14 @@
             </div>
         </div>
   
-        <div class="card">   
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link" href="{{route('entry_products')}}"><i class="fa fa-home"></i> Tovar kiritish</a></li>
-            <li class="nav-item"><a class="nav-link  active show" href="{{route('take_products')}}"><i class="fa fa-user"></i> Tovar chiqarish</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{route('entry_container')}}"><i class="fa fa-home"></i> Idishlarni kiritish</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{route('take_container')}}"><i class="fa fa-user"></i> Tara chiqarish </a></li>
+        <div class="">   
+        <ul class="nav nav-tabs-new2">
+            <li class="nav-item"><a class="nav-link"  style="font-weight: bold; color: black" href="{{route('entry_products')}}"><i class="fa fa-home"></i> Tovar kiritish</a></li>
+            <li class="nav-item"><a class="nav-link  active show" style="font-weight: bold;" href="{{route('take_products')}}"><i class="fa fa-user"></i> Tovar chiqarish</a></li>
+            <li class="nav-item"><a class="nav-link" style="font-weight: bold; color: black" href="{{route('entry_container')}}"><i class="fa fa-home"></i> Idishlarni kiritish</a></li>
+            <li class="nav-item"><a class="nav-link" style="font-weight: bold; color: black" href="{{route('take_container')}}"><i class="fa fa-user"></i> Tara chiqarish </a></li>
         </ul>
-        <div class="tab-content">   
+        <div class="tab-content col-8">   
             <div class="tab-pane show active" id="takeproducts">
                 <div class="card">
                     <div class="header">
@@ -78,7 +78,7 @@
                     </div>      
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-sm">
                                 <thead>
                                 <tr class="text-800 bg-200">
                                     <th width = "80">#</th>
@@ -87,7 +87,7 @@
                                     <th>Miqdori</th>
                                     <th>Olgan vaqti</th>
                                     <th>Kim berdi</th>
-                                    <th width = "270px" style="min-width: 270px">Action</th>
+                                    <th width = "80px" style="min-width: 80px">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -107,9 +107,9 @@
                                             
                                             <td>{{$takeproduct->sent->name}}</td>
                                             <td>
-                                                <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#edit{{$takeproduct->id}}">
+                                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit{{$takeproduct->id}}">
                                                     <i class="fa fa-edit"></i> <span></span></button>
-                                                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete{{$takeproduct->id}}">
+                                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{$takeproduct->id}}">
                                                     <i class="fa fa-trash-o"></i> <span></span></button>
                                             </td>
                                         </tr> 

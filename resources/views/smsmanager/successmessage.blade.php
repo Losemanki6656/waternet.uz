@@ -43,7 +43,7 @@
             </div>
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th width = "80">#</th>

@@ -16,8 +16,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/multi-select/css/multi-select.css') }}">
 
-    <link rel="stylesheet"
-        href="{{ asset('assets/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/chartist/css/chartist.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
 
@@ -28,6 +27,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/sweetalert/sweetalert.css') }}" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="{{ asset('assets/css/inbox.css') }}">
 
 
     <!-- MAIN CSS -->
@@ -401,12 +401,6 @@
     <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
 
-    <script src="{{ asset('assets/bundles/chartist.bundle.js') }}"></script>
-    <script src="{{ asset('assets/bundles/knob.bundle.js') }}"></script> <!-- Jquery Knob-->
-    <script src="{{ asset('assets/bundles/flotscripts.bundle.js') }}"></script> <!-- flot charts Plugin Js -->
-
-    <script src="{{ asset('assets/js/index.js') }}"></script>
-
     <script src="{{ asset('assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script> <!-- Bootstrap Colorpicker Js -->
     <script src="{{ asset('assets/vendor/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script> <!-- Input Mask Plugin Js -->
     <script src="{{ asset('assets/vendor/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
@@ -425,19 +419,12 @@
     <script src="{{ asset('assets/bundles/morrisscripts.bundle.js') }}"></script>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-
-    <script src="{{ asset('assets/js/widgets/infobox/infobox-1.js') }}"></script>
-
-    <script>
-        $('.sparkbar').sparkline('html', {
-            type: 'bar'
-        });
-    </script>
-    <!--<script src="//code-eu1.jivosite.com/widget/RmsgH8HyeY" async></script>-->
     @yield('scripts')
+
+   
     @stack('scripts')
 </body>
-<!-- Mirrored from thememakker.com/templates/mplify/html/light/forms-advanced.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 25 Feb 2022 12:03:49 GMT -->
 
 </html>

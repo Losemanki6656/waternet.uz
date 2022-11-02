@@ -85,7 +85,7 @@
 
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table mb-0 table-bordered">
+                    <table class="table mb-0 table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th width="60">#</th>
@@ -104,7 +104,7 @@
                             @foreach ($clients as $client)
                                 <tr>
                                     <td>{{ $clients->currentPage() * request('paginate') - request('paginate') + $loop->index + 1 }}</td>
-                                    <td class="text-center">{{ $client->fullname }}</td>
+                                    <td class="text-center" style="font-weight: bold">{{ $client->fullname }}</td>
                                     <td class="text-center">
                                         <h6>{{ $client->phone }}</h6>
                                         <span class="text-muted">{{ $client->phone2 }}</span>

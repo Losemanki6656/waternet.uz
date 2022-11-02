@@ -71,7 +71,7 @@
 
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table m-b-0 table-bordered">
+                    <table class="table m-b-0 table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th width="60">#</th>

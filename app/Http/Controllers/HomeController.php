@@ -22,6 +22,7 @@ use App\Models\Sms;
 use App\Models\EntryContainer;
 use App\Models\ActiveTraffic;
 use App\Models\SmsText;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 
@@ -66,57 +67,161 @@ class HomeController extends Controller
 
         if(Auth::user()->id != 1)
         {
+            $maxsum = 0;
+            $x = 1;
+            while ($x < 8)
+            {
+                $data2 = now()->subDays($x-1);
 
-            $solds = SuccessOrders::whereDate('created_at', now())
-            ->where('organization_id',$info_id)
-            ->whereIn('order_status',[1,2])->get();
-            $solds2 = ClientPrices::whereDate('created_at',now())
-            ->where('organization_id',$info_id)
-            ->where('status',1)->get();
+                $solds = SuccessOrders::where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->whereIn('order_status',[1,2])
+                    ->get();
 
-            $soldsumm = 0; 
-            $payment1 = 0; 
-            $payment2 = 0;
+                $solds2 = ClientPrices::where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->get();
 
-            foreach ($solds as $sold) {
+                $order = Order::where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->sum('product_count');
+                $takeproduct = TakeProduct::where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->sum('product_count');
 
-                if($sold->count * $sold->price >= $sold->amount)
-                    $soldsumm = $soldsumm + $sold->count * $sold->price;
-                else
-                $soldsumm = $soldsumm + $sold->amount;
-                
-                if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
-                if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
+                $entrycon = SuccessOrders::
+                    where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->sum('container');
+    
+                $takecon = EntryContainer::
+                    where('organization_id',$info_id)
+                    ->whereDate('created_at','=',$data2)
+                    ->sum('product_count');
+
+                $soldproducts = $solds->sum('count');
+                $soldsumm = 0; 
+                $amount = 0;
+                $payment1 = 0; 
+                $payment2 = 0;
+                $payment3 = 0;  
+
+                foreach ($solds as $sold) {
+
+                    if($sold->count * $sold->price >= $sold->amount)
+                        $soldsumm = $soldsumm + $sold->count * $sold->price;
+                    else
+                    $soldsumm = $soldsumm + $sold->amount;
+
+                    if($sold->price_sold < 0) $amount = $amount + $sold->price_sold;
+                    
+                }
+
+                foreach ($solds2 as $sold) {
+                    if($sold->status == 1) $soldsumm = $soldsumm + $sold->amount;
+
+                        if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
+                        if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
+                        if($sold->payment == 3) $payment3 = $payment3 + $sold->amount;
+                }
+
+                if($x == 1) {
+                    $y = $payment1 + $payment2;
+                    $z = $soldsumm;
+                }
+                if($soldsumm > $maxsum) $maxsum = $soldsumm;
+                $u[] = $soldsumm;
+                $q[] = $payment1;
+                $q2[] = $payment2;
+                $q3[] = $payment3;
+
+                $zakasoldi[] = $order;
+                $idisholdi[] = $entrycon;
+                $idishqaytardi[] = $takecon;
+                $tovaroldi[] = $takeproduct;
+                $tovarsotdi[] = $soldproducts;
+
+                $q4[] = (-1) * $amount;
+                $sana[] = $data2->format('Y-m-d');
+
+                $x++;
             }
+                $series = [
+                    [
+                        'name' => 'Umumiy daromad',
+                        'data' => $u
+                    ],
+                    [
+                        'name' => 'Naqd pul',
+                        'data' => $q
+                    ],
+                    [
+                        'name' => 'Plastik',
+                        'data' => $q2 
+                    ],
+                    [
+                        'name' => "Pul ko'chirish",
+                        'data' => $q3
+                    ],
+                    [
+                        'name' => 'Qarzdorlik',
+                        'data' => $q4
+                    ]
+                    
+                ];
+                $series1 = [
+                    [
+                        'name' => 'Zakaz oldi',
+                        'data' => $zakasoldi
+                    ],
+                    [
+                        'name' => 'Tovar oldi',
+                        'data' => $tovaroldi
+                    ],
+                    [
+                        'name' => 'Tovar sotdi',
+                        'data' => $tovarsotdi 
+                    ],
+                    [
+                        'name' => "Idish oldi",
+                        'data' => $idisholdi
+                    ],
+                    [
+                        'name' => 'Idish qaytardi',
+                        'data' => $idishqaytardi
+                    ]
+                    
+                ];
+                //dd($series1);
+                $categories = $sana;
 
-            foreach ($solds2 as $sold) {
-                $soldsumm = $soldsumm + $sold->amount;
-
-                if($sold->payment == 1) $payment1 = $payment1 + $sold->amount;
-                if($sold->payment == 2) $payment2 = $payment2 + $sold->amount;
-            }
-
-            $x = $payment1+$payment2;
-
+            $users = UserOrganization::where('organization_id',$info_id)->count();
             $dolg = Client::where('organization_id',$info_id)->where('balance','<','0')->sum('balance');
             $pered = Client::where('organization_id',$info_id)->where('balance','>','0')->sum('balance');
             $clients = Client::where('organization_id',$info_id)->get()->count();
             $lastclients = Client::where('organization_id',$info_id)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get()->count();
-            
+            $products = Product::where('organization_id',$info_id)->get();
             return view('statistics',[
+                'users' => $users,
+                'series' => $series,
+                'series1' => $series1,
+                'categories' => $categories,
                 'info_org' => $info_org,
                 'dolg' => $dolg,
                 'pered' => $pered,
-                'soldsumm' => $soldsumm,
-                'x' => $x,
+                'soldsumm' => $z,
+                'x' => $y,
+                'maxsum' => $maxsum,
                 'clients' => $clients,
-                'lastclients' => $lastclients
+                'lastclients' => $lastclients,
+                'products' => $products
             ]);     
         }
         else
             return redirect()->route('organizations');
     }
 
+ 
     public function active_traffics(Request $request)
     {
         $i = 0; $a= [];
@@ -728,18 +833,18 @@ class HomeController extends Controller
             
 
             $entrycon[$user->id] = SuccessOrders::
-            where('organization_id',$info_id)
-            ->whereDate('created_at','>=',$date1)
-            ->whereDate('created_at','<=',$date2)
-            ->where('user_id', $user->id)
-            ->sum('container');
+                where('organization_id',$info_id)
+                ->whereDate('created_at','>=',$date1)
+                ->whereDate('created_at','<=',$date2)
+                ->where('user_id', $user->id)
+                ->sum('container');
 
             $takecon[$user->id] = EntryContainer::
-            where('organization_id',$info_id)
-            ->whereDate('created_at','>=',$date1)
-            ->whereDate('created_at','<=',$date2)
-            ->where('user_id', $user->id)
-            ->sum('product_count');
+                where('organization_id',$info_id)
+                ->whereDate('created_at','>=',$date1)
+                ->whereDate('created_at','<=',$date2)
+                ->where('user_id', $user->id)
+                ->sum('product_count');
             
             $summentrycon = array_sum($entrycon);
             $amount[$user->id] = (-1)*$amount[$user->id];
