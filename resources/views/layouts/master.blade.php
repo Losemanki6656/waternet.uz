@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="description" content="Mplify Bootstrap 4.1.1 Admin Template">
-    <meta name="author" content="ThemeMakker, design by: ThemeMakker.com">
+    <meta name="description" content="waternet">
+    <meta name="author" content="Waternet">
 
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">

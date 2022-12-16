@@ -379,7 +379,10 @@ class HomeController extends Controller
         $client->address = $request->address ?? '';
         $client->login = $request->login;
         $client->password = $request->password;
-        $client->location = $request->location;
+        
+        if($request->location)
+            $client->location = $request->location;
+
         $client->phone = $request->phone;
         $client->phone2 = $request->phone2 ?? '';
     
