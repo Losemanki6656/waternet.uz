@@ -62,6 +62,27 @@ class HomeController extends Controller
         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
         $info_org = Organization::find($info_id);
 
+        $usersArr = UserOrganization::where('organization_id', $info_id)->where('role',3)->pluck('user_id')->toArray();
+        $dusers = User::whereIn('id', $usersArr)->get();
+
+        $takeproduct = []; $solds = []; $takecon = [];
+        foreach($dusers as $auser) 
+        {
+
+            $takeproduct[$auser->id] = TakeProduct::whereDate('created_at','=', now())
+                ->where('received_id', $auser->id)
+                ->sum('product_count');
+
+            $solds[$auser->id] = SuccessOrders::whereDate('created_at','=', now())
+                ->where('user_id', $auser->id)
+                ->whereIn('order_status',[1,2])->sum('count');
+            
+            $takecon[$auser->id] = EntryContainer::whereDate('created_at','=', now())
+                ->where('user_id', $auser->id)
+                ->sum('product_count');
+
+        }
+
         if($info_org->date_traffic < now()) 
         return view('error');
 
@@ -214,7 +235,11 @@ class HomeController extends Controller
                 'maxsum' => $maxsum,
                 'clients' => $clients,
                 'lastclients' => $lastclients,
-                'products' => $products
+                'products' => $products,
+                'takecon' => $takecon,
+                'solds' => $solds,
+                'takeproduct' => $takeproduct,
+                'info_user' => $dusers
             ]);     
         }
         else
@@ -783,10 +808,10 @@ class HomeController extends Controller
 
         foreach ( $data as $user ) {
             $order[$user->id] = Order::
-            where('user_id',$user->id)
-            ->whereDate('created_at','>=',$date1)
-            ->whereDate('created_at','<=',$date2)
-            ->sum('product_count');
+                where('user_id',$user->id)
+                ->whereDate('created_at','>=',$date1)
+                ->whereDate('created_at','<=',$date2)
+                ->sum('product_count');
             $takeproduct[$user->id] = TakeProduct::whereDate('created_at','>=',$date1)
             ->whereDate('created_at','<=',$date2)
             ->where('received_id', $user->id)

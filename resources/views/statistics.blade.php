@@ -20,66 +20,46 @@
         </div>
 
         <div class="row clearfix d-flex justify-content-center">
-            
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card text-center">
-                    <div class="header">
-                        <h2>Connection</h2>
-                    </div>
-                    <div class="body pt-0">
-                        <div class="row">
-                            <div class="col-12 m-b-15">
-                                <h1>
-                                    <img src="https://sun9-42.userapi.com/impg/BKyMCPHVjA1UNCw0-yuohYoKFM7QNEPDOMhGag/TE6pNt9JZ1E.jpg?size=604x276&quality=96&sign=5c58ac18bd3cbba3ef82b59931c1a9fe&type=album" 
-                                    width="180" height="90" alt="">
-                                </h1>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <h4 class="font-22 text-col-green font-weight-bold">
-                                    <small class="font-12 text-col-dark d-block m-b-10">Following</small>
-                                    1255
-                                </h4>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <h4 class="font-22 text-col-blue font-weight-bold">
-                                    <small class="font-12 text-col-dark d-block m-b-10">Followers</small>
-                                    3650
-                                </h4>
+
+            @foreach ($info_user as $duser)
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="card text-center">
+                        <div class="header">
+                            <h2>{{$duser->name}}</h2>
+                        </div>
+                        <div class="body pt-0">
+                            <div class="row">
+                                <div class="col-12 m-b-15">
+                                    <h1>
+                                        <img src="https://sun9-42.userapi.com/impg/BKyMCPHVjA1UNCw0-yuohYoKFM7QNEPDOMhGag/TE6pNt9JZ1E.jpg?size=604x276&quality=96&sign=5c58ac18bd3cbba3ef82b59931c1a9fe&type=album"
+                                            width="180" height="90" alt="">
+                                    </h1>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <h4 class="font-22 text-col-green font-weight-bold">
+                                        <small class="font-12 text-col-dark d-block m-b-10">Tovar oldi</small>
+                                        {{ $takeproduct[$duser->id] }}
+                                    </h4>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <h4 class="font-22 text-col-blue font-weight-bold">
+                                        <small class="font-12 text-col-dark d-block m-b-10">Tovar sotdi</small>
+                                        {{ $solds[$duser->id] }}
+                                    </h4>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <h4 class="font-22 text-col-blue font-weight-bold">
+                                        <small class="font-12 text-col-dark d-block m-b-10">Idish qaytardi</small>
+                                        {{ $takecon[$duser->id] }}
+                                    </h4>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card text-center">
-                    <div class="header">
-                        <h2>Connection</h2>
-                    </div>
-                    <div class="body pt-0">
-                        <div class="row">
-                            <div class="col-12 m-b-15">
-                                <h1>
-                                    <img src="https://sun9-42.userapi.com/impg/BKyMCPHVjA1UNCw0-yuohYoKFM7QNEPDOMhGag/TE6pNt9JZ1E.jpg?size=604x276&quality=96&sign=5c58ac18bd3cbba3ef82b59931c1a9fe&type=album" 
-                                    width="180" height="90" alt="">
-                                </h1>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <h4 class="font-22 text-col-green font-weight-bold">
-                                    <small class="font-12 text-col-dark d-block m-b-10">Following</small>
-                                    1255
-                                </h4>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <h4 class="font-22 text-col-blue font-weight-bold">
-                                    <small class="font-12 text-col-dark d-block m-b-10">Followers</small>
-                                    3650
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+
+
         </div>
 
 
@@ -246,7 +226,6 @@
         </div>
 
     </div>
-
 @endsection
 
 @section('scripts')
