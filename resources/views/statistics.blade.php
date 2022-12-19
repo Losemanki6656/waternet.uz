@@ -21,7 +21,7 @@
 
         <div class="row clearfix d-flex justify-content-center">
 
-            @foreach ($info_user as $duser)
+            @foreach ($info_users as $duser)
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="card text-center">
                         <div class="header">
@@ -38,19 +38,19 @@
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <h4 class="font-22 text-col-green font-weight-bold">
                                         <small class="font-12 text-col-dark d-block m-b-10">Tovar oldi</small>
-                                        {{ $takeproduct[$duser->id] }}
+                                        {{ $p1roducts[$duser->id] }}
                                     </h4>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <h4 class="font-22 text-col-blue font-weight-bold">
                                         <small class="font-12 text-col-dark d-block m-b-10">Tovar sotdi</small>
-                                        {{ $solds[$duser->id] }}
+                                        {{ $p2roducts[$duser->id] }}
                                     </h4>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <h4 class="font-22 text-col-blue font-weight-bold">
+                                    <h4 class="font-22 text-col-red font-weight-bold">
                                         <small class="font-12 text-col-dark d-block m-b-10">Idish qaytardi</small>
-                                        {{ $takecon[$duser->id] }}
+                                        {{ $p3roducts[$duser->id] }}
                                     </h4>
                                 </div>
                             </div>

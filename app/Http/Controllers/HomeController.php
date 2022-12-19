@@ -65,24 +65,25 @@ class HomeController extends Controller
         $usersArr = UserOrganization::where('organization_id', $info_id)->where('role',3)->pluck('user_id')->toArray();
         $dusers = User::whereIn('id', $usersArr)->get();
 
-        $takeproduct = []; $solds = []; $takecon = [];
+        $p1roducts = []; $p2roducts = []; $p3roducts = [];
         foreach($dusers as $auser) 
         {
 
-            $takeproduct[$auser->id] = TakeProduct::whereDate('created_at','=', now())
+            $p1roducts[$auser->id] = TakeProduct::whereDate('created_at','=', now())
                 ->where('received_id', $auser->id)
                 ->sum('product_count');
 
-            $solds[$auser->id] = SuccessOrders::whereDate('created_at','=', now())
+            $p2roducts[$auser->id] = SuccessOrders::whereDate('created_at','=', now())
                 ->where('user_id', $auser->id)
                 ->whereIn('order_status',[1,2])->sum('count');
             
-            $takecon[$auser->id] = EntryContainer::whereDate('created_at','=', now())
+            $p3roducts[$auser->id] = EntryContainer::whereDate('created_at','=', now())
                 ->where('user_id', $auser->id)
                 ->sum('product_count');
 
         }
-
+        // dd($takeproducts, $soldproducts);
+        
         if($info_org->date_traffic < now()) 
         return view('error');
 
@@ -236,10 +237,10 @@ class HomeController extends Controller
                 'clients' => $clients,
                 'lastclients' => $lastclients,
                 'products' => $products,
-                'takecon' => $takecon,
-                'solds' => $solds,
-                'takeproduct' => $takeproduct,
-                'info_user' => $dusers
+                'p3roducts' => $p3roducts,
+                'p2roducts' => $p2roducts,
+                'p1roducts' => $p1roducts,
+                'info_users' => $dusers
             ]);     
         }
         else
