@@ -1002,13 +1002,13 @@ class ClientController extends Controller
      public function client_add_order(Request $request) 
      {
         $order = Order::
-        where('client_id',$request->client_id)
-        ->where('product_id',$request->product_id)
-        ->where('status',0)
-        ->get();
+            where('client_id',$request->client_id)
+            ->where('product_id',$request->product_id)
+            ->where('status', 0)
+            ->get();
 
         if($order->count() > 0) {
-            return response()->json(['error' => 'Unauthorized'], 422);
+            return response()->json(['message' => 'Sizda ushbu tovardan tugallanmagan zakaz mavjud!'], 422);
         }
 
         $client = Client::find($request->client_id);
@@ -1048,7 +1048,9 @@ class ClientController extends Controller
      public function client_order_edit(Request $request) 
      {
 
-        $product = Product::findOrFail($request->product_id);
+        // return response()->json($request->all(), 200);
+
+        $product = Product::find($request->product_id);
 
         $zakaz = Order::find($request->order_id);
         $zakaz->product_id = $request->product_id;
@@ -1058,7 +1060,7 @@ class ClientController extends Controller
         $zakaz->comment = 'Mijoz mobil ilova orqali taxrirladi';
         $zakaz->save();
 
-        return response()->json(['message' => 'success'], 200);
+        return response()->json(['message' => 'Zakaz muvaffaqqiyatli taxrirlandi!'], 200);
      }
 
      public function client_order_delete(Request $request) 
@@ -1068,17 +1070,17 @@ class ClientController extends Controller
         $order->comment = "Mijoz mobil ilova orqali o'chirdi";
         $order->save();
 
-        return response()->json(['message' => 'success'], 200);
+        return response()->json(['message' => 'Zakaz muvaffaqqiyatli ochirildi!'], 200);
      }
 
      public function cl_succ_orders(Request $request)
      {
          $orders = SuccessOrders::
-         where('client_id',$request->client_id)
-         ->whereIn('order_status',[1,2])
-         ->with('product')
-         ->orderBy('created_at','desc')
-         ->get();
+            where('client_id',$request->client_id)
+            ->whereIn('order_status',[1,2])
+            ->with('product')
+            ->orderBy('created_at','desc')
+            ->get();
 
          return response()->json($orders, 200);
      }
