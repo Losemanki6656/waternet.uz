@@ -8,6 +8,7 @@ use App\Models\Sity;
 use App\Models\Organization;
 use App\Models\UserOrganization;
 use App\Models\Product;
+use App\Exports\ClientsExport;
 use App\Models\Order;
 use App\Models\SuccessOrders;
 use App\Models\ClientPrices;
@@ -24,6 +25,7 @@ use App\Models\ActiveTraffic;
 use App\Models\SmsText;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 
 class HomeController extends Controller
@@ -273,37 +275,40 @@ class HomeController extends Controller
         $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
 
         $clients = Client::query()
-        ->where('organization_id', $organ)
-        ->when(\Request::input('search'),function($query,$search){
-            $query->where(function ($query) use ($search) {
-                $query->Orwhere('fullname','like','%'.$search.'%')
-                    ->orWhere('phone','like','%'.$search.'%')
-                    ->orWhere('address','like','%'.$search.'%');
-            });
-        })
-        ->when(request('city_id'), function ($query, $city_id) {
-            return $query->where('city_id', $city_id);
-        })
-        ->when(request('area_id'), function ($query, $area_id) {
-            return $query->where('area_id', $area_id);
-        })->orderBy('activated_at', 'DESC');
+            ->where('organization_id', $organ)
+            ->when(\Request::input('search'),function($query,$search){
+                $query->where(function ($query) use ($search) {
+                    $query->Orwhere('fullname','like','%'.$search.'%')
+                        ->orWhere('phone','like','%'.$search.'%')
+                        ->orWhere('address','like','%'.$search.'%');
+                });
+            })
+            ->when(request('city_id'), function ($query, $city_id) {
+                return $query->where('city_id', $city_id);
+            })
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+            })->orderBy('activated_at', 'DESC');
 
-        $sities = Sity::where('organization_id',$organ)->get();
-        $areas = Area::where('city_id', request('city_id', 0))->get();
-        $ars = Area::where('organization_id', $organ)->get();
+            $sities = Sity::where('organization_id',$organ)->get();
+            $areas = Area::where('city_id', request('city_id', 0))->get();
+            $ars = Area::where('organization_id', $organ)->get();
 
-        $products = Product::where('organization_id', $organ)->get();
-        $info_id = $organ;
-        $info_org = Organization::find($info_id);
-        //dd($organ);
-        if($info_org->date_traffic < now()) 
-        return view('error');
+            $products = Product::where('organization_id', $organ)->get();
+            $info_id = $organ;
+            $info_org = Organization::find($info_id);
+            //dd($organ);
+            if($info_org->date_traffic < now()) 
+            return view('error');
 
-        $page = request('page', session('clients_page', 1));
-        session(['clients_page' => $page]);
+            $page = request('page', session('clients_page', 1));
+            session(['clients_page' => $page]);
 
         
         if($request->paginate) {
+                if($request->paginate == -1) {
+                    $paginate = $clients->count();
+                } else
                 $paginate = $request->paginate; 
         } else $paginate = 10;
 
@@ -313,9 +318,35 @@ class HomeController extends Controller
             'areas' => $areas,
             'products' => $products,
             'info_org' => $info_org,
+            'paginate' => $paginate,
             'ars'   => $ars
         ]);
     }
+
+    public function export_clients(Request $request)
+    {
+        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+
+        $clients = Client::query()
+            ->where('organization_id', $organ)
+            ->when(\Request::input('search'),function($query,$search){
+                $query->where(function ($query) use ($search) {
+                    $query->Orwhere('fullname','like','%'.$search.'%')
+                        ->orWhere('phone','like','%'.$search.'%')
+                        ->orWhere('address','like','%'.$search.'%');
+                });
+            })
+            ->when(request('city_id'), function ($query, $city_id) {
+                return $query->where('city_id', $city_id);
+            })
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+            })->orderBy('activated_at', 'DESC');
+
+        return Excel::download(new ClientsExport, 'Mijozlar.xlsx');
+
+    }
+
 
     public function add_client_page()
     {

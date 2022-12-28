@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users_create');
 
     Route::get('/clients', [App\Http\Controllers\HomeController::class, 'clients'])->name('clients');
+    Route::get('/export_clients', [App\Http\Controllers\HomeController::class, 'export_clients'])->name('export_clients');
     Route::get('/status-client/{id}', [App\Http\Controllers\HomeController::class, 'status_client'])->name('status_client');
     
     

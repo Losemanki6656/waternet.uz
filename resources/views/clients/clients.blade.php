@@ -18,6 +18,8 @@
                     <h2>Mijozlar</h2>
                 </div>
                 <div class="col-lg-7 col-md-4 col-sm-12 text-right">
+                    <button type="button" class="btn btn-success" onclick="ExportToExcel('xlsx')"><i
+                            class="fa fa-download"></i> <span> Export</span></button>
                     <a type="button" href="{{ route('add_client_page') }}" class="btn btn-primary"><i
                             class="fa fa-plus"></i> <span> Mijoz qo'shish</span></a>
                 </div>
@@ -85,7 +87,7 @@
 
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table mb-0 table-bordered table-sm">
+                    <table id="table" class="table mb-0 table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th width="60">#</th>
@@ -103,7 +105,7 @@
 
                             @foreach ($clients as $client)
                                 <tr>
-                                    <td>{{ $clients->currentPage() * request('paginate') - request('paginate') + $loop->index + 1 }}</td>
+                                    <td>{{ $clients->currentPage() * $paginate - $paginate + $loop->index + 1 }}</td>
                                     <td class="text-center" style="font-weight: bold">{{ $client->fullname }}</td>
                                     <td class="text-center">
                                         <h6>{{ $client->phone }}</h6>
@@ -260,7 +262,8 @@
                                             <div class="modal-header">
                                                 <h4 class="title" id="defaultModalLabel">Zakaz olish</h4>
                                             </div>
-                                            <form action="{{ route('add_order', ['id' => $client->id]) }}" method="post">
+                                            <form action="{{ route('add_order', ['id' => $client->id]) }}"
+                                                method="post">
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="form-group">
@@ -525,6 +528,7 @@
                                 <option value="30" @if (request('paginate') == 30) selected @endif>30</option>
                                 <option value="50" @if (request('paginate') == 50) selected @endif>50</option>
                                 <option value="100" @if (request('paginate') == 100) selected @endif>100</option>
+                                <option value="-1" @if (request('paginate') == $clients->count()) selected @endif>All</option>
                             </select>
                         </div>
 
@@ -544,8 +548,26 @@
                 let search = $('#search').val();
                 let paginate = $(this).val();
                 let url = '{{ route('clients') }}';
-                window.location.href = `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
+                window.location.href =
+                    `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
             })
+        </script>
+
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+        <script>
+            function ExportToExcel(type, fn, dl) {
+                var elt = document.getElementById('table');
+                var wb = XLSX.utils.table_to_book(elt, {
+                    sheet: "sheet1"
+                });
+                return dl ?
+                    XLSX.write(wb, {
+                        bookType: type,
+                        bookSST: true,
+                        type: 'base64'
+                    }) :
+                    XLSX.writeFile(wb, fn || ('Mijozlar.' + (type || 'xlsx')));
+            }
         </script>
     @endpush
 

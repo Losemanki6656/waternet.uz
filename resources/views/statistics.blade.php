@@ -19,51 +19,6 @@
             </div>
         </div>
 
-        <div class="row clearfix d-flex justify-content-center">
-
-            @foreach ($info_users as $duser)
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="card text-center">
-                        <div class="header">
-                            <h2>{{$duser->name}}</h2>
-                        </div>
-                        <div class="body pt-0">
-                            <div class="row">
-                                <div class="col-12 m-b-15">
-                                    <h1>
-                                        <img src="https://sun9-42.userapi.com/impg/BKyMCPHVjA1UNCw0-yuohYoKFM7QNEPDOMhGag/TE6pNt9JZ1E.jpg?size=604x276&quality=96&sign=5c58ac18bd3cbba3ef82b59931c1a9fe&type=album"
-                                            width="180" height="90" alt="">
-                                    </h1>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <h4 class="font-22 text-col-green font-weight-bold">
-                                        <small class="font-12 text-col-dark d-block m-b-10">Tovar oldi</small>
-                                        {{ $p1roducts[$duser->id] }}
-                                    </h4>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <h4 class="font-22 text-col-blue font-weight-bold">
-                                        <small class="font-12 text-col-dark d-block m-b-10">Tovar sotdi</small>
-                                        {{ $p2roducts[$duser->id] }}
-                                    </h4>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <h4 class="font-22 text-col-red font-weight-bold">
-                                        <small class="font-12 text-col-dark d-block m-b-10">Idish qaytardi</small>
-                                        {{ $p3roducts[$duser->id] }}
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-
-        </div>
-
-
-
         <div class="row clearfix">
             <div class="col-12">
                 <div class="card top_report">
@@ -223,6 +178,51 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+
+            @foreach ($info_users as $duser)
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="card text-center">
+                        <div class="header">
+                            <h2>{{$duser->name}}</h2>
+                        </div>
+                        <div class="body pt-0">
+                            <div class="row">
+                                <div class="col-12 m-b-15">
+                                    <h1>
+                                        <img src="https://sun9-42.userapi.com/impg/BKyMCPHVjA1UNCw0-yuohYoKFM7QNEPDOMhGag/TE6pNt9JZ1E.jpg?size=604x276&quality=96&sign=5c58ac18bd3cbba3ef82b59931c1a9fe&type=album"
+                                            width="180" height="90" alt="">
+                                    </h1>
+                                </div>
+                                <div class="col">
+                                    <h4 class="font-22 text-col-green font-weight-bold">
+                                        <span class="font-12 text-col-green">Tovar oldi / </span><span class="font-12 text-col-dark">Tovar sotdi / </span><span class="font-12 text-col-blue">Tara oldi</span>
+                                    </h4>
+                                    <h4>
+                                        <span class="font-18 text-col-green">{{ $p1roducts[$duser->id] }} / </span><span class="font-18 text-col-dark">{{ $p2roducts[$duser->id] }} / </span><span class="font-18 text-col-blue">{{ $p3roducts[$duser->id] }}</span>
+                                    </h4>
+                                </div>
+                                {{-- <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <h4 class="font-22 text-col-blue font-weight-bold">
+                                        <small class="font-12 text-col-dark d-block m-b-10">Tovar sotdi</small>
+                                       
+                                    </h4>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <h4 class="font-22 text-col-red font-weight-bold">
+                                        <small class="font-12 text-col-dark d-block m-b-10">Idish qaytardi</small>
+                                        
+                                    </h4>
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+
         </div>
 
     </div>
