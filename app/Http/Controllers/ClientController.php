@@ -15,6 +15,8 @@ use App\Models\TakeContainer;
 use App\Models\EntryContainer;
 use App\Models\SuccessOrders;
 use App\Models\ActiveTraffic;
+use App\Models\TgToken;
+use App\Models\ClientChat;
 use App\Models\Traffic;
 use App\Models\Product;
 use App\Models\User;
@@ -549,6 +551,41 @@ class ClientController extends Controller
         $client_count = $clients->count();
         if(!$request->paginate) $paginate = 10; else $paginate = $request->paginate;
         return view('smsmanager.sendmessage',[
+            'clients' => $clients->paginate($paginate),
+            'sities' => $sities,
+            'areas' => $areas,
+            'products' => $products,
+            'info_org' => $info_org,
+            'client_count' => $client_count
+        ]);
+    }
+
+    public function send_message_tg(Request $request)
+    {  
+        $organ = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
+
+        $clients = Client::query()
+            ->where('organization_id', $organ)
+            ->when(request('city_id'), function ($query, $city_id) {
+                return $query->where('city_id', $city_id);
+            })
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+            })
+            ->with('city')
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('area')
+            ->with('telegrams');
+
+        $sities = Sity::where('organization_id',$organ)->get();
+        $areas = Area::where('city_id', request('city_id', 0))->get();
+
+        $products = Product::where('organization_id', $organ)->get();
+        $info_org = Organization::find($organ);
+        $client_count = $clients->count();
+        if(!$request->paginate) $paginate = 10; else $paginate = $request->paginate;
+        return view('smsmanager.tg_send_message',[
             'clients' => $clients->paginate($paginate),
             'sities' => $sities,
             'areas' => $areas,
@@ -1121,4 +1158,65 @@ class ClientController extends Controller
         }
         
      }
+
+     public function bot_token(Request $request)
+     {
+
+        $tokens = TgToken::get()->count();
+        if($tokens == 0) {
+            $message = new TgToken();
+            $message->res_token = $request->token;
+            $message->save();
+
+            return response()->json([
+                'message' => "success"
+            ]);
+
+        } else {
+            $message = TgToken::find(1);
+            $message->res_token = $request->token;
+            $message->save();
+
+            return response()->json([
+                'message' => "success"
+            ]);
+        }
+
+         return response()->json( [
+             'message' => "success"
+         ]);
+     }
+
+     public function registration($client_id, Request $request)
+     {
+        $client = Client::find($client_id);
+        if($client) {
+            $newinfo = new ClientChat();
+            $newinfo->client_id = $client_id;
+            $newinfo->name = $request->fullname;
+            $newinfo->phone = $request->phone;
+            $newinfo->chat_id = $request->chat_id;
+            $newinfo->save();
+
+
+            return response()->json( [
+                'message' => "success"
+            ]);
+        } else 
+        return response()->json( [
+            'message' => "Bunday foydalanuvchi topilmadi!"
+        ],404);
+       
+     }
+
+     public function logout_client($client_id)
+     {
+   
+            $newinfo = ClientChat::where('client_id', $client_id)->delete();
+
+            return response()->json( [
+                'message' => "success"
+            ]);
+     }
+
 }

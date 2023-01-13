@@ -47,6 +47,12 @@ Route::group([
     
 });
 
+
+Route::post('/client/bot_token', [ClientController::class, 'bot_token']);
+Route::get('/client/logout/{client_id}', [ClientController::class, 'logout_client']);
+
+Route::post('/client/registration/{client_id}', [ClientController::class, 'registration']);
+
 Route::get('/client/client-info', [ClientController::class, 'client_info']);
 Route::get('/client/products', [ClientController::class, 'client_products']);
 

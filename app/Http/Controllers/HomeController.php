@@ -471,6 +471,43 @@ class HomeController extends Controller
         return response()->json(['message' => 'success']);
     }
 
+    public function add_order_check(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $org_id = UserOrganization::where('user_id', $user_id)->value('organization_id');
+        $pr_status = Product::findOrFail($request->product_id)->container_status;
+
+        $arr = $request->checkbox;
+            $x = 0;
+    
+            foreach ($arr as $key => $value) { 
+                $order = Order::where('client_id',$key)->where('product_id',$request->product_id)->where('status',0)->get();
+                if($order->count() == 0) {
+
+                    $client = Client::find($key);
+
+                    $zakaz = new Order();
+                    $zakaz->organization_id = $org_id;
+                    $zakaz->city_id = $client->city_id;
+                    $zakaz->area_id = $client->area_id;
+                    $zakaz->client_id = $key;
+                    $zakaz->product_id = $request->product_id;
+                    $zakaz->container_status = $pr_status;
+                    $zakaz->product_count = $request->count;
+                    $zakaz->price = $request->sena;
+                    $zakaz->comment = $request->izoh ?? '';
+                    $zakaz->status = 0;
+                    $zakaz->user_id = $user_id;
+                    $zakaz->save();
+                    
+                    $client->activated_at = now();
+                    $client->save();
+                }
+            }
+
+        return redirect()->back()->with('msg' , 1);
+    }
+
     public function add_order(Request $request, $id)
     {
         $order = Order::where('client_id',$id)->where('product_id',$request->product_id)->where('status',0)->get();

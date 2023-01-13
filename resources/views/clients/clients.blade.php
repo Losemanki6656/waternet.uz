@@ -22,6 +22,54 @@
                             class="fa fa-download"></i> <span> Export</span></button>
                     <a type="button" href="{{ route('add_client_page') }}" class="btn btn-primary"><i
                             class="fa fa-plus"></i> <span> Mijoz qo'shish</span></a>
+
+                    <button type="button" class="btn btn-danger" data-target="#orderall" data-toggle="modal"><i
+                            class="fa fa-shopping-cart"></i> <span> Zakaz olish</span></button>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="orderall" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="title" id="defaultModalLabel">Zakaz olish</h4>
+                    </div>
+                    <form action="{{ route('add_order_check') }}" method="post" id="order_all_form">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <h6><label>Tovar nomi:</label></h6>
+                                <select class="form-control show-tick select2" id="prod_sel_all" name="product_id"
+                                    onchange="onselall()" required>
+                                    @foreach ($products as $product)
+                                        <option data-amount="{{ $product->price }}" value={{ $product->id }}>
+                                            {{ $product->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <h6><label>Narxi:</label></h6>
+                                <input class="form-control" type="text" id="sena_product_order_all" name="sena"
+                                    @if ($products->count()) value="{{ $products[0]->price }}" @endif required>
+                            </div>
+                            <div class="form-group">
+                                <h6><label>Soni:</label></h6>
+                                <input class="form-control" type="number" name="count" required>
+                            </div>
+                            <div class="form-group">
+                                <h6><label>Izoh:</label></h6>
+                                <textarea class="form-control" name="izoh" id="" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                Chiqish</button>
+                            <button class="btn btn-primary" type="submit"> Saqlash</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -90,7 +138,13 @@
                     <table id="table" class="table mb-0 table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th width="60">#</th>
+                                <th class="text-center">
+                                    <label class="fancy-checkbox">
+                                        <input class="select-all" type="checkbox" name="checkbox">
+                                        <span></span>
+                                    </label>
+                                </th>
+                                <th class="text-center" width="60">#</th>
                                 <th class="text-center">FIO</th>
                                 <th class="text-center">Tel raqami</th>
                                 <th class="text-center">Addres</th>
@@ -99,13 +153,22 @@
                                 <th class="text-center">Operator</th>
                                 <th width="100">Aktivligi</th>
                                 <th width="150">Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
 
                             @foreach ($clients as $client)
                                 <tr>
-                                    <td>{{ $clients->currentPage() * $paginate - $paginate + $loop->index + 1 }}</td>
+                                    <td style="width: 50px;" class="text-center">
+                                        <label class="fancy-checkbox">
+                                            <input class="checkbox-tick text-center" type="checkbox"
+                                                form="order_all_form" name="checkbox[{{ $client->id }}]">
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $clients->currentPage() * $paginate - $paginate + $loop->index + 1 }}</td>
                                     <td class="text-center" style="font-weight: bold">{{ $client->fullname }}</td>
                                     <td class="text-center">
                                         <h6>{{ $client->phone }}</h6>
@@ -611,5 +674,29 @@
             const dataVal = $this.find(':selected').data('amount');
             $('#sena_product_order' + id).val(dataVal);
         }
+    </script>
+
+    <script>
+        function onselall() {
+            const $this = $("#prod_sel_all");
+            const dataVal = $this.find(':selected').data('amount');
+            $('#sena_product_order_all').val(dataVal);
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            @if (\Session::has('msg'))
+                @if (Session::get('msg') == 1)
+                    Toastify({
+                        text: "Zakazlar muvaffaqqiyatli yuborildi!",
+                        className: "info",
+                        gravity: "bottom",
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                    }).showToast();
+                @endif
+            @endif
+        });
     </script>
 @endsection

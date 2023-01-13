@@ -18,6 +18,7 @@
   
         <div class="card">   
             <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link" href="{{route('send_message_tg')}}"><i class="fa fa-telegram"></i> Telegram</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{route('send_message')}}"><i class="fa fa-home"></i> Sms yuborish</a></li>
                 <li class="nav-item"><a class="nav-link active show" href="{{route('success_message')}}"><i class="fa fa-user"></i> Yuborilgan smslar </a></li>
                 <li class="nav-item"><a class="nav-link" href="{{route('sms_text')}}"><i class="fa fa-comment"></i> SmsText </a></li>

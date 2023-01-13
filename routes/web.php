@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::get('/results', [App\Http\Controllers\HomeController::class, 'results'])->name('results');
     Route::post('/add-order/{id}', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
+    Route::post('/add-order-check', [App\Http\Controllers\HomeController::class, 'add_order_check'])->name('add_order_check');
     
     Route::post('/delete-Order/{id}', [App\Http\Controllers\HomeController::class, 'delete_Order'])->name('delete_Order');
     Route::post('/success-order/{id}', [App\Http\Controllers\HomeController::class, 'success_order'])->name('success_order');
@@ -117,6 +118,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/warehouse/take-succ-container', [App\Http\Controllers\ClientController::class, 'take_entry_container'])->name('take_entry_container');
 
     Route::get('/smsmanager/send-message', [App\Http\Controllers\ClientController::class, 'send_message'])->name('send_message');
+    Route::get('/smsmanager/send-message-tg', [App\Http\Controllers\ClientController::class, 'send_message_tg'])->name('send_message_tg');
     Route::get('/smsmanager/success-message', [App\Http\Controllers\ClientController::class, 'success_message'])->name('success_message');
     Route::get('/smsmanager/sms-text', [App\Http\Controllers\ClientController::class, 'sms_text'])->name('sms_text');
     

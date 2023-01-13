@@ -9,7 +9,7 @@
         @endif
     @endif
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="dis">
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-5 col-md-8 col-sm-12">
@@ -26,14 +26,17 @@
   
         <div class="card">   
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link" href="{{route('send_message_tg')}}"><i class="fa fa-telegram"></i> Telegram</a></li>
-                <li class="nav-item"><a class="nav-link active show" href="{{route('send_message')}}"><i class="fa fa-home"></i> Sms yuborish</a></li>
+                <li class="nav-item"><a class="nav-link active show" href="{{route('send_message_tg')}}"><i class="fa fa-message"></i> Telegram</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{route('send_message')}}"><i class="fa fa-home"></i> Sms yuborish</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{route('success_message')}}"><i class="fa fa-user"></i> Yuborilgan smslar </a></li>
                 <li class="nav-item"><a class="nav-link" href="{{route('sms_text')}}"><i class="fa fa-comment"></i> SmsText </a></li>
             </ul>
             <div class="tab-content">            
                 <div class="tab-pane show active">
                     <div class="card">
+                        <div class="alert alert-warning alert-dismissible mb-3 text-center fw-bold" role="alert">
+                            <i class="fa fa-warning"></i> Tez kunda
+                        </div>
                         <div class="header" style="padding-bottom: 0">
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-6">
@@ -119,9 +122,7 @@
                                             <th>Adres</th>
                                             <th>Balans</th>
                                             <th>Idish qarzi</th>
-                                            <th>Operator</th>
-                                            <th>Qo'shilgan vaqti</th>
-                                            <th>Aktivligi</th>
+                                            <th class="text-center">Telegram</th>
                                             <th>
                                                 <label class="fancy-checkbox">
                                                     <input class="select-all" type="checkbox" name="checkbox">
@@ -141,9 +142,14 @@
                                                     <td>{{$client->city->name}}, {{$client->area->name}}</td>
                                                     <td>{{$client->balance}}</td>
                                                     <td>{{$client->container}}</td>
-                                                    <td>{{$client->user->name}}</td>
-                                                    <td>{{$client->created_at->format('Y-m-d')}}</td>
-                                                    <td><span class="badge badge-primary">{{$client->created_at->format('Y-m-d')}}</span></td>
+                                                    <td width="200" class="text-center">
+                                                        @if ($client->telegrams->count())
+                                                            <span class="badge badge-primary"><i class="fa fa-telegram"></i>  {{$client->telegrams->count()}} ta akkaunt</span></td>
+                                                        @else
+                                                            <span class="badge badge-danger"> <i class="fa fa-telegram"></i> Mavjud emas </span></td>
+                                                        @endif
+                                                        
+                                                        
                                                     <td style="width: 50px;">
                                                         <label class="fancy-checkbox">
                                                             <input class="checkbox-tick" type="checkbox" name="checkbox[{{$client->id}}]">
@@ -193,4 +199,9 @@
 @endsection
 
 @push('scripts')
+
+<script>
+    $("#dis").find("*").prop('disabled', true);
+</script>
+
 @endpush

@@ -41,6 +41,11 @@ class Client extends Model
         return $this->belongsTo(Sity::class,'city_id');
     }
 
+    public function telegrams()
+    {
+        return $this->hasMany(ClientChat::class,'client_id');
+    }
+
     public function area()
     {
         return $this->belongsTo(Area::class);

@@ -321,7 +321,7 @@
                         @endcan
                         @can('smsmanager')
                             <li class="{{ strpos(url()->current(), 'smsmanager') ? 'active' : '' }}">
-                                <a href="{{ route('send_message') }}"><i
+                                <a href="{{ route('send_message_tg') }}"><i
                                         class="fa fa-comment"></i><span>SmsManager</span>
                                 </a>
                             </li>

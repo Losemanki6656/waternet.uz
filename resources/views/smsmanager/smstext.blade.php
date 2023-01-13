@@ -24,6 +24,7 @@
 
         <div class="card animate__animated animate__fadeInUp">
             <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link" href="{{route('send_message_tg')}}"><i class="fa fa-telegram"></i> Telegram</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('send_message') }}"><i class="fa fa-home"></i> Sms
                         yuborish</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('success_message') }}"><i class="fa fa-user"></i>
