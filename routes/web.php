@@ -27,6 +27,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
 
     Route::get('/statistics', [App\Http\Controllers\HomeController::class, 'statistics'])->name('statistics');
+
+    Route::get('/admin/refresh', [App\Http\Controllers\HomeController::class, 'muborak_refresh'])->name('muborak_refresh');
     
     Route::post('/administration/active-traffics', [App\Http\Controllers\HomeController::class, 'active_traffics'])->name('active_traffics');
 

@@ -1355,4 +1355,46 @@ class HomeController extends Controller
         }
         return response()->json(['message' => 'success']);
     }
+
+    public function muborak_refresh()
+    {
+        $areas = Area::where('city_id', 58)->get();
+
+        foreach($areas as $area)
+        {
+            $newArea  = new Area();
+            $newArea->organization_id = 17;
+            $newArea->city_id = 99;
+            $newArea->name = $area->name;
+            $newArea->save();
+
+            $clients = Client::where('area_id', $area->id)->get();
+
+            foreach($clients as $item)
+            {
+                $newClient = new Client();
+                $newClient->organization_id = 17;
+                $newClient->user_id = 56;
+                $newClient->city_id = 99;
+                $newClient->area_id = $newArea->id;
+                $newClient->fullname = $item->fullname;
+                $newClient->street = $item->street;
+                $newClient->home_number = $item->home_number;
+                $newClient->entrance = $item->entrance;
+                $newClient->floor = $item->floor;
+                $newClient->apartment_number = $item->apartment_number;
+                $newClient->address = $item->address;
+                $newClient->location = $item->location;
+                $newClient->login = '17' . $item->login;
+                $newClient->password = '17' . $item->password;
+                $newClient->balance = $item->balance;
+                $newClient->container = $item->container;
+                $newClient->bonus = $item->bonus;
+                $newClient->phone = $item->phone;
+                $newClient->phone2 = $item->phone2;
+                $newClient->activated_at = $item->activated_at;
+                $newClient->save();
+            }
+        }
+    }
 }
