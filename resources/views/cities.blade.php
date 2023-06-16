@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 @section('content')
 
     @if (\Session::has('msg'))
@@ -41,8 +41,7 @@
                                 </button>
                                 @push('scripts')
                                     <script>
-                                        function Sort()
-                                        {
+                                        function Sort() {
                                             let url = '{{ route('cities') }}';
                                             window.location.href =
                                                 `${url}?filter=${"down"}`;

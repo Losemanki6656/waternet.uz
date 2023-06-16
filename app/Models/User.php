@@ -1,18 +1,18 @@
 <?php
-  
+
 namespace App\Models;
-  
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-  
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasRoles;
-  
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
     ];
-  
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
     ];
-  
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -43,7 +43,8 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function getJWTIdentifier() {
+    public function getJWTIdentifier()
+    {
         return $this->getKey();
     }
     /**
@@ -51,17 +52,31 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims() {
+    public function getJWTCustomClaims()
+    {
         return [];
-    } 
+    }
 
     public function organization()
     {
-        return $this->belongsTo(UserOrganization::class,'user_id');
+        return $this->belongsTo(Organization::class);
     }
 
     public function regionUser()
     {
         return $this->hasOne(RegionUser::class);
+    }
+
+    public function roleName()
+    {
+
+        if ($this->role == 4)
+            return 'Director';
+        if ($this->role == 2)
+            return 'Warehouse manager';
+        if ($this->role == 3)
+            return 'Driver';
+        if ($this->role == 1)
+            return 'Operator';
     }
 }

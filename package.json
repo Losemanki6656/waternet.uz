@@ -21,6 +21,8 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "animate.css": "^4.1.1",
+        "font-awesome": "^4.7.0",
         "places.js": "^1.19.0"
     }
 }

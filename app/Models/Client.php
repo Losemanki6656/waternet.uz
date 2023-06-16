@@ -32,18 +32,22 @@ class Client extends Model
         'phone2',
         'activated_at'
     ];
-  
+
+
+    protected $casts = [
+        'balance' => 'double'
+    ];
 
     protected $dates = ['activated_at'];
 
     public function city()
     {
-        return $this->belongsTo(Sity::class,'city_id');
+        return $this->belongsTo(Sity::class, 'city_id');
     }
 
     public function telegrams()
     {
-        return $this->hasMany(ClientChat::class,'client_id');
+        return $this->hasMany(ClientChat::class, 'client_id');
     }
 
     public function area()
@@ -53,11 +57,24 @@ class Client extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class,'organization_id');
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function RegionAddress()
+    {
+        return $this->city->name . ', ' . $this->area->name;
+    }
+
+    public function Address()
+    {
+        $address = $this->street . ', ' . $this->home_number . ', ' . $this->entrance . ', ' . $this->floor . ', ' . $this->apartment_number . ', ' . $this->address . '.';
+
+        $address = str_replace([' , ', ' ,', '  ', ', .'], ['', '', ' ', ''], $address);
+        return $address;
     }
 }

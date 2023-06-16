@@ -33,13 +33,13 @@ class ClientController extends Controller
         $client = Client::find($id);
         $locations[0] = $client->fullname;
 
-        $arr = explode(',',$client->location);
+        $arr = explode(',', $client->location);
 
         $locations[1] = $arr[0];
         $locations[2] = $arr[1];
         $locations[3] = 1;
 
-        return view('clients.viewlocation',[
+        return view('clients.viewlocation', [
             'locations' => $locations
         ]);
     }
@@ -47,156 +47,181 @@ class ClientController extends Controller
     public function client_price(Request $request, $id)
     {
         $clientprice = new ClientPrices();
-        $clientprice->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $clientprice->organization_id = auth()->user()->organization_id;
         $clientprice->success_order_id = 0;
         $clientprice->client_id = $id;
         $clientprice->user_id = Auth::user()->id;
         $clientprice->payment = $request->payment;
         $clientprice->amount = $request->amount;
-        $clientprice->comment = $request->comment ?? ''; 
-        $clientprice->status = 1; 
+        $clientprice->comment = $request->comment ?? '';
+        $clientprice->status = 1;
         $clientprice->save();
 
         $client = Client::find($id);
         $client->balance = $client->balance + $request->amount;
         $client->save();
-        
 
-       
-        return redirect()->back()->with('msg' ,'success');
+        return redirect()->back()->with('success', __('messages.price_added_successfully'));
     }
 
     public function client_price_edit(Request $request, $id)
     {
-        $clientprice = ClientPrices::find($id);
-        if($clientprice->status == 1) {
-            $price = $clientprice->amount;
-            $clientprice->payment = $request->payment;
-            $clientprice->amount = $request->amount;
-            $clientprice->comment = $request->comment ?? ''; 
-            $clientprice->save();
-    
-            $client = Client::find($clientprice->client_id);
-            $client->balance = $client->balance - $price +  $request->amount;
-            $client->save();
-        } else {
-            $price = $clientprice->amount;
-            $clientprice->payment = $request->payment;
-            $clientprice->amount = $request->amount;
-            $clientprice->comment = $request->comment ?? ''; 
-            $clientprice->save();
-    
-            $client = Client::find($clientprice->client_id);
-            $client->balance = $client->balance - $price +  $request->amount;
-            $client->save();
+        try {
 
-            $succ = SuccessOrders::find($clientprice->success_order_id);
-            $succ->amount = $request->amount;
-            $succ->price_sold = $request->amount - ($succ->count * $succ->price);
-            $succ->save();
+            $clientprice = ClientPrices::find($id);
+            if ($clientprice->status == 1) {
+                $price = $clientprice->amount;
+                $clientprice->payment = $request->payment;
+                $clientprice->amount = $request->amount;
+                $clientprice->comment = $request->comment ?? '';
+                $clientprice->save();
+
+                $client = Client::find($clientprice->client_id);
+                $client->balance = $client->balance - $price + $request->amount;
+                $client->save();
+            } else {
+                $price = $clientprice->amount;
+                $clientprice->payment = $request->payment;
+                $clientprice->amount = $request->amount;
+                $clientprice->comment = $request->comment ?? '';
+                $clientprice->save();
+
+                $client = Client::find($clientprice->client_id);
+                $client->balance = $client->balance - $price + $request->amount;
+                $client->save();
+
+                $succ = SuccessOrders::find($clientprice->success_order_id);
+                $succ->amount = $request->amount;
+                $succ->price_sold = $request->amount - ($succ->count * $succ->price);
+                $succ->save();
+            }
+
+            return redirect()->back()->with('success', __('messages.amount_receipts_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        
-
-       
-        return redirect()->back()->with('msg' ,'success');
     }
 
-    public function client_price_delete( $id)
+    public function client_price_delete($id)
     {
-        $clientprice = ClientPrices::find($id);
-        $price = $clientprice->amount;
+        try {
 
-        $client = Client::find($clientprice->client_id);
-        $client->balance = $client->balance - $price;
-        $client->save();
-        $clientprice->delete();
-       
-        return redirect()->back()->with('msg' ,'success');
+            $clientprice = ClientPrices::find($id);
+            $price = $clientprice->amount;
+
+            $client = Client::find($clientprice->client_id);
+            $client->balance = $client->balance - $price;
+            $client->save();
+            $clientprice->delete();
+
+            return redirect()->back()->with('success', __('messages.amount_receipts_deleted_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function client_container(Request $request, $id)
     {
         $clientprice = new ClientContainer();
-        $clientprice->organization_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $clientprice->organization_id = auth()->user()->organization_id;
         $clientprice->success_order_id = 0;
         $clientprice->client_id = $id;
         $clientprice->user_id = Auth::user()->id;
         $clientprice->product_id = $request->product_id;
         $clientprice->count = $request->count;
-        $clientprice->invalid_count = $request->invalid_count; 
-        $clientprice->comment = $request->comment ?? ''; 
-        $clientprice->status = 1; 
+        $clientprice->invalid_count = $request->invalid_count;
+        $clientprice->comment = $request->comment ?? '';
+        $clientprice->status = 1;
         $clientprice->save();
 
         $client = Client::find($id);
         $client->container = $client->container + $request->count - $request->invalid_count;
         $client->save();
 
-       
-        return redirect()->back()->with('msg' ,'success');
+        return redirect()->back()->with('success', __('messages.container_returned_successfully'));
     }
 
     public function client_container_edit(Request $request, $id)
     {
-        $clientprice = ClientContainer::find($id);
-        if($clientprice->status == 1) {
-            $count = $clientprice->count;
-            $incount = $clientprice->invalid_count;
-    
-            $clientprice->product_id = $request->product_id;
-            $clientprice->count = $request->count;
-            $clientprice->invalid_count = $request->invalid_count; 
-            $clientprice->comment = $request->comment ?? ''; 
-            $clientprice->save();
-    
-            $client = Client::find($clientprice->client_id);
-            $client->container = $client->container - ($count-$incount) + $request->count - $request->invalid_count;
-            $client->save();
-        } else {
-            $count = $clientprice->count;
-            $incount = $clientprice->invalid_count;
-    
-            $clientprice->product_id = $request->product_id;
-            $clientprice->count = $request->count;
-            $clientprice->invalid_count = $request->invalid_count; 
-            $clientprice->comment = $request->comment ?? ''; 
-            $clientprice->save();
-    
-            $client = Client::find($clientprice->client_id);
-            $client->container = $client->container - ($count-$incount) + $request->count - $request->invalid_count;
-            $client->save();
+        try {
 
-            $succ = SuccessOrders::find($clientprice->success_order_id);
-            $succ->container = $request->count;
-            $succ->invalid_container_count = $request->invalid_count;
-            $succ->save();
+            $clientprice = ClientContainer::find($id);
+            if ($clientprice->status == 1) {
+                $count = $clientprice->count;
+                $incount = $clientprice->invalid_count;
+
+                $clientprice->product_id = $request->product_id;
+                $clientprice->count = $request->count;
+                $clientprice->invalid_count = $request->invalid_count;
+                $clientprice->comment = $request->comment ?? '';
+                $clientprice->save();
+
+                $client = Client::find($clientprice->client_id);
+                $client->container = $client->container - ($count - $incount) + $request->count - $request->invalid_count;
+                $client->save();
+            } else {
+                $count = $clientprice->count;
+                $incount = $clientprice->invalid_count;
+
+                $clientprice->product_id = $request->product_id;
+                $clientprice->count = $request->count;
+                $clientprice->invalid_count = $request->invalid_count;
+                $clientprice->comment = $request->comment ?? '';
+                $clientprice->save();
+
+                $client = Client::find($clientprice->client_id);
+                $client->container = $client->container - ($count - $incount) + $request->count - $request->invalid_count;
+                $client->save();
+
+                $succ = SuccessOrders::find($clientprice->success_order_id);
+                $succ->container = $request->count;
+                $succ->invalid_container_count = $request->invalid_count;
+                $succ->save();
+            }
+
+            return redirect()->back()->with('success', __('messages.returned_containers_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
-        return redirect()->back()->with('msg' ,'success');
     }
     public function client_container_delete($id)
     {
-        $clientprice = ClientContainer::find($id);
-        $count = $clientprice->count;
-        $incount = $clientprice->invalid_count;
+        try {
 
-        $client = Client::find($clientprice->client_id);
-        $client->container = $client->container - ($count-$incount);
-        $client->save();
+            $clientprice = ClientContainer::find($id);
+            $count = $clientprice->count;
+            $incount = $clientprice->invalid_count;
 
-        $clientprice->delete();
-       
-        return redirect()->back()->with('msg' ,'success');
+            $client = Client::find($clientprice->client_id);
+            $client->container = $client->container - ($count - $incount);
+            $client->save();
+
+            $clientprice->delete();
+
+            return redirect()->back()->with('success', __('messages.returned_containers_deleted_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function success_order_view($id)
-    {  
+    {
         $order = Order::find($id);
         $summ = $order->product_count * $order->price;
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        return view('clients.success_order',[
+        return view('clients.success_order', [
             'order' => $order,
             'summ' => $summ,
             'info_org' => $info_org
@@ -204,22 +229,22 @@ class ClientController extends Controller
     }
 
     public function take_products()
-    {  
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $takeproducts = TakeProduct::where('organization_id',$info_id)
-        ->orderBy('created_at', 'DESC')
-        ->with('received')->with('sent')->with('product');
+    {
+        $info_id = auth()->user()->organization_id;
+        $takeproducts = TakeProduct::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('received')->with('sent')->with('product');
 
         $products = Product::where('organization_id', $info_id)->get();
-    
+
         $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
-       
-        $users = User::whereIn('id',$arr)->get();
-        
+
+        $users = User::whereIn('id', $arr)->get();
+
         $info_org = Organization::find($info_id);
 
 
-        return view('sklad.take-product',[
+        return view('sklad.take-product', [
             'takeproducts' => $takeproducts->paginate(10),
             'products' => $products,
             'users' => $users,
@@ -228,41 +253,61 @@ class ClientController extends Controller
     }
 
     public function entry_products()
-    {  
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $entryproduct = EntryProduct::where('organization_id',$info_id)
-        ->orderBy('created_at', 'DESC')
-        ->with('user')->with('product');
+    {
+        $info_id = auth()->user()->organization_id;
+
+        $users = User::where('organization_id', $info_id)->get();
+
+        $entryproduct = EntryProduct::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('user')->with('product');
+
+        $takeproducts = TakeProduct::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('received')->with('sent')->with('product');
+
+        $entrycontainer = EntryContainer::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('received')
+            ->with('product');
+
+        $takecontainer = TakeContainer::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('product');
 
         $products = Product::where('organization_id', $info_id)->get();
-       
-        $info_org = Organization::find($info_id);
 
-        return view('sklad.entry-product',[
+
+        return view('sklad.entry-product', [
             'entryproduct' => $entryproduct->paginate(10),
             'products' => $products,
-            'info_org' => $info_org
+            'users' => $users,
+            'takeproducts' => $takeproducts->paginate(10),
+            'entrycontainer' => $entrycontainer->paginate(10),
+            'takecontainer' => $takecontainer->paginate(10)
         ]);
     }
 
     public function entry_container()
-    {  
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-        $entrycontainer = EntryContainer::where('organization_id',$info_id)
-        ->orderBy('created_at', 'DESC')
-        ->with('user')
-        ->with('received')
-        ->with('product');
+    {
+        $info_id = auth()->user()->organization_id;
+        $entrycontainer = EntryContainer::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('received')
+            ->with('product');
 
         $products = Product::where('organization_id', $info_id)->get();
-    
+
         $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
-       
-        $users = User::whereIn('id',$arr)->get();
-       
+
+        $users = User::whereIn('id', $arr)->get();
+
         $info_org = Organization::find($info_id);
 
-        return view('sklad.entry-container',[
+        return view('sklad.entry-container', [
             'entrycontainer' => $entrycontainer->paginate(10),
             'products' => $products,
             'users' => $users,
@@ -271,19 +316,19 @@ class ClientController extends Controller
     }
 
     public function take_container()
-    {  
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        $info_id = auth()->user()->organization_id;
 
-        $takecontainer = TakeContainer::where('organization_id',$info_id)
-        ->orderBy('created_at', 'DESC')
-        ->with('user')
-        ->with('product');
+        $takecontainer = TakeContainer::where('organization_id', $info_id)
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('product');
 
         $products = Product::where('organization_id', $info_id)->get();
-        
+
         $info_org = Organization::find($info_id);
 
-        return view('sklad.take-container',[
+        return view('sklad.take-container', [
             'takecontainer' => $takecontainer->paginate(10),
             'products' => $products,
             'info_org' => $info_org
@@ -291,266 +336,398 @@ class ClientController extends Controller
     }
 
     public function add_take_product(Request $request)
-    {  
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        try {
 
-        $takproduct = new TakeProduct();
-        $takproduct->organization_id = $organ;
-        $takproduct->received_id = $request->user_id;
-        $takproduct->sent_id = Auth::user()->id;
-        $takproduct->product_id = $request->product_id;
-        $takproduct->product_count = $request->product_count;
-        $takproduct->save();
+            $organ = auth()->user()->organization_id;
 
-        $prod = Product::find($request->product_id);
-        $prod->product_count = $prod->product_count - $request->product_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $takproduct = new TakeProduct();
+            $takproduct->organization_id = $organ;
+            $takproduct->received_id = $request->user_id;
+            $takproduct->sent_id = Auth::user()->id;
+            $takproduct->product_id = $request->product_id;
+            $takproduct->product_count = $request->product_count;
+            $takproduct->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->product_count = $prod->product_count - $request->product_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.product_taked_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function take_edit_product(Request $request, $id)
-    {  
-        $takproduct = TakeProduct::find($id);
-        $takproduct->received_id = $request->user_id;
-        $takproduct->sent_id = Auth::user()->id;
-        $takproduct->product_id = $request->product_id;
-        $old = $takproduct->product_count;
-        $takproduct->product_count = $request->product_count;
-        $takproduct->save();
+    {
 
-        $prod = Product::find($request->product_id);
-        $prod->product_count = $prod->product_count + $old - $request->product_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+        try {
+
+            $takproduct = TakeProduct::find($id);
+            $takproduct->received_id = $request->user_id;
+            $takproduct->sent_id = Auth::user()->id;
+            $takproduct->product_id = $request->product_id;
+            $old = $takproduct->product_count;
+            $takproduct->product_count = $request->product_count;
+            $takproduct->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->product_count = $prod->product_count + $old - $request->product_count;
+            $prod->save();
+
+
+            return redirect()->back()->with('success', __('messages.taked_product_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    public function take_delete_product(Request $request, $id)
-    {  
-        $takproduct = TakeProduct::find($id);
-        $old = $takproduct->product_count;
-        $oldid = $takproduct->product_id;
+    public function take_delete_product()
+    {
+        try {
 
-        $prod = Product::find($oldid);
-        $prod->product_count = $prod->product_count + $old;
-        $prod->save();
-        $takproduct->delete();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $takproduct = TakeProduct::find(request('id'));
+            $old = $takproduct->product_count;
+            $oldid = $takproduct->product_id;
+
+            $prod = Product::find($oldid);
+            $prod->product_count = $prod->product_count + $old;
+            $prod->save();
+            $takproduct->delete();
+
+            return response()->json([
+                'message' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function add_entry_product(Request $request)
-    {  
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        try {
 
-        $entryproduct = new EntryProduct();
-        $entryproduct->organization_id = $organ;
-        $entryproduct->product_id = $request->product_id;
-        $entryproduct->user_id = Auth::user()->id;
-        $entryproduct->product_count = $request->product_count;
-        $entryproduct->price = $request->price;
-        $entryproduct->comment = $request->comment?? '';
-        $entryproduct->save();
+            $organ = auth()->user()->organization_id;
 
-        $prod = Product::find($request->product_id);
-        $prod->product_count = $prod->product_count + $request->product_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entryproduct = new EntryProduct();
+            $entryproduct->organization_id = $organ;
+            $entryproduct->product_id = $request->product_id;
+            $entryproduct->user_id = Auth::user()->id;
+            $entryproduct->product_count = $request->product_count;
+            $entryproduct->price = $request->price;
+            $entryproduct->comment = $request->comment ?? '';
+            $entryproduct->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->product_count = $prod->product_count + $request->product_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.product_entered_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function edit_entry_product(Request $request, $id)
-    {  
-        $entryproduct = EntryProduct::find($id);
+    {
+        try {
 
-        $entryproduct->product_id = $request->product_id;
-        $entryproduct->user_id = Auth::user()->id;
-        $old = $entryproduct->product_count;
-        $entryproduct->product_count = $request->product_count;
-        $entryproduct->price = $request->price;
-        $entryproduct->comment = $request->comment?? '';
-        $entryproduct->save();
+            $entryproduct = EntryProduct::find($id);
 
-        $prod = Product::find($request->product_id);
-        $prod->product_count = $prod->product_count - $old + $request->product_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entryproduct->product_id = $request->product_id;
+            $entryproduct->user_id = Auth::user()->id;
+            $old = $entryproduct->product_count;
+            $entryproduct->product_count = $request->product_count;
+            $entryproduct->price = $request->price;
+            $entryproduct->comment = $request->comment ?? '';
+            $entryproduct->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->product_count = $prod->product_count - $old + $request->product_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.product_entered_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    public function delete_entry_product($id)
-    {  
-        $entryproduct = EntryProduct::find($id);
-        $old = $entryproduct->product_count;
-        $oldid = $entryproduct->product_id;
+    public function delete_entry_product()
+    {
+        try {
 
-        $entryproduct->save();
+            $entryproduct = EntryProduct::find(request('id'));
+            $old = $entryproduct->product_count;
+            $oldid = $entryproduct->product_id;
 
-        $prod = Product::find($oldid);
-        $prod->product_count = $prod->product_count - $old;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entryproduct->delete();
+
+            $prod = Product::find($oldid);
+            $prod->product_count = $prod->product_count - $old;
+            $prod->save();
+
+            return response()->json([
+                'message' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
+
     }
 
     public function add_entry_container(Request $request)
-    {  
-        //dd($request->all());
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        try {
 
-        $entrycontainer = new EntryContainer();
-        $entrycontainer->organization_id = $organ;
-        $entrycontainer->product_id = $request->product_id;
-        $entrycontainer->user_id = $request->user_id;
-        $entrycontainer->product_count = $request->container_count;
-        $entrycontainer->received_id = Auth::user()->id;
-        $entrycontainer->save();
+            $organ = auth()->user()->organization_id;
 
-        $prod = Product::find($request->product_id);
-        $prod->container = $prod->container + $request->container_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entrycontainer = new EntryContainer();
+            $entrycontainer->organization_id = $organ;
+            $entrycontainer->product_id = $request->product_id;
+            $entrycontainer->user_id = $request->user_id;
+            $entrycontainer->product_count = $request->container_count;
+            $entrycontainer->received_id = Auth::user()->id;
+            $entrycontainer->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->container = $prod->container + $request->container_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.entry_container_added_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function edit_entry_container(Request $request, $id)
-    {  
-        
-        $entrycontainer = EntryContainer::find($id);
-        $old = $entrycontainer->product_count;
+    {
 
-        $entrycontainer->product_id = $request->product_id;
-        $entrycontainer->user_id = $request->user_id;
-        $entrycontainer->product_count = $request->container_count;
-        $entrycontainer->received_id = Auth::user()->id;
-        $entrycontainer->save();
+        try {
 
-        $prod = Product::find($request->product_id);
-        $prod->container = $prod->container - $old + $request->container_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entrycontainer = EntryContainer::find($id);
+            $old = $entrycontainer->product_count;
+
+            $entrycontainer->product_id = $request->product_id;
+            $entrycontainer->user_id = $request->user_id;
+            $entrycontainer->product_count = $request->container_count;
+            $entrycontainer->received_id = Auth::user()->id;
+            $entrycontainer->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->container = $prod->container - $old + $request->container_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.entry_container_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    public function delete_entry_container($id)
-    {  
-        
-        $entrycontainer = EntryContainer::find($id);
-        $prodid = $entrycontainer->product_id;
-        $old = $entrycontainer->product_count;
+    public function delete_entry_container()
+    {
 
-        $prod = Product::find($prodid);
-        $prod->container = $prod->container - $old;
-        $prod->save();     
-        $entrycontainer->delete();
-        
-        return redirect()->back()->with('msg' ,'success');
+        try {
+
+            $entrycontainer = EntryContainer::find(request('id'));
+            $prodid = $entrycontainer->product_id;
+            $old = $entrycontainer->product_count;
+
+            $prod = Product::find($prodid);
+            $prod->container = $prod->container - $old;
+            $prod->save();
+            $entrycontainer->delete();
+
+            return response()->json([
+                'message' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function edit_product(Request $request, $id)
-    {  
-        if($request->photo != null){
-            $fileName = time().'.'.$request->photo->extension();
-            $path = $request->photo->storeAs('products', $fileName);
+    {
+
+        try {
+
+            if ($request->photo != null) {
+                $fileName = time() . '.' . $request->photo->extension();
+                $path = $request->photo->storeAs('products', $fileName);
+            }
+
+            $product = Product::find($id);
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->container_status = $request->container_status;
+
+            if ($request->photo != null) {
+                $product->photo = 'storage/products/' . $fileName;
+            } else
+                $product->photo = '';
+
+            $product->save();
+
+            return redirect()->back()->with('success', __('messages.product_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function delete_product()
+    {
+
+        try {
+
+            Product::find(request('id'))->delete();
+
+            return response()->json([
+                'message' => __('messages.product_deleted_successfully')
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
         }
 
-        $product = Product::find($id);
-        $product->name = $request->name;
-        $product->price = $request->price;
-        
-        if($request->photo != null){
-            $product->photo =  'storage/products/' . $fileName;
-        } else  $product->photo = '';
-       
-        $product->save();
-        
-        return redirect()->back()->with('msg' ,'success');
     }
 
-    public function delete_product($id)
-    {  
-        $product = Product::find($id)->delete();
-        
-        return redirect()->back()->with('msg' ,'success');
-    }
-    
     public function take_entry_container(Request $request)
-    {  
-       // dd($request->all());
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        try {
 
-        $entrycontainer = new TakeContainer();
-        $entrycontainer->organization_id = $organ;
-        $entrycontainer->user_id = Auth::user()->id;
-        $entrycontainer->product_id = $request->product_id;
-        $entrycontainer->product_count = $request->product_count;
-        $entrycontainer->comment = $request->comment?? '';
-        $entrycontainer->save();
+            $organ = auth()->user()->organization_id;
 
-        $prod = Product::find($request->product_id);
-        $prod->container = $prod->container - $request->product_count;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entrycontainer = new TakeContainer();
+            $entrycontainer->organization_id = $organ;
+            $entrycontainer->user_id = Auth::user()->id;
+            $entrycontainer->product_id = $request->product_id;
+            $entrycontainer->product_count = $request->product_count;
+            $entrycontainer->comment = $request->comment ?? '';
+            $entrycontainer->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->container = $prod->container - $request->product_count;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.take_container_addedd_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function take_edit_container(Request $request, $id)
-    {  
-        $entrycontainer = TakeContainer::find($id);
-        $entrycontainer->user_id = Auth::user()->id;
-        $entrycontainer->product_id = $request->product_id;
-        $old = $entrycontainer->product_count;
+    {
+        try {
 
-        $entrycontainer->product_count = $request->product_count;
-        $entrycontainer->comment = $request->comment?? '';
-        $entrycontainer->save();
+            $entrycontainer = TakeContainer::find($id);
+            $entrycontainer->user_id = Auth::user()->id;
+            $entrycontainer->product_id = $request->product_id;
+            $old = $entrycontainer->product_count;
 
-        $prod = Product::find($request->product_id);
-        $prod->container = $prod->container - $request->product_count + $old;
-        $prod->save();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entrycontainer->product_count = $request->product_count;
+            $entrycontainer->comment = $request->comment ?? '';
+            $entrycontainer->save();
+
+            $prod = Product::find($request->product_id);
+            $prod->container = $prod->container - $request->product_count + $old;
+            $prod->save();
+
+            return redirect()->back()->with('success', __('messages.take_container_updated_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function take_delete_container($id)
-    {  
-        $entrycontainer = TakeContainer::find($id);
-        $old = $entrycontainer->product_count;
-        $oldid = $entrycontainer->product_id;
+    public function take_delete_container()
+    {
+        try {
 
-        $prod = Product::find($oldid);
-        $prod->container = $prod->container + $old;
-        $prod->save();
-        $entrycontainer->delete();
-        
-        return redirect()->back()->with('msg' ,'success');
+            $entrycontainer = TakeContainer::find(request('id'));
+            $old = $entrycontainer->product_count;
+            $oldid = $entrycontainer->product_id;
+
+            $prod = Product::find($oldid);
+            $prod->container = $prod->container + $old;
+            $prod->save();
+            $entrycontainer->delete();
+
+            return response()->json([
+                'message' => __('messages.product_deleted_successfully')
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function send_message(Request $request)
-    {  
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        $organ = auth()->user()->organization_id;
         $clients = Client::query()
-        ->where('organization_id', $organ)
-        ->when(request('city_id'), function ($query, $city_id) {
-            return $query->where('city_id', $city_id);
-        })
-        ->when(request('area_id'), function ($query, $area_id) {
-            return $query->where('area_id', $area_id);
-        })
-        ->with('city')
-        ->orderBy('created_at', 'DESC')
-        ->with('user')
-        ->with('area');
+            ->where('organization_id', $organ)
+            ->when(request('city_id'), function ($query, $city_id) {
+                return $query->where('city_id', $city_id);
+            })
+            ->when(request('area_id'), function ($query, $area_id) {
+                return $query->where('area_id', $area_id);
+            })
+            ->with('city')
+            ->orderBy('created_at', 'DESC')
+            ->with('user')
+            ->with('area');
 
-        $sities = Sity::where('organization_id',$organ)->get();
+        $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
 
         $products = Product::where('organization_id', $organ)->get();
         $info_org = Organization::find($organ);
         $client_count = $clients->count();
-        if(!$request->paginate) $paginate = 10; else $paginate = $request->paginate;
-        return view('smsmanager.sendmessage',[
+        if (!$request->paginate)
+            $paginate = 10;
+        else
+            $paginate = $request->paginate;
+        return view('smsmanager.sendmessage', [
             'clients' => $clients->paginate($paginate),
             'sities' => $sities,
             'areas' => $areas,
@@ -561,8 +738,8 @@ class ClientController extends Controller
     }
 
     public function send_message_tg(Request $request)
-    {  
-        $organ = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
+    {
+        $organ = auth()->user()->organization_id;
 
         $clients = Client::query()
             ->where('organization_id', $organ)
@@ -578,14 +755,17 @@ class ClientController extends Controller
             ->with('area')
             ->with('telegrams');
 
-        $sities = Sity::where('organization_id',$organ)->get();
+        $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
 
         $products = Product::where('organization_id', $organ)->get();
         $info_org = Organization::find($organ);
         $client_count = $clients->count();
-        if(!$request->paginate) $paginate = 10; else $paginate = $request->paginate;
-        return view('smsmanager.tg_send_message',[
+        if (!$request->paginate)
+            $paginate = 10;
+        else
+            $paginate = $request->paginate;
+        return view('smsmanager.tg_send_message', [
             'clients' => $clients->paginate($paginate),
             'sities' => $sities,
             'areas' => $areas,
@@ -596,34 +776,34 @@ class ClientController extends Controller
     }
 
     public function sms_text()
-    {  
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
         $smsText = SmsText::where('organization_id', $info_id)->first();
 
-        return view('smsmanager.smstext',[
+        return view('smsmanager.smstext', [
             'info_org' => $info_org,
             'smsText' => $smsText
         ]);
     }
 
     public function success_message()
-    {  
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+    {
+        $organ = auth()->user()->organization_id;
 
         $smsmanagers = Sms::query()
-        ->where('organization_id',$organ)
-        ->when(request('data'), function ($query, $data) {
-            return $query->whereDate('created_at', $data);
-        })->orderBy('created_at', 'DESC')
-        ->with('client')
-        ->with('user');
-        
+            ->where('organization_id', $organ)
+            ->when(request('data'), function ($query, $data) {
+                return $query->whereDate('created_at', $data);
+            })->orderBy('created_at', 'DESC')
+            ->with('client')
+            ->with('user');
+
 
         $info_org = Organization::find($organ);
 
-        return view('smsmanager.successmessage',[
+        return view('smsmanager.successmessage', [
             'smsmanagers' => $smsmanagers->paginate(10),
             'info_org' => $info_org
         ]);
@@ -631,47 +811,50 @@ class ClientController extends Controller
 
 
     public function send_client_message($text, $phone_number, $id)
-    {  
-        
-        $char = ['(', ')', ' ','-','+'];
-        $replace = ['', '', '','',''];
+    {
+
+        $char = ['(', ')', ' ', '-', '+'];
+        $replace = ['', '', '', '', ''];
         $phone = str_replace($char, $replace, $phone_number);
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>"{
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'http://sms.etc.uz:8084/json2sms',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => "{
                    \"login\":\"sms0085ts\",
                    \"pwd\":\"01986max\",
                    \"CgPN\":\"WEBEST_UZ\",
                    \"CdPN\":\"998$phone\",
                    \"text\":\"$text\"
                }",
-          CURLOPT_HTTPHEADER => array(
-            'Accept: application/json',
-            'Content-Type: application/json'
-          ),
-        ));
-        
-        $response = curl_exec($curl);
-       
-        $json = json_decode($response, true);
-        
-        if ($json['query_state'] == "SUCCESS") {         
+                CURLOPT_HTTPHEADER => array(
+                    'Accept: application/json',
+                    'Content-Type: application/json'
+                ),
+            )
+        );
 
-            $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $response = curl_exec($curl);
+
+        $json = json_decode($response, true);
+
+        if ($json['query_state'] == "SUCCESS") {
+
+            $organ = auth()->user()->organization_id;
             $count = Organization::find($organ);
             $count->sms_count = $count->sms_count + 1;
             $count->save();
-            
+
             $cl = Client::find($id);
 
             $sms = new Sms();
@@ -685,37 +868,39 @@ class ClientController extends Controller
             $sms->sms_text = $text;
             $sms->save();
         }
-        
+
         return 1;
     }
-    
+
 
     public function send_sms(Request $request)
     {
-        $organ = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $organ = auth()->user()->organization_id;
         $count = Organization::find($organ);
 
-        if($count->sms_count < $count->traffic->sms_count + $count->location) {
-            
+        if ($count->sms_count < $count->traffic->sms_count + $count->location) {
+
             $arr = $request->checkbox;
             $x = 0;
-    
-            foreach ($arr as $key => $value) { 
+
+            foreach ($arr as $key => $value) {
 
                 $phone_number = Client::find($key)->phone;
-                if ( $this->send_client_message($request->text, $phone_number, $key) == 1 ) $x++;
+                if ($this->send_client_message($request->text, $phone_number, $key) == 1)
+                    $x++;
 
                 $count = Organization::find($organ);
-                if($count->sms_count >= $count->traffic->sms_count ) break;
+                if ($count->sms_count >= $count->traffic->sms_count)
+                    break;
             }
 
-            return redirect()->back()->with('msg' , $x);
+            return redirect()->back()->with('msg', $x);
 
-        } else 
-        
-        return redirect()->back()->with('msg' , 0);
+        } else
 
-       
+            return redirect()->back()->with('msg', 0);
+
+
     }
 
     public function client_profile(Request $request)
@@ -728,323 +913,335 @@ class ClientController extends Controller
         }
         ';
 
-        $client = Client::where('login',$request->login)->where('password',$request->password)->get();
+        $client = Client::where('login', $request->login)->where('password', $request->password)->get();
 
-        if(count($client)) return  $client;
+        if (count($client))
+            return $client;
         else
-            return json_decode($error, true); 
+            return json_decode($error, true);
     }
 
-    public function resultorders(Request $request){
+    public function resultorders(Request $request)
+    {
 
-        if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        $orders = Order::whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)
-        ->where('organization_id', $info_id)->with('client')->with('user')->with('product');
-        
-        return view('result.resultorders',[
+        $orders = Order::whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('organization_id', $info_id)->with('client')->with('user')->with('product');
+
+        return view('result.resultorders', [
             'orders' => $orders->paginate(10),
             'info_org' => $info_org
         ]);
 
     }
 
-    public function resulttakeproducts(Request $request){
+    public function resulttakeproducts(Request $request)
+    {
 
-        if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
         $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
 
-        $takeproduct = TakeProduct::whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)
-        ->where('organization_id',$info_id)
-        ->with('received')
-        ->with('sent')
-        ->with('product')
-        ->get();
+        $takeproduct = TakeProduct::whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('organization_id', $info_id)
+            ->with('received')
+            ->with('sent')
+            ->with('product')
+            ->get();
 
 
-        return view('result.resulttake',[
+        return view('result.resulttake', [
             'takeproduct' => $takeproduct,
             'info_org' => $info_org
         ]);
 
     }
 
-    public function resultsold(Request $request){
+    public function resultsold(Request $request)
+    {
 
-        if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        $soldproducts = SuccessOrders::where('organization_id',$info_id)
-        ->whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)->get();
-       
+        $soldproducts = SuccessOrders::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)->get();
+
         $summ = 0;
-        foreach ($soldproducts as $sold){
+        foreach ($soldproducts as $sold) {
             $summ = $summ + $sold->amount;
         }
 
-        return view('result.soldproduct',[
+        return view('result.soldproduct', [
             'soldproducts' => $soldproducts,
             'summ' => $summ,
             'info_org' => $info_org
         ]);
     }
 
-    public function summresult(Request $request){
+    public function summresult(Request $request)
+    {
 
-       if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)->get();
+        $soldproducts = SuccessOrders::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)->get();
 
         $summ = 0;
-        foreach ($soldproducts as $sold){
+        foreach ($soldproducts as $sold) {
             $summ = $summ + $sold->amount;
         }
 
-        return view('result.summ',[
+        return view('result.summ', [
             'soldproducts' => $soldproducts,
             'summ' => $summ,
             'info_org' => $info_org
         ]);
     }
 
-    public function resultentrycontainer(Request $request){
+    public function resultentrycontainer(Request $request)
+    {
 
-        if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        $entrycontainer = SuccessOrders::whereDate('created_at','>=',$date1)
-        ->whereDate('created_at','<=',$date2)
-        ->where('organization_id',$info_id)
-        ->with('user')
-        ->has('client')
-        ->with('product')->get();
+        $entrycontainer = SuccessOrders::whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('organization_id', $info_id)
+            ->with('user')
+            ->has('client')
+            ->with('product')->get();
 
         $summ_con = $entrycontainer->sum('container');
         $summ_con_in = $entrycontainer->sum('invalid_container_count');
 
-        return view('result.resultentryontainer',[
+        return view('result.resultentryontainer', [
             'entrycontainer' => $entrycontainer,
             'info_org' => $info_org,
             'summ_con' => $summ_con,
             'summ_con_in' => $summ_con_in
         ]);
-     }
+    }
 
-     public function payment1(Request $request){
+    public function payment1(Request $request)
+    {
 
-        if($request->date1 == null) {
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
-        
-         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-         $info_org = Organization::find($info_id);
 
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',1)->where('user_id',$request->id)->get();
-  
-          $summ = 0;
-          foreach ($clientprices as $clientprice){
-              $summ = $summ + $clientprice->amount;
-          }
-         return view('result.payment1',[
-             'summ' => $summ,
-             'clientprices' => $clientprices,
-             'info_org' => $info_org
-         ]);
-     }
-     public function payment2(Request $request){
+        $info_id = auth()->user()->organization_id;
+        $info_org = Organization::find($info_id);
 
-        if($request->date1 == null) {
+        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)->where('payment', 1)->where('user_id', $request->id)->get();
+
+        $summ = 0;
+        foreach ($clientprices as $clientprice) {
+            $summ = $summ + $clientprice->amount;
+        }
+        return view('result.payment1', [
+            'summ' => $summ,
+            'clientprices' => $clientprices,
+            'info_org' => $info_org
+        ]);
+    }
+    public function payment2(Request $request)
+    {
+
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-         $info_org = Organization::find($info_id);
- 
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',2)->where('user_id',$request->id)->get();
-  
-          $summ = 0;
-          foreach ($clientprices as $clientprice){
-              $summ = $summ + $clientprice->amount;
-          }
+        $info_id = auth()->user()->organization_id;
+        $info_org = Organization::find($info_id);
 
-         return view('result.payment2',[
-             'summ' => $summ,
-             'clientprices' => $clientprices,
-             'info_org' => $info_org
-         ]);
-     }
+        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)->where('payment', 2)->where('user_id', $request->id)->get();
 
-     public function payment3(Request $request){
+        $summ = 0;
+        foreach ($clientprices as $clientprice) {
+            $summ = $summ + $clientprice->amount;
+        }
 
-        if($request->date1 == null) {
+        return view('result.payment2', [
+            'summ' => $summ,
+            'clientprices' => $clientprices,
+            'info_org' => $info_org
+        ]);
+    }
+
+    public function payment3(Request $request)
+    {
+
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
-       
-         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-         $info_org = Organization::find($info_id);
 
-          $clientprices = ClientPrices::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-          ->whereDate('created_at','<=',$date2)->where('payment',3)->where('user_id',$request->id)->get();
-  
-          $summ = 0;
-          foreach ($clientprices as $clientprice){
-              $summ = $summ + $clientprice->amount;
-          }
- 
-         return view('result.payment3',[
-             'summ' => $summ,
-             'clientprices' => $clientprices,
-             'info_org' => $info_org
-         ]);
-     }
+        $info_id = auth()->user()->organization_id;
+        $info_org = Organization::find($info_id);
 
-     public function dolgresult(Request $request){
+        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)->where('payment', 3)->where('user_id', $request->id)->get();
 
-        if($request->date1 == null) {
+        $summ = 0;
+        foreach ($clientprices as $clientprice) {
+            $summ = $summ + $clientprice->amount;
+        }
+
+        return view('result.payment3', [
+            'summ' => $summ,
+            'clientprices' => $clientprices,
+            'info_org' => $info_org
+        ]);
+    }
+
+    public function dolgresult(Request $request)
+    {
+
+        if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
         } else {
 
-            $date1 = date('Y-m-d',strtotime($request->date1));
-            $date2 = date('Y-m-d',strtotime($request->date2));
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
-         $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
-         $info_org = Organization::find($info_id);
+        $info_id = auth()->user()->organization_id;
+        $info_org = Organization::find($info_id);
 
-         $soldproducts = SuccessOrders::where('organization_id',$info_id)->whereDate('created_at','>=',$date1)
-         ->whereDate('created_at','<=',$date2)
-        ->where('price_sold','<',0)->where('user_id',$request->id)
-        ->get();
- 
-         $summ = 0;
-         foreach ($soldproducts as $sold){
-             $summ = $summ + $sold->amount;
-         }
- 
-         return view('result.dolg',[
-             'soldproducts' => $soldproducts,
-             'summ' => $summ,
-             'info_org' => $info_org
-         ]);
-     }
+        $soldproducts = SuccessOrders::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('price_sold', '<', 0)->where('user_id', $request->id)
+            ->get();
 
-     public function admin_traffics(){
+        $summ = 0;
+        foreach ($soldproducts as $sold) {
+            $summ = $summ + $sold->amount;
+        }
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        return view('result.dolg', [
+            'soldproducts' => $soldproducts,
+            'summ' => $summ,
+            'info_org' => $info_org
+        ]);
+    }
+
+    public function admin_traffics()
+    {
+
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
         $traffics = Traffic::whereIn('id', explode(',', ActiveTraffic::find(1)->string1))->get();
-        
-        return view('clients.traffics',[
+
+        return view('clients.traffics', [
             'info_org' => $info_org,
             'traffics' => $traffics
         ]);
-     }
+    }
 
-     public function dolgs(){
+    public function dolgs()
+    {
 
-        $info_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+        $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);
 
-        $clients = Client::where('organization_id',$info_id)
-        ->where(function ($query) {
-            $query->where('balance', '<', 0)
-                  ->orWhere('container', '<', 0);
-                })->orderBy('balance','ASC');
-        
-        return view('but_results.dolg',[
+        $clients = Client::where('organization_id', $info_id)
+            ->where(function ($query) {
+                $query->where('balance', '<', 0)
+                    ->orWhere('container', '<', 0);
+            })->orderBy('balance', 'ASC');
+
+        return view('but_results.dolg', [
             'info_org' => $info_org,
             'clients' => $clients->paginate(10)
         ]);
-     }
+    }
 
-     public function client_products(Request $request) 
-     {
-         $org_id = Client::find($request->client_id)->organization_id;
-         $products = Product::where('organization_id',$org_id)->get();
+    public function client_products(Request $request)
+    {
+        $org_id = Client::find($request->client_id)->organization_id;
+        $products = Product::where('organization_id', $org_id)->get();
 
-         return response()->json($products, 200);
-     }
+        return response()->json($products, 200);
+    }
 
-     public function client_add_order(Request $request) 
-     {
+    public function client_add_order(Request $request)
+    {
         $order = Order::
-            where('client_id',$request->client_id)
-            ->where('product_id',$request->product_id)
+            where('client_id', $request->client_id)
+            ->where('product_id', $request->product_id)
             ->where('status', 0)
             ->get();
 
-        if($order->count() > 0) {
+        if ($order->count() > 0) {
             return response()->json(['message' => 'Sizda ushbu tovardan tugallanmagan zakaz mavjud!'], 422);
         }
 
@@ -1067,23 +1264,23 @@ class ClientController extends Controller
 
         $client->activated_at = now();
         $client->save();
-        
-        $orders = Order::where('client_id',$request->client_id)->get();
+
+        $orders = Order::where('client_id', $request->client_id)->get();
 
         return response()->json($orders, 200);
-     }
-     public function client_order(Request $request) 
-     {
+    }
+    public function client_order(Request $request)
+    {
         $orders = Order::
-        where('client_id',$request->client_id)
-        ->where('status',0)
-        ->with('product')->get();
-        
-        return response()->json($orders, 200);
-     }
+            where('client_id', $request->client_id)
+            ->where('status', 0)
+            ->with('product')->get();
 
-     public function client_order_edit(Request $request) 
-     {
+        return response()->json($orders, 200);
+    }
+
+    public function client_order_edit(Request $request)
+    {
 
         // return response()->json($request->all(), 200);
 
@@ -1098,72 +1295,71 @@ class ClientController extends Controller
         $zakaz->save();
 
         return response()->json(['message' => 'Zakaz muvaffaqqiyatli taxrirlandi!'], 200);
-     }
+    }
 
-     public function client_order_delete(Request $request) 
-     {
+    public function client_order_delete(Request $request)
+    {
         $order = Order::find($request->order_id);
         $order->status = 1;
         $order->comment = "Mijoz mobil ilova orqali o'chirdi";
         $order->save();
 
         return response()->json(['message' => 'Zakaz muvaffaqqiyatli ochirildi!'], 200);
-     }
+    }
 
-     public function cl_succ_orders(Request $request)
-     {
-         $orders = SuccessOrders::
-            where('client_id',$request->client_id)
-            ->whereIn('order_status',[1,2])
+    public function cl_succ_orders(Request $request)
+    {
+        $orders = SuccessOrders::
+            where('client_id', $request->client_id)
+            ->whereIn('order_status', [1, 2])
             ->with('product')
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
-         return response()->json($orders, 200);
-     }
+        return response()->json($orders, 200);
+    }
 
-     public function client_info(Request $request)
-     {
-         $client = Client::where('id',$request->client_id)->with('organization')->get();
+    public function client_info(Request $request)
+    {
+        $client = Client::where('id', $request->client_id)->with('organization')->get();
 
-         return response()->json($client[0], 200);
-     }
+        return response()->json($client[0], 200);
+    }
 
-     public function sms_text_new(Request $request)
-     {
-        if(!$request->a) {
+    public function sms_text_new(Request $request)
+    {
+        if (!$request->a) {
             return response()->json([
                 'message' => "Text ko'rinishini kiriting!"
-            ],400);
+            ], 400);
         } else {
             $txt = $request->a;
-            $arr = explode('&',$txt);
+            $arr = explode('&', $txt);
 
-            $org_id = UserOrganization::where('user_id',Auth::user()->id)->value('organization_id');
+            $org_id = auth()->user()->organization_id;
             SmsText::where('organization_id', $org_id)->delete();
 
-            foreach ($arr as $key => $value)
-            {
-                if($value != null || $value!='') 
-                
-                SmsText::create([
-                    'organization_id' => $org_id,
-                    'sms_text' => $value,
-                    'full_sms_text' => $request->b
-                ]);
+            foreach ($arr as $key => $value) {
+                if ($value != null || $value != '')
+
+                    SmsText::create([
+                        'organization_id' => $org_id,
+                        'sms_text' => $value,
+                        'full_sms_text' => $request->b
+                    ]);
             }
             return response()->json([
                 'message' => "Muvaffaqqiyatli qo'shildi!"
             ]);
         }
-        
-     }
 
-     public function bot_token(Request $request)
-     {
+    }
+
+    public function bot_token(Request $request)
+    {
 
         $tokens = TgToken::get()->count();
-        if($tokens == 0) {
+        if ($tokens == 0) {
             $message = new TgToken();
             $message->res_token = $request->token;
             $message->save();
@@ -1182,15 +1378,15 @@ class ClientController extends Controller
             ]);
         }
 
-         return response()->json( [
-             'message' => "success"
-         ]);
-     }
+        return response()->json([
+            'message' => "success"
+        ]);
+    }
 
-     public function registration($client_id, Request $request)
-     {
+    public function registration($client_id, Request $request)
+    {
         $client = Client::find($client_id);
-        if($client) {
+        if ($client) {
             $newinfo = new ClientChat();
             $newinfo->client_id = $client_id;
             $newinfo->name = $request->fullname;
@@ -1199,24 +1395,24 @@ class ClientController extends Controller
             $newinfo->save();
 
 
-            return response()->json( [
+            return response()->json([
                 'message' => "success"
             ]);
-        } else 
-        return response()->json( [
-            'message' => "Bunday foydalanuvchi topilmadi!"
-        ],404);
-       
-     }
+        } else
+            return response()->json([
+                'message' => "Bunday foydalanuvchi topilmadi!"
+            ], 404);
 
-     public function logout_client($client_id)
-     {
-   
-            $newinfo = ClientChat::where('client_id', $client_id)->delete();
+    }
 
-            return response()->json( [
-                'message' => "success"
-            ]);
-     }
+    public function logout_client($client_id)
+    {
+
+        $newinfo = ClientChat::where('client_id', $client_id)->delete();
+
+        return response()->json([
+            'message' => "success"
+        ]);
+    }
 
 }

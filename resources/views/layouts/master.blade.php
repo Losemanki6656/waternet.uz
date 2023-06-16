@@ -11,30 +11,31 @@
     <meta name="author" content="Waternet">
 
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/animate-css/animate.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/multi-select/css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/animate-css/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/multi-select/css/multi-select.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/chartist/css/chartist.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('assets1/vendor/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/chartist/css/chartist.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
 
     <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/select2/select2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/sweetalert/sweetalert.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets1/vendor/sweetalert/sweetalert.css') }}" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <link rel="stylesheet" href="{{ asset('assets/css/inbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/css/inbox.css') }}">
 
 
     <!-- MAIN CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/blog.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ecommerce.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/color_skins.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/css/blog.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/css/ecommerce.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets1/css/color_skins.css') }}">
 
     <!-- Demo CSS not Include in project -->
     <style>
@@ -55,7 +56,7 @@
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
-            <div class="m-t-30"><img src="{{ asset('assets/images/thumbnail.png') }}" width="20" height="30">
+            <div class="m-t-30"><img src="{{ asset('assets1/images/thumbnail.png') }}" width="20" height="30">
             </div>
             <p>Please wait...</p>
         </div>
@@ -70,7 +71,7 @@
 
                 <div class="navbar-brand">
                     <a href="/">
-                        <img src="{{ asset('assets/images/thumbnail.png') }}" width="20" height="30"
+                        <img src="{{ asset('assets1/images/thumbnail.png') }}" width="20" height="30"
                             style="margin-left: 10px">
                         <span class="name"> Waternet</span>
                     </a>
@@ -240,13 +241,13 @@
                                         <a href="javascript:void(0);" class="dropdown-toggle icon-menu"
                                             data-toggle="dropdown">
                                             <img class="rounded-circle"
-                                                src="{{ asset('assets/images/user-small.png') }}" width="30"
+                                                src="{{ asset('assets1/images/user-small.png') }}" width="30"
                                                 alt="">
                                         </a>
                                         <div class="dropdown-menu animated flipInY user-profile">
                                             <div class="d-flex p-3 align-items-center">
                                                 <div class="drop-left m-r-10">
-                                                    <img src="{{ asset('assets/images/user-small.png') }}"
+                                                    <img src="{{ asset('assets1/images/user-small.png') }}"
                                                         class="rounded" width="50" alt="">
                                                 </div>
                                                 <div class="drop-right">
@@ -398,32 +399,32 @@
     </div>
 
     <!-- Javascript -->
-    <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>
-    <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets1/bundles/libscripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets1/bundles/vendorscripts.bundle.js') }}"></script>
 
-    <script src="{{ asset('assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script> <!-- Bootstrap Colorpicker Js -->
-    <script src="{{ asset('assets/vendor/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script> <!-- Input Mask Plugin Js -->
-    <script src="{{ asset('assets/vendor/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/multi-select/js/jquery.multi-select.js') }}"></script> <!-- Multi Select Plugin Js -->
-    <script src="{{ asset('assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js') }}"></script>
-    <script src="{{ asset('assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js') }}"></script> <!-- Bootstrap Tags Input Plugin Js -->
-    <script src="{{ asset('assets/vendor/nouislider/nouislider.js') }}"></script> <!-- noUISlider Plugin Js -->
+    <script src="{{ asset('assets1/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script> <!-- Bootstrap Colorpicker Js -->
+    <script src="{{ asset('assets1/vendor/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script> <!-- Input Mask Plugin Js -->
+    <script src="{{ asset('assets1/vendor/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('assets1/vendor/multi-select/js/jquery.multi-select.js') }}"></script> <!-- Multi Select Plugin Js -->
+    <script src="{{ asset('assets1/vendor/bootstrap-multiselect/bootstrap-multiselect.js') }}"></script>
+    <script src="{{ asset('assets1/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets1/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js') }}"></script> <!-- Bootstrap Tags Input Plugin Js -->
+    <script src="{{ asset('assets1/vendor/nouislider/nouislider.js') }}"></script> <!-- noUISlider Plugin Js -->
 
-    <script src="{{ asset('assets/vendor/select2/select2.min.js') }}"></script> <!-- Select2 Js -->
+    <script src="{{ asset('assets1/vendor/select2/select2.min.js') }}"></script> <!-- Select2 Js -->
 
-    <script src="{{ asset('assets/js/pages/forms/advanced-form-elements.js') }}"></script>
-    <script src="{{ asset('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets1/js/pages/forms/advanced-form-elements.js') }}"></script>
+    <script src="{{ asset('assets1/vendor/sweetalert/sweetalert.min.js') }}"></script>
 
-    <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
-    <script src="{{ asset('assets/bundles/morrisscripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets1/bundles/mainscripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets1/bundles/morrisscripts.bundle.js') }}"></script>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     @yield('scripts')
 
-   
+
     @stack('scripts')
 </body>
 

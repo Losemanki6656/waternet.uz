@@ -26,7 +26,7 @@ class TrafficController extends Controller
     
     public function user_organizations()
     {
-        $users = UserOrganization::where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))->get();
+        $users = UserOrganization::where('organization_id',auth()->user()->organization_id)->get();
         $x = 0;
         $y = [];
         foreach ($users as $user) {

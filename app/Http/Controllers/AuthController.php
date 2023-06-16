@@ -111,7 +111,7 @@ class AuthController extends Controller
             return response()->json(
             Order::query()
             ->where('status',0)
-            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->where('organization_id',auth()->user()->organization_id)
             ->has('client')
             ->with(['product' ,'client.city', 'client.area'])
             ->when(request('area_id'), function ($query, $area_id) {
@@ -126,7 +126,7 @@ class AuthController extends Controller
             Order::query()
             ->where('status',0)
             ->whereIn('area_id',$intareas)
-            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->where('organization_id',auth()->user()->organization_id)
             ->has('client')
             ->with(['product' ,'client.city', 'client.area'])
             ->when(request('area_id'), function ($query, $area_id) {
@@ -141,7 +141,7 @@ class AuthController extends Controller
             return response()->json(Order::query()
             ->where('status',0)
             ->where('area_id', $request->area_id)
-            ->where('organization_id',UserOrganization::where('user_id',Auth::user()->id)->value('organization_id'))
+            ->where('organization_id',auth()->user()->organization_id)
             ->with(['product' , 'client','client.city', 'client.area'])->get());
     }
 

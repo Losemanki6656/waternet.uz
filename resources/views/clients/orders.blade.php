@@ -1,357 +1,251 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 @section('content')
-    <div class="container-fluid">
-        <div class="block-header">
-            <div class="row">
-                <div class="col-lg-5 col-md-8 col-sm-12">
-                    <h2>Mijozlar</h2>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.Orders') }}</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item active">{{ __('messages.Orders') }}</li>
+                    </ol>
                 </div>
-                <div class="col-lg-7 col-md-4 col-sm-12 text-right">
-                    <ul class="breadcrumb justify-content-end">
-                        <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>
-                        <li class="breadcrumb-item active">Mijozlar</li>
-                    </ul>
-                </div>
+
             </div>
         </div>
-        <div class="card">
-            <div class="header">
-                <div class="row clearfix">
-                    <div class="col-lg-3 col-md-6">
-                        <select class="form-control show-tick ms select2" id="sity_select"
-                            data-placeholder="Regionni tanlang ... ">
-                            <option value=""></option>
-                            @foreach ($sities as $sity)
-                                <option value={{ $sity->id }} @if ($sity->id == request('city_id')) selected @endif>
-                                    {{ $sity->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <select class="form-control show-tick ms select2" id="area_select"
-                            data-placeholder="Shaharni tanlang ... ">
-                            <option value=""></option>
-                            @foreach ($areas as $area)
-                                <option value={{ $area->id }} @if ($area->id == request('area_id')) selected @endif>
-                                    {{ $area->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <form action="{{ route('orders') }}" method="get">
-                            @csrf
-                            <div class="input-group mb-3">
-                                <input class="form-control" value="{{ request()->query('search') }}" name="search"
-                                    type="search" placeholder="Qidirish ..." aria-label="Search" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-0">
+                <select class="form-control" data-trigger name="city_id" id="sity_select">
+                    <option value="">{{ __('messages.select_region') }}</option>
+                    @foreach ($sities as $sity)
+                        <option value={{ $sity->id }} @if ($sity->id == request('city_id')) selected @endif>
+                            {{ $sity->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            @push('scripts')
-                <script>
-                    $('#sity_select').change(function(e) {
-                        let city_id = $(this).val();
-                        let url = '{{ route('orders') }}';
-                        window.location.href = `${url}?city_id=${city_id}`;
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-0">
+                <select class="form-control" data-trigger name="area_id" id="area_select">
+                    <option value="">{{ __('messages.select_city') }}</option>
+                    @foreach ($areas as $area)
+                        <option value={{ $area->id }} @if ($area->id == request('area_id')) selected @endif>
+                            {{ $area->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <form action="{{ route('orders') }}" method="get">
+                @csrf
+                <div class="input-group mb-3">
+                    <input class="form-control" value="{{ request()->query('search') }}" name="search" type="search"
+                        placeholder="{{ __('messages.search') }}" aria-label="Search" />
+                </div>
+            </form>
+        </div>
+    </div>
+    @push('scripts')
+        <script>
+            $('#sity_select').change(function(e) {
+                let city_id = $(this).val();
+                let url = '{{ route('orders') }}';
+                window.location.href = `${url}?city_id=${city_id}`;
 
 
-                    })
+            })
 
-                    $('#area_select').change(function(e) {
-                        let area_id = $(this).val();
-                        let city_id = $('#sity_select').val();
-                        let url = '{{ route('orders') }}';
-                        window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}`;
-                    })
-                </script>
-            @endpush
-
-            <div class="body">
-                <div class="table-responsive">
-                    <table class="table m-b-0 table-bordered table-sm">
-                        <thead>
+            $('#area_select').change(function(e) {
+                let area_id = $(this).val();
+                let city_id = $('#sity_select').val();
+                let url = '{{ route('orders') }}';
+                window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}`;
+            })
+        </script>
+    @endpush
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-sm align-middle table-bordered table-nowrap">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" width="60">#</th>
+                            <th class="text-center">{{ __('messages.fullname') }}</th>
+                            <th class="text-center">{{ __('messages.phone') }}</th>
+                            <th class="text-center">{{ __('messages.address') }} </th>
+                            <th class="text-center">{{ __('messages.product') }}</th>
+                            <th class="text-center">{{ __('messages.count') }}</th>
+                            <th class="text-center">{{ __('messages.price') }}</th>
+                            <th class="text-center">{{ __('messages.time') }}</th>
+                            <th class="text-center">{{ __('messages.comment') }}</th>
+                            <th class="text-center">{{ __('messages.user') }}</th>
+                            <th class="text-center">{{ __('messages.action') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
                             <tr>
-                                <th width="60">#</th>
-                                <th>FIO</th>
-                                <th>Tel raqami</th>
-                                <th>Manzil </th>
-                                <th>Tovar nomi</th>
-                                <th>Miqdori</th>
-                                <th>Narxi</th>
-                                <th>Vaqti</th>
-                                <th>Izoh</th>
-                                <th>Operator</th>
-                                <th>Action</th>
+                                <td class="text-center">{{ $orders->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
+                                <td class="text-center">{{ $order->client->fullname }}</td>
+                                <td class="text-center">{{ $order->client->phone }}</td>
+                                <td class="text-center">
+                                    {{ $order->client->city->name ?? '' }},{{ $order->client->area->name ?? '' }}
+                                    <span> <br> {{ $order->client->address ?? '' }}</span>
+                                </td>
+                                <td class="text-center">{{ $order->product->name ?? '' }}</td>
+                                <td class="text-center">{{ $order->product_count ?? '' }}</td>
+                                <td class="text-center">{{ $order->price }}</td>
+                                <td class="text-center">{{ $order->created_at->format('Y-m-d') }}</td>
+                                <td class="text-center">{{ $order->comment }}</td>
+                                <td class="text-center">{{ $order->user->name }}</td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group dropstart">
+                                        <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bx bx-smile font-size-16 align-middle"></i></button>
+
+                                        <div class="dropdown-menu dropdownmenu-primary">
+                                            <a class="dropdown-item"
+                                                href="{{ route('success_order_view', ['id' => $order->id]) }}"><i
+                                                    class="fa fa-check-circle me-2 text-success"></i>
+                                                {{ __('messages.accept') }}</a>
+                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#orderedit{{ $order->id }}"
+                                                aria-controls="offcanvasBottom"><i class="fa fa-edit me-2"></i>
+                                                {{ __('messages.update') }}</a>
+
+                                            <a class="dropdown-item" href="#" class="text-danger"
+                                                onclick="DeleteOrder('{{ $order->client->fullname }}', {{ $order->id }})"><i
+                                                    class="fa fa-trash me-2 text-danger"></i>
+                                                {{ __('messages.delete') }}</a>
+                                        </div>
+                                    </div>
+
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach ($orders as $order)
-                                <tr>
-                                    <td>{{ $orders->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
-                                    <td>{{ $order->client->fullname }}</td>
-                                    <td>{{ $order->client->phone }}</td>
-                                    <td class="text-center">
-                                        {{ $order->client->city->name ?? '' }},{{ $order->client->area->name ?? '' }}
-                                        <span> <br> {{ $order->client->address ?? '' }}</span>
-                                    </td>
-                                    <td>{{ $order->product->name }}</td>
-                                    <td>{{ $order->product_count }}</td>
-                                    <td>{{ $order->price }}</td>
-                                    <td>{{ $order->created_at->format('Y-m-d') }}</td>
-                                    <td>{{ $order->comment }}</td>
-                                    <td>{{ $order->user->name }}</td>
-                                    <td class="align-middle text-center">
-                                        @if ($order->client->location != '0')
-                                            <a type="button" target="_blank"
-                                                href="{{ route('view_location', ['id' => $order->client->id]) }}"
-                                                class="btn btn-warning">
-                                                <i class="fa fa-map-marker"></i> <span></span></a>
-                                        @else
-                                            <button type="button" class="btn btn-outline-warning" disabled>
-                                                <i class="fa fa-map-marker"></i> <span></span></button>
-                                        @endif
-                                        <a href="{{ route('success_order_view', ['id' => $order->id]) }}" type="button"
-                                            class="btn btn-success"><i class="fa fa-check-circle"></i> <span></span></a>
-
-                                        <button type="button" class="btn btn-dark" data-toggle="modal"
-                                        title="Zakasni taxrirlash" data-target="#orderedit{{ $order->id }}"><i class="fa fa-edit"></i>
-                                            <span></span></button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                        title="Zakasni o'chirish" data-target="#deleteorder{{ $order->id }}"><i class="fa fa-trash"></i>
-                                            <span></span></button>
-                                    </td>
-                                </tr>
-                                <div class="modal fade" id="orderedit{{ $order->id }}" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="title" id="defaultModalLabel">Zakazni taxrirlash</h4>
-                                            </div>
-                                            <form action="{{ route('order_edit', ['id' => $order->id]) }}" method="post">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <h6><label>Tovar nomi:</label></h6>
-                                                        <select class="form-control show-tick select2"
-                                                            id="prod_sel{{ $order->id }}" name="product_id"
-                                                            onchange="onsel({{ $order->id }})" required>
-                                                            @foreach ($products as $product)
-                                                                <option data-amount="{{ $product->price }}"
-                                                                    @if ($order->product_id == $product->id) selected @endif
-                                                                    value={{ $product->id }}>{{ $product->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <h6><label>Narxi:</label></h6>
+                            <div class="modal fade" id="orderedit{{ $order->id }}" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="myModalLabel">{{ __('messages.order_update') }}
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('order_edit', ['id' => $order->id]) }}" method="post">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="mb-0">{{ __('messages.product') }}:</label>
+                                                    <select class="form-select" id="prod_sel{{ $order->id }}"
+                                                        name="product_id" onchange="onsel({{ $order->id }})" required>
+                                                        @foreach ($products as $product)
+                                                            <option data-amount="{{ $product->price }}"
+                                                                @if ($order->product_id == $product->id) selected @endif
+                                                                value={{ $product->id }}>{{ $product->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <label class="mb-0">{{ __('messages.price') }}:</label>
                                                         <input class="form-control" type="text"
                                                             id="sena_product_order{{ $order->id }}" name="sena"
                                                             value="{{ $order->price }}" required>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <h6><label>Soni:</label></h6>
+                                                    <div class="col">
+                                                        <label class="mb-0">{{ __('messages.count') }}:</label>
                                                         <input class="form-control" type="number"
                                                             value="{{ $order->product_count }}" name="count" required>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <h6><label>Izoh:</label></h6>
-                                                        <textarea class="form-control" name="izoh" id="" rows="2"></textarea>
-                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                                        Chiqish</button>
-                                                    <button class="btn btn-primary" type="submit"> Saqlash</button>
+                                                <div>
+                                                    <label class="mb-0">{{ __('messages.comment') }}:</label>
+                                                    <textarea class="form-control" name="izoh" id="" rows="2"></textarea>
                                                 </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal fade" id="deleteorder{{ $order->id }}" tabindex="-1"
-                                    role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="title" id="defaultModalLabel">O'chirish</h4>
                                             </div>
-                                            <form action="{{ route('delete_Order', ['id' => $order->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    <h6><label class="fw-bold text-danger">{{ $order->client->fullname }} </label> zakasini o'chirmoqchimisz ?</h6>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal"> Chiqish</button>
-                                                    <button class="btn btn-danger" type="submit">Xa, O'chirish</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal fade" id="success{{ $order->id }}" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="title" id="defaultModalLabel">Zakazni yetqazish</h5>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-secondary btn-lg waves-effect waves-light"
+                                                    data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                                    {{ __('messages.cancel') }}</button>
+                                                <button class="btn btn-success btn-lg waves-effect waves-light"
+                                                    type="submit"> <i class="fa fa-save me-2"></i>
+                                                    {{ __('messages.save') }}</button>
                                             </div>
-                                            <form action="{{ route('success_order', ['id' => $order->id]) }}"
-                                                method="post" enctype="multipart/form-data">
-                                                @csrf
-                                                <div class="modal-body">
-
-                                                    <div class="card top_report">
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <div class="body">
-                                                                    <div class="clearfix">
-                                                                        <div class="float-left">
-                                                                            <i class="fa fa-2x fa-dollar text-col-blue"></i>
-                                                                        </div>
-                                                                        <div class="number float-right text-right">
-                                                                            <h6>Mijoz balansi:</h6>
-                                                                            <span
-                                                                                class="font700">{{ $order->client->balance }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="progress progress-xs progress-transparent custom-color-blue mb-0 mt-3">
-                                                                        <div class="progress-bar" data-transitiongoal="28">
-                                                                        </div>
-                                                                    </div>
-                                                                    <h6><small
-                                                                            class="text-muted">{{ $order->client->fullname }}</small>
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <div class="body">
-                                                                    <div class="clearfix">
-                                                                        <div class="float-left">
-                                                                            <i
-                                                                                class="fa fa-2x fa-shopping-cart text-col-red"></i>
-                                                                        </div>
-                                                                        <div class="number float-right text-right">
-                                                                            <h6>Tovar soni:</h6>
-                                                                            <span
-                                                                                class="font700">{{ $order->product_count }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="progress progress-xs progress-transparent custom-color-red mb-0 mt-3">
-                                                                        <div class="progress-bar" data-transitiongoal="41">
-                                                                        </div>
-                                                                    </div>
-                                                                    <h6><small
-                                                                            class="text-muted">{{ $order->product->name }}</small>
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-lg-4 col-md-6">
-                                                                <h6><label>Zakaz holati:</label></h6>
-                                                                <select class="form-control" name="order_status"
-                                                                    id="order-stat">
-                                                                    <option value="1">Yetqazildi</option>
-                                                                    <option value="2">Olib ketildi</option>
-                                                                    <option value="3">Bekor qilindi</option>
-                                                                    <option value="4">Manzil topilmadi</option>
-                                                                    <option value="5">Manzilda xech kim yo'q</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-lg-4 col-md-6">
-                                                                <h6><label>Yetqazildi:</label></h6>
-                                                                <input class="form-control" type="number"
-                                                                    onchange="summa({{ $order->id }})" name="count"
-                                                                    id="count{{ $order->id }}" value="0"
-                                                                    required>
-                                                            </div>
-                                                            <div class="col-lg-4 col-md-6">
-                                                                <h6><label>Narxi:</label></h6>
-                                                                <input class="form-control" type="number"
-                                                                    onchange="summa({{ $order->id }})" name="sena"
-                                                                    id="sena{{ $order->id }}" value="0" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @if ($order->container_status == 0)
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-lg-6 col-md-6">
-                                                                    <h6><label>Qaytargan idish soni:</label></h6>
-                                                                    <input class="form-control" type="number"
-                                                                        name="idish" id="idish{{ $order->id }}"
-                                                                        value="0" required>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-6">
-                                                                    <h6><label>Yaroqsiz idish soni:</label></h6>
-                                                                    <input class="form-control" type="number"
-                                                                        name="yaroqsiz_idish"
-                                                                        id="yaroqsiz_idish{{ $order->id }}"
-                                                                        value="0" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-md-6">
-                                                                <h6><label>To'lov ususli:</label></h6>
-                                                                <select class="form-control" name="tolov_usuli"
-                                                                    onchange="onsel({{ $order->id }})"
-                                                                    id="tolov-usuli{{ $order->id }}">
-                                                                    <option value="1">Naqd</option>
-                                                                    <option value="2">Plastik</option>
-                                                                    <option value="3">Pul ko'chirish</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-6">
-                                                                <h6><label>To'lov summasi:</label></h6>
-                                                                <input class="form-control" type="number"
-                                                                    name="olinganpul" id="olinganpul{{ $order->id }}"
-                                                                    value="0" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <textarea name="izoh" rows="2" class="form-control" name="izoh" placeholder="Izoh..."></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                                        Chiqish</button>
-                                                    <button class="btn btn-primary" type="submit"><i
-                                                            class="fa fa-save"></i> Saqlash</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="d-flex justify-content mt-3">
-                    <ul class="pagination mb-0">
-                        {{ $orders->withQueryString()->links() }}
-                    </ul>
-                </div>
+                            </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-
+            @if ($orders->total() > 10)
+                <div class="row justify-content-between">
+                    <div class="col-md-2">
+                        <label class="mx-2">
+                        </label>
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <label class="mb-0 p-0">{{ $orders->onEachSide(1)->withQueryString() }}</label>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <label class="me-2">
+                        </label>
+                    </div>
+                </div>
+            @endif
         </div>
+
     </div>
 @endsection
 
 @section('scripts')
+    <script>
+        function DeleteOrder(fullname, id) {
+            Swal.fire({
+                title: "{{ __('messages.Do_you_want_to_delete') }} ?",
+                text: fullname,
+                icon: "warning",
+                showCancelButton: !0,
+                cancelButtonText: "{{ __('messages.no') }}",
+                confirmButtonColor: "#1c84ee",
+                cancelButtonColor: "#fd625e",
+                confirmButtonText: "{{ __('messages.Yes_delete') }} !"
+            }).then(function(e) {
+                if (e.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('delete_Order') }}",
+                        method: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: id
+                        },
+                        success: function(res) {
+                            e.value && Swal.fire("{{ __('messages.deleted') }}!",
+                                "{{ __('messages.success_removed') }}",
+                                "success").then((result) => {
+                                location.reload();
+                            });
+
+                        },
+                        error: function(error) {
+                            alertify.error(error.responseJSON.message);
+                        }
+                    });
+                }
+
+            })
+        }
+    </script>
     <script>
         function onsel(id) {
             if (document.getElementById("tolov-usuli" + id).value == 3) {

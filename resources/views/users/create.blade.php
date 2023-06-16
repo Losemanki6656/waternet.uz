@@ -1,76 +1,76 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 
 
 @section('content')
 
 
 
-@if (count($errors) > 0)
-  <div class="alert alert-danger">
-    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-    <ul>
-       @foreach ($errors->all() as $error)
-         <li>{{ $error }}</li>
-       @endforeach
-    </ul>
-  </div>
-@endif
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
-    <div class="block-header">
-        <div class="row">
-            <div class="col-lg-5 col-md-8 col-sm-12">
-                <h2>Xodimlar</h2>
-            </div>            
-            <div class="col-lg-7 col-md-4 col-sm-12 text-right">
-                <ul class="breadcrumb justify-content-end">
-                    <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>                            
-                    <li class="breadcrumb-item active">Xodim qo'shish</li>
-                </ul>
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-5 col-md-8 col-sm-12">
+                    <h2>Xodimlar</h2>
+                </div>
+                <div class="col-lg-7 col-md-4 col-sm-12 text-right">
+                    <ul class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>
+                        <li class="breadcrumb-item active">Xodim qo'shish</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row clearfix">
-        <div class="col-lg-9 col-md-12">
-            
-            <div class="card">
-                <div class="header">
-                    <h2> Xodim qo'shish</h2>
-                </div>
-                <div class="body">
-                    {!! Form::open(array('route' => 'users.store','method'=>'POST')) !!}
+        <div class="row clearfix">
+            <div class="col-lg-9 col-md-12">
 
-                    <div class="row">
+                <div class="card">
+                    <div class="header">
+                        <h2> Xodim qo'shish</h2>
+                    </div>
+                    <div class="body">
+                        {!! Form::open(['route' => 'users.store', 'method' => 'POST']) !!}
+
+                        <div class="row">
                             <div class="col-lg-3">
                                 <div class="mb-3">
-                                    <label for="lastname"> FIO: </label> 
-                                     {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                                    <label for="lastname"> FIO: </label>
+                                    {!! Form::text('name', null, ['placeholder' => 'Name', 'class' => 'form-control']) !!}
                                 </div>
                                 <div class="mb-3">
                                     <label for="firstname"> Email: </label>
-                                     {!! Form::text('email', null, array('placeholder' => 'Email','class' => 'form-control')) !!}           
+                                    {!! Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) !!}
                                 </div>
                                 <div class="mb-3">
-                                    <label for="middlename"> Parol: </label>  
-                                    {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}    
+                                    <label for="middlename"> Parol: </label>
+                                    {!! Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) !!}
                                 </div>
                                 <div class="mb-3">
-                                    <label for="birhtdate"> Parolni takrorlash: </label>  
-                                    {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}             
+                                    <label for="birhtdate"> Parolni takrorlash: </label>
+                                    {!! Form::password('confirm-password', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) !!}
                                 </div>
                                 <div class="mb-3">
-                                    <label for="birhtdate"> Roli: </label>  
+                                    <label for="birhtdate"> Roli: </label>
                                     <select class="form-control" name="role" required>
                                         @foreach ($roles as $key => $value)
-                                            <option value={{$key}}>{{$value}}</option> 
+                                            <option value={{ $key }}>{{ $value }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="col" style="margin-top: 247px">
                                 <div class="mt-3">
                                     <div class="row">
@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>    
+                                </div>
                                 <div class="mt-3">
                                     <div class="row">
                                         <div class="col">
@@ -109,7 +109,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="mt-3">
                                     <div class="row">
                                         <div class="col">
@@ -128,21 +128,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
+                        </div>
+                        <div class="header text-right">
+                            <div class="mb-3">
+                                <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i
+                                        class="fa fa-mail-reply"></i> Orqaga </a>
+                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>
+                            </div>
+                        </div>
+                        {!! Form::close() !!}
                     </div>
-                    <div class="header text-right">
-                        <div class="mb-3">
-                            <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i class="fa fa-mail-reply"></i> Orqaga </a>  
-                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Saqlash</button>       
-                        </div>   
-                    </div>
-                    {!! Form::close() !!}
-                </div>   
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 

@@ -13,5 +13,10 @@ class Organization extends Model
     {
         return $this->belongsTo(Traffic::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
     
 }
