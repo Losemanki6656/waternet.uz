@@ -349,7 +349,7 @@ class HomeController extends Controller
             $a[] = [
                 'num' => $x,
                 'fullname' => $item->fullname,
-                'phone' => $item->phone,
+                'phone' => $item->phone . "\n" . $item->phone2,
                 'region' => $item->RegionAddress(),
                 'address' => $item->Address(),
                 'balance' => $item->balance,

@@ -18,6 +18,7 @@ class AddColumnToUsersTable extends Migration
             $table->integer('role')->nullable()->after('organization_id');
             $table->text('mobile_token')->nullable()->after('remember_token');
             $table->string('areas')->nullable()->after('mobile_token');
+            $table->foreign('organization_id')->references('id')->on('organizations');
         });
     }
 
