@@ -928,21 +928,26 @@ class ClientController extends Controller
             $date1 = now();
             $date2 = now();
         } else {
-
             $date1 = date('Y-m-d', strtotime($request->date1));
             $date2 = date('Y-m-d', strtotime($request->date2));
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
         $orders = Order::whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
-            ->where('organization_id', $info_id)->with('client')->with('user')->with('product');
+            ->where('organization_id', $info_id)
+            ->where('user_id', request('id'))
+            ->with('client')
+            ->with('user')
+            ->with('product')
+            ->orderBy('updated_at', 'desc');
+
+        $total = $orders->sum('product_count');
 
         return view('result.resultorders', [
             'orders' => $orders->paginate(10),
-            'info_org' => $info_org
+            'total' => $total
         ]);
 
     }
@@ -960,22 +965,22 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $arr = UserOrganization::where('organization_id', $info_id)->pluck('user_id')->toArray();
-
-        $takeproduct = TakeProduct::whereDate('created_at', '>=', $date1)
+        $takeproducts = TakeProduct::whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
+            ->whereIn('order_status', [1, 2])
             ->where('organization_id', $info_id)
+            ->where('received_id', request('id'))
             ->with('received')
             ->with('sent')
             ->with('product')
-            ->get();
+            ->orderBy('updated_at', 'desc');
 
+        $total = $takeproducts->sum('product_count');
 
         return view('result.resulttake', [
-            'takeproduct' => $takeproduct,
-            'info_org' => $info_org
+            'takeproducts' => $takeproducts->paginate(10),
+            'total' => $total
         ]);
 
     }
@@ -993,21 +998,30 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
         $soldproducts = SuccessOrders::where('organization_id', $info_id)
+            ->where('user_id', request('id'))
             ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)->get();
+            ->whereDate('created_at', '<=', $date2)
+            ->with('user')
+            ->with('product')
+            ->orderBy('updated_at', 'desc');
 
-        $summ = 0;
-        foreach ($soldproducts as $sold) {
-            $summ = $summ + $sold->amount;
-        }
+        $order_count_total = $soldproducts->sum('order_count');
+        $order_price_total = $soldproducts->sum('order_price');
+        $count_total = $soldproducts->sum('count');
+        $price_total = $soldproducts->sum('price');
+        $container_total = $soldproducts->sum('container');
+        $amount_total = $soldproducts->sum('amount');
 
         return view('result.soldproduct', [
-            'soldproducts' => $soldproducts,
-            'summ' => $summ,
-            'info_org' => $info_org
+            'soldproducts' => $soldproducts->paginate(10),
+            'order_count_total' => $order_count_total,
+            'order_price_total' => $order_price_total,
+            'count_total' => $count_total,
+            'price_total' => $price_total,
+            'container_total' => $container_total,
+            'amount_total' => $amount_total
         ]);
     }
 
@@ -1024,20 +1038,31 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $soldproducts = SuccessOrders::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)->get();
+        $soldproducts = SuccessOrders::where('organization_id', $info_id)
+            ->where('user_id', request('id'))
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->with('user')
+            ->with('product')
+            ->orderBy('updated_at', 'desc');
 
-        $summ = 0;
-        foreach ($soldproducts as $sold) {
-            $summ = $summ + $sold->amount;
-        }
+        $order_count_total = $soldproducts->sum('order_count');
+        $order_price_total = $soldproducts->sum('order_price');
+        $count_total = $soldproducts->sum('count');
+        $price_total = $soldproducts->sum('price');
+        $container_total = $soldproducts->sum('container');
+        $amount_total = $soldproducts->sum('amount');
+
 
         return view('result.summ', [
-            'soldproducts' => $soldproducts,
-            'summ' => $summ,
-            'info_org' => $info_org
+            'soldproducts' => $soldproducts->paginate(10),
+            'order_count_total' => $order_count_total,
+            'order_price_total' => $order_price_total,
+            'count_total' => $count_total,
+            'price_total' => $price_total,
+            'container_total' => $container_total,
+            'amount_total' => $amount_total
         ]);
     }
 
@@ -1054,21 +1079,22 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
         $entrycontainer = SuccessOrders::whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
             ->where('organization_id', $info_id)
             ->with('user')
-            ->has('client')
-            ->with('product')->get();
+            ->with('client')
+            ->with('product')
+            ->where('user_id', request('id'))
+            ->orderBy('updated_at', 'desc');
+
 
         $summ_con = $entrycontainer->sum('container');
         $summ_con_in = $entrycontainer->sum('invalid_container_count');
 
         return view('result.resultentryontainer', [
-            'entrycontainer' => $entrycontainer,
-            'info_org' => $info_org,
+            'entrycontainer' => $entrycontainer->paginate(10),
             'summ_con' => $summ_con,
             'summ_con_in' => $summ_con_in
         ]);
@@ -1087,19 +1113,20 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)->where('payment', 1)->where('user_id', $request->id)->get();
+        $clientprices = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 1)
+            ->with('user')
+            ->with('client')
+            ->where('user_id', request('id'))
+            ->orderBy('updated_at', 'desc');
+        $total = $clientprices->sum('amount');
 
-        $summ = 0;
-        foreach ($clientprices as $clientprice) {
-            $summ = $summ + $clientprice->amount;
-        }
         return view('result.payment1', [
-            'summ' => $summ,
-            'clientprices' => $clientprices,
-            'info_org' => $info_org
+            'clientprices' => $clientprices->paginate(10),
+            'total' => $total
         ]);
     }
     public function payment2(Request $request)
@@ -1115,20 +1142,21 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)->where('payment', 2)->where('user_id', $request->id)->get();
+        $clientprices = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 2)
+            ->with('user')
+            ->with('client')
+            ->where('user_id', request('id'))
+            ->orderBy('updated_at', 'desc');
 
-        $summ = 0;
-        foreach ($clientprices as $clientprice) {
-            $summ = $summ + $clientprice->amount;
-        }
+        $total = $clientprices->sum('amount');
 
         return view('result.payment2', [
-            'summ' => $summ,
-            'clientprices' => $clientprices,
-            'info_org' => $info_org
+            'clientprices' => $clientprices->paginate(10),
+            'total' => $total
         ]);
     }
 
@@ -1145,20 +1173,21 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $clientprices = ClientPrices::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)->where('payment', 3)->where('user_id', $request->id)->get();
+        $clientprices = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 3)
+            ->with('user')
+            ->with('client')
+            ->where('user_id', request('id'))
+            ->orderBy('updated_at', 'desc');
 
-        $summ = 0;
-        foreach ($clientprices as $clientprice) {
-            $summ = $summ + $clientprice->amount;
-        }
+        $total = $clientprices->sum('amount');
 
         return view('result.payment3', [
-            'summ' => $summ,
-            'clientprices' => $clientprices,
-            'info_org' => $info_org
+            'clientprices' => $clientprices->paginate(10),
+            'total' => $total
         ]);
     }
 
@@ -1175,22 +1204,25 @@ class ClientController extends Controller
         }
 
         $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
         $soldproducts = SuccessOrders::where('organization_id', $info_id)->whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
-            ->where('price_sold', '<', 0)->where('user_id', $request->id)
-            ->get();
+            ->where('price_sold', '<', 0)
+            ->whereIn('order_status', [1, 2])
+            ->where('user_id', request('id'));
 
-        $summ = 0;
-        foreach ($soldproducts as $sold) {
-            $summ = $summ + $sold->amount;
-        }
+
+        $order_count_total = $soldproducts->sum('order_count');
+        $count_total = $soldproducts->sum('count');
+        $amount_total = $soldproducts->sum('amount');
+        $price_sold = $soldproducts->sum('price_sold');
 
         return view('result.dolg', [
-            'soldproducts' => $soldproducts,
-            'summ' => $summ,
-            'info_org' => $info_org
+            'soldproducts' => $soldproducts->paginate(10),
+            'order_count_total' => $order_count_total,
+            'count_total' => $count_total,
+            'amount_total' => $amount_total,
+            'price_sold' => $price_sold
         ]);
     }
 
@@ -1261,9 +1293,6 @@ class ClientController extends Controller
         $zakaz->status = 0;
         $zakaz->user_id = $client->user_id;
         $zakaz->save();
-
-        $client->activated_at = now();
-        $client->save();
 
         $orders = Order::where('client_id', $request->client_id)->get();
 

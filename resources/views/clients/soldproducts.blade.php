@@ -167,10 +167,10 @@
                                                 <button type="button"
                                                     class="btn btn-primary waves-effect waves-light btn-sm"
                                                     data-bs-toggle="modal" data-bs-target="#priceedit">
-                                                    {{ $prices->user->name }}
+                                                    {{ $prices->user->name ?? '' }}
                                                 </button>
                                             @else
-                                                {{ $prices->user->name }}
+                                                {{ $prices->user->name ?? '' }}
                                             @endif
                                         </td>
                                         <td>
@@ -211,7 +211,7 @@
                             <tbody>
                                 @foreach ($clientcontainer as $container)
                                     <tr>
-                                        <td>{{ $container->product->name }}</td>
+                                        <td>{{ $container->product->name ?? '' }}</td>
                                         <td>{{ $container->count }}</td>
                                         <td>{{ $container->invalid_count }}</td>
                                         <td>
@@ -220,7 +220,7 @@
                                                     data-bs-target="#container_edit"> {{ $container->user->name }}
                                                 </button>
                                             @else
-                                                {{ $container->user->name }}
+                                                {{ $container->user->name ?? '' }}
                                             @endif
                                         </td>
                                         <td>{{ $container->comment }}</td>
@@ -370,7 +370,7 @@
                         @foreach ($soldproducts as $soldproduct)
                             @if ($soldproduct->order_status == 1 || $soldproduct->order_status == 2)
                                 <tr>
-                                    <td>{{ $soldproduct->product->name }}</td>
+                                    <td>{{ $soldproduct->product->name ?? '' }}</td>
                                     <td>{{ $soldproduct->order_count }}</td>
                                     <td>{{ $soldproduct->order_price }}</td>
                                     <td>{{ $soldproduct->order_date }}</td>

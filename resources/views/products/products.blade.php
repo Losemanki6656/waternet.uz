@@ -109,14 +109,12 @@
                                             <h6>{{ $product->container }}</h6>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-dark btn-lg waves-effect waves-light"
-                                                data-bs-toggle="modal" data-bs-target="#edit{{ $product->id }}">
-                                                <i class="fa fa-edit"></i> {{ __('messages.update') }}
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-lg waves-effect waves-light"
-                                                onclick="DeleteProduct('{{ $product->name }}', {{ $product->id }})">
-                                                <i class="fa fa-save"></i> {{ __('messages.delete') }}
-                                            </button>
+                                            <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                                data-bs-toggle="modal" data-bs-target="#edit{{ $product->id }}"><i
+                                                    class="bx bx-edit-alt font-size-16 align-middle"></i></button>
+                                            <button type="button" class="btn btn-soft-danger waves-effect waves-light"
+                                                onclick="DeleteProduct('{{ $product->name }}', {{ $product->id }})"><i
+                                                    class="bx bx-trash-alt font-size-16 align-middle"></i></button>
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="edit{{ $product->id }}" tabindex="-1" role="dialog">

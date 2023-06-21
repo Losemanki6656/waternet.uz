@@ -4,11 +4,7 @@
         r = "en";
 
     function d(t) {
-        document.getElementById("header-lang-img") && ("en" == t ? document.getElementById("header-lang-img").src = "assets/images/flags/us.jpg" : "sp" == t ? document.getElementById("header-lang-img").src = "assets/images/flags/spain.jpg" : "gr" == t ? document.getElementById("header-lang-img").src = "assets/images/flags/germany.jpg" : "it" == t ? document.getElementById("header-lang-img").src = "assets/images/flags/italy.jpg" : "ru" == t && (document.getElementById("header-lang-img").src = "assets/images/flags/russia.jpg"), localStorage.setItem("Dason-language", t), null == (o = localStorage.getItem("Dason-language")) && d(r), n.getJSON("assets/lang/" + o + ".json", function (t) {
-            n("html").attr("lang", o), n.each(t, function (t, e) {
-                "head" === t && n(document).attr("title", e.title), n("[data-key='" + t + "']").text(e)
-            })
-        }))
+        document.getElementById("header-lang-img") && ("en" == t ? document.getElementById("header-lang-img").src = "..//assets/images/flags/us.jpg" : "uz" == t ? document.getElementById("header-lang-img").src = "..//assets/images/flags/uzb.jpg" : "ru" == t && (document.getElementById("header-lang-img").src = "..//assets/images/flags/russia.jpg"))
     }
 
     function i() {
@@ -28,29 +24,29 @@
     }
 
     function l(t) {
-       
+
     }
 
     function c() {
         document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || n("body").removeClass("fullscreen-enable")
     }
     n("#side-menu").metisMenu(), i(), e = document.body.getAttribute("data-sidebar-size"),
-     n("#vertical-menu-btn").on("click", function (t) {
-        t.preventDefault(), n("body").toggleClass("sidebar-enable"), 992 <= n(window).width() && (null == e ? null == document.body.getAttribute("data-sidebar-size") || "lg" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "lg") : "md" == e ? "md" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "md") : "sm" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "lg") : document.body.setAttribute("data-sidebar-size", "sm"))
-    }), n("#sidebar-menu a").each(function () {
-        var t = window.location.href.split(/[?#]/)[0];
-        this.href == t && (n(this).addClass("active"), n(this).parent().addClass("mm-active"), n(this).parent().parent().addClass("mm-show"), n(this).parent().parent().prev().addClass("mm-active"), n(this).parent().parent().parent().addClass("mm-active"), n(this).parent().parent().parent().parent().addClass("mm-show"), n(this).parent().parent().parent().parent().parent().addClass("mm-active"))
-    }), n(document).ready(function () {
-        var t;
-        0 < n("#sidebar-menu").length && 0 < n("#sidebar-menu .mm-active .active").length && (300 < (t = n("#sidebar-menu .mm-active .active").offset().top) && (t -= 300, n(".vertical-menu .simplebar-content-wrapper").animate({
-            scrollTop: t
-        }, "slow")))
-    }), n(".navbar-nav a").each(function () {
-        var t = window.location.href.split(/[?#]/)[0];
-        this.href == t && (n(this).addClass("active"), n(this).parent().addClass("active"), n(this).parent().parent().addClass("active"), n(this).parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().parent().parent().addClass("active"))
-    }), n('[data-toggle="fullscreen"]').on("click", function (t) {
-        t.preventDefault(), n("body").toggleClass("fullscreen-enable"), document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement ? document.cancelFullScreen ? document.cancelFullScreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitCancelFullScreen && document.webkitCancelFullScreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
-    }), document.addEventListener("fullscreenchange", c), document.addEventListener("webkitfullscreenchange", c), document.addEventListener("mozfullscreenchange", c),
+        n("#vertical-menu-btn").on("click", function (t) {
+            t.preventDefault(), n("body").toggleClass("sidebar-enable"), 992 <= n(window).width() && (null == e ? null == document.body.getAttribute("data-sidebar-size") || "lg" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "lg") : "md" == e ? "md" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "md") : "sm" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "lg") : document.body.setAttribute("data-sidebar-size", "sm"))
+        }), n("#sidebar-menu a").each(function () {
+            var t = window.location.href.split(/[?#]/)[0];
+            this.href == t && (n(this).addClass("active"), n(this).parent().addClass("mm-active"), n(this).parent().parent().addClass("mm-show"), n(this).parent().parent().prev().addClass("mm-active"), n(this).parent().parent().parent().addClass("mm-active"), n(this).parent().parent().parent().parent().addClass("mm-show"), n(this).parent().parent().parent().parent().parent().addClass("mm-active"))
+        }), n(document).ready(function () {
+            var t;
+            0 < n("#sidebar-menu").length && 0 < n("#sidebar-menu .mm-active .active").length && (300 < (t = n("#sidebar-menu .mm-active .active").offset().top) && (t -= 300, n(".vertical-menu .simplebar-content-wrapper").animate({
+                scrollTop: t
+            }, "slow")))
+        }), n(".navbar-nav a").each(function () {
+            var t = window.location.href.split(/[?#]/)[0];
+            this.href == t && (n(this).addClass("active"), n(this).parent().addClass("active"), n(this).parent().parent().addClass("active"), n(this).parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().parent().addClass("active"), n(this).parent().parent().parent().parent().parent().parent().addClass("active"))
+        }), n('[data-toggle="fullscreen"]').on("click", function (t) {
+            t.preventDefault(), n("body").toggleClass("fullscreen-enable"), document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement ? document.cancelFullScreen ? document.cancelFullScreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitCancelFullScreen && document.webkitCancelFullScreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
+        }), document.addEventListener("fullscreenchange", c), document.addEventListener("webkitfullscreenchange", c), document.addEventListener("mozfullscreenchange", c),
         function () {
             if (document.getElementById("topnav-menu-content")) {
                 for (var t = document.getElementById("topnav-menu-content").getElementsByTagName("a"), e = 0, a = t.length; e < a; e++) t[e].onclick = function (t) {

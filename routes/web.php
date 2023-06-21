@@ -78,6 +78,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get('/results', [App\Http\Controllers\HomeController::class, 'results'])->name('results');
+
+    Route::get('/results-export', [App\Http\Controllers\HomeController::class, 'export_results'])->name('export_results');
+
     Route::post('/add-order/{id}', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
     Route::post('/add-order-check', [App\Http\Controllers\HomeController::class, 'add_order_check'])->name('add_order_check');
 
@@ -144,6 +147,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/smsmanager/sms-text-new', [App\Http\Controllers\ClientController::class, 'sms_text_new'])->name('sms_text_new');
 
     Route::get('/traffics-merchant', [App\Http\Controllers\ClientController::class, 'traffic_merchant'])->name('traffic_merchant');
+    Route::get('/user-info', [App\Http\Controllers\HomeController::class, 'user_info'])->name('user_info');
 
     Route::post('/smsmanager/send-client-message/{id}', [App\Http\Controllers\ClientController::class, 'send_client_message'])->name('send_client_message');
 

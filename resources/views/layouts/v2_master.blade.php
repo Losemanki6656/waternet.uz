@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="html_layout">
 
 <head>
 
@@ -122,7 +122,7 @@
                                     class="me-1" height="12"> <span class="align-middle">Russian</span>
                             </a>
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="uz">
                                 <img src="{{ asset('assets/images/flags/uzb.jpg') }}" alt="user-image"
                                     class="me-1" height="12"> <span class="align-middle">Uzbek</span>
                             </a>
@@ -134,58 +134,6 @@
                             <i data-feather="moon" class="icon-lg layout-mode-dark"></i>
                             <i data-feather="sun" class="icon-lg layout-mode-light"></i>
                         </button>
-                    </div>
-
-                    <div class="dropdown d-none d-lg-inline-block ms-1">
-                        <button type="button" class="btn header-item" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i data-feather="grid" class="icon-lg"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <div class="p-2">
-                                <div class="row g-0">
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/github.png" alt="Github">
-                                            <span>GitHub</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
-                                            <span>Bitbucket</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/dribbble.png" alt="dribbble">
-                                            <span>Dribbble</span>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="row g-0">
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/dropbox.png" alt="dropbox">
-                                            <span>Dropbox</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/mail_chimp.png" alt="mail_chimp">
-                                            <span>Mail Chimp</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/slack.png" alt="slack">
-                                            <span>Slack</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="dropdown d-inline-block">
@@ -212,7 +160,7 @@
                                 <a href="#!" class="text-reset notification-item">
                                     <div class="d-flex">
                                         <div class="flex-shrink-0 me-3">
-                                            <img src="assets/images/users/avatar-3.jpg"
+                                            <img src="{{ asset('assets/images/users/avatar-3.jpg') }}"
                                                 class="rounded-circle avatar-sm" alt="user-pic">
                                         </div>
                                         <div class="flex-grow-1">
@@ -343,6 +291,15 @@
                             </li>
                         @endcan
 
+                        @can('results')
+                            <li>
+                                <a href="{{ route('results') }}">
+                                    <i data-feather="monitor"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.results') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+
                         @can('admin')
                             <li class="menu-title" data-key="t-apps">Administration</li>
 
@@ -386,22 +343,10 @@
 
                     </ul>
 
-                    <div class="card sidebar-alert shadow-none text-center mx-4 mb-0 mt-5">
-                        <div class="card-body">
-                            <img src="assets/images/giftbox.png" alt="">
-                            <div class="mt-4">
-                                <h5 class="alertcard-title font-size-16">Unlimited Access</h5>
-                                <p class="font-size-13">Upgrade your plan from a Free trial, to select ‘Business Plan’.
-                                </p>
-                                <a href="#!" class="btn btn-primary mt-2">Upgrade Now</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
-                <!-- Sidebar -->
             </div>
         </div>
-        <!-- Left Sidebar End -->
 
 
 
@@ -458,45 +403,36 @@
                 <div class="form-check form-check-inline">
                     <input class="form-check-input theme-color" type="radio" name="theme-mode" id="theme-default"
                         value="default" onchange="document.documentElement.setAttribute('data-theme-mode', 'default')"
-                        checked>
+                        onclick="htmlLayout('light')" checked>
                     <label class="form-check-label" for="theme-default">{{ __('messages.default') }}</label>
                 </div>
 
                 <div class="form-check form-check-inline">
                     <input class="form-check-input theme-color" type="radio" name="theme-mode" id="theme-red"
-                        value="red" onchange="document.documentElement.setAttribute('data-theme-mode', 'red')">
+                        value="red" onchange="document.documentElement.setAttribute('data-theme-mode', 'red')"
+                        onclick="htmlLayout('red')">
                     <label class="form-check-label" for="theme-red">{{ __('messages.red') }}</label>
                 </div>
 
                 <div class="form-check form-check-inline">
                     <input class="form-check-input theme-color" type="radio" name="theme-mode" id="theme-purple"
-                        value="purple" onchange="document.documentElement.setAttribute('data-theme-mode', 'purple')">
+                        value="purple" onchange="document.documentElement.setAttribute('data-theme-mode', 'purple')"
+                        onclick="htmlLayout('purple')">
                     <label class="form-check-label" for="theme-purple">{{ __('messages.purple') }}</label>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">{{ __('messages.layout_mode') }}</h6>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="layout-mode" id="layout-mode-light"
-                        value="light">
-                    <label class="form-check-label" for="layout-mode-light">{{ __('messages.light') }}</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="layout-mode" id="layout-mode-dark"
-                        value="dark">
-                    <label class="form-check-label" for="layout-mode-dark">{{ __('messages.dark') }}</label>
                 </div>
 
                 <h6 class="mt-4 mb-3 pt-2">{{ __('messages.topbar_color') }}</h6>
 
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="topbar-color" id="topbar-color-light"
-                        value="light" onchange="document.body.setAttribute('data-topbar', 'light')">
+                        value="light" onchange="document.body.setAttribute('data-topbar', 'light')"
+                        onclick="topBar('light')">
                     <label class="form-check-label" for="topbar-color-light">{{ __('messages.light') }}</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="topbar-color" id="topbar-color-dark"
-                        value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
+                        value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')"
+                        onclick="topBar('dark')">
                     <label class="form-check-label" for="topbar-color-dark">{{ __('messages.dark') }}</label>
                 </div>
 
@@ -504,30 +440,100 @@
 
                 <div class="form-check sidebar-setting">
                     <input class="form-check-input" type="radio" name="sidebar-color" id="sidebar-color-light"
-                        value="light" onchange="document.body.setAttribute('data-sidebar', 'light')">
+                        value="light" onchange="document.body.setAttribute('data-sidebar', 'light')"
+                        onclick="sidebarThemeUpdate('light')">
                     <label class="form-check-label" for="sidebar-color-light">{{ __('messages.light') }}</label>
                 </div>
                 <div class="form-check sidebar-setting">
                     <input class="form-check-input" type="radio" name="sidebar-color" id="sidebar-color-dark"
-                        value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')">
+                        value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')"
+                        onclick="sidebarThemeUpdate('dark')">
                     <label class="form-check-label" for="sidebar-color-dark">{{ __('messages.dark') }}</label>
                 </div>
                 <div class="form-check sidebar-setting">
                     <input class="form-check-input" type="radio" name="sidebar-color" id="sidebar-color-brand"
-                        value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')">
+                        value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')"
+                        onclick="sidebarThemeUpdate('brand')">
                     <label class="form-check-label" for="sidebar-color-brand">{{ __('messages.brand') }}</label>
+                </div>
+            </div>
+            <hr class="m-0" />
+            <div class="p-4">
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <img src="{{ asset('assets/images/custom_logos/clients.jpg') }}"
+                            class="rounded-circle avatar-sm" alt="user-pic">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1" id="clients_count"></h6>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-1" id="clients_count_traffic"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <img src="{{ asset('assets/images/custom_logos/sms.jpg') }}" class="rounded-circle avatar-sm"
+                            alt="user-pic">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1" id="sms_count"></h6>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-1" id="sms_count_traffic"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <img src="{{ asset('assets/images/custom_logos/bak.jpg') }}" class="rounded-circle avatar-sm"
+                            alt="user-pic">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1" id="products_count"></h6>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-1" id="products_count_taffic"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <img src="{{ asset('assets/images/custom_logos/man.jpg') }}" class="rounded-circle avatar-sm"
+                            alt="user-pic">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1" id="users_count"></h6>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-1" id="users_count_taffic"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <img src="{{ asset('assets/images/custom_logos/balance.png') }}"
+                            class="rounded-circle avatar-sm" alt="user-pic">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1" id="balance"></h6>
+                        <div class="font-size-13 text-muted">
+                            <p class="mb-1" id="balance_debt"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button type="button" onclick="updateOrgInfo()" class="btn btn-primary btn-lg">
+                        <i class="fas fa-redo-alt me-2"></i>
+                        {{ __('messages.update') }}
+                    </button>
                 </div>
 
             </div>
 
-        </div> <!-- end slimscroll-menu-->
+        </div>
     </div>
-    <!-- /Right-bar -->
 
-    <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
 
-    <!-- JAVASCRIPT -->
     <script>
         let cat = localStorage.getItem('body_class') ?? 'pace-done sidebar-enable';
         document.getElementById("bodyAttr").setAttribute("class", cat);
@@ -535,12 +541,18 @@
         let x = localStorage.getItem('data_sidebar_size') ?? 'lg';
         document.getElementById("bodyAttr").setAttribute("data-sidebar-size", x);
 
-        let y = localStorage.getItem('data_bs_theme') ?? 'light';
-        document.getElementById("bodyAttr").setAttribute("data-bs-theme", y);
-
+        let y = localStorage.getItem('data_bs_theme') ?? '';
+        if (y == "light") document.getElementById("bodyAttr").setAttribute("data-bs-theme", '');
+        else document.getElementById("bodyAttr").setAttribute("data-bs-theme", y);
 
         let z = localStorage.getItem('data_sidebar') ?? 'light';
         document.getElementById("bodyAttr").setAttribute("data-sidebar", z);
+
+        let l = localStorage.getItem('data_bs_theme_html') ?? 'default';
+        document.getElementById("html_layout").setAttribute("data-theme-mode", l);
+
+        let q = localStorage.getItem('topBar') ?? 'dark';
+        document.getElementById("bodyAttr").setAttribute("data-topbar", q);
     </script>
 
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
@@ -549,16 +561,49 @@
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
     <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
-    <!-- pace js -->
     <script src="{{ asset('assets/libs/pace-js/pace.min.js') }}"></script>
     <script src="{{ asset('assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/libs/alertifyjs/build/alertify.min.js') }}"></script>
     <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
-    {{-- <script src="{{asset('assets/libs/pristinejs/pristine.min.js')}}"></script> --}}
     <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 
+    <script>
+        function sidebarThemeUpdate(color) {
+            localStorage.setItem('data_sidebar', color);
+        }
+    </script>
+    <script>
+        function htmlLayout(color) {
+            localStorage.setItem('data_bs_theme_html', color);
+        }
+    </script>
+    <script>
+        function topBar(color) {
+            localStorage.setItem('topBar', color);
+        }
+    </script>
+    <script>
+        function userData() {
+            var userInfo = JSON.parse(localStorage.getItem('userInfo'))
+
+            $('#clients_count').html("{{ __('messages.clients_count') }}: " + userInfo.clientCount);
+            $('#clients_count_traffic').html("{{ __('messages.traffic') }}: " + userInfo.clientCountTraffic);
+
+            $('#sms_count').html("{{ __('messages.sms_count') }}: " + userInfo.productsCount);
+            $('#sms_count_traffic').html("{{ __('messages.traffic') }}: " + userInfo.productsCountTraffic);
+
+            $('#products_count').html("{{ __('messages.products_count') }}: " + userInfo.smsCount);
+            $('#products_count_taffic').html("{{ __('messages.traffic') }}: " + userInfo.smsCountTraffic);
+
+            $('#users_count').html("{{ __('messages.users_count') }}: " + userInfo.usersCount);
+            $('#users_count_taffic').html("{{ __('messages.traffic') }}: " + userInfo.usersCountTraffic);
+
+            $('#balance').html("{{ __('messages.balance') }}: " + userInfo.balance);
+            $('#balance_debt').html("{{ __('messages.date_traffic') }}: " + userInfo.date_traffic);
+        }
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var e = document.querySelectorAll("[data-trigger]");
@@ -569,6 +614,8 @@
                     searchPlaceholderValue: "{{ __('messages.search') }}"
                 })
             }
+            userData();
+
         });
 
         document.getElementById('vertical-menu-btn').onclick = function() {
@@ -592,19 +639,40 @@
             let c = localStorage.getItem('data_bs_theme') ?? 'light';
 
             if (c == "light") {
+                console.log(1);
                 document.getElementById("bodyAttr").setAttribute("data-bs-theme", "dark");
                 document.getElementById("bodyAttr").setAttribute("data-sidebar", "light");
                 localStorage.setItem('data_bs_theme', 'dark');
                 localStorage.setItem('data_sidebar', 'light');
             } else {
-                document.getElementById("bodyAttr").setAttribute("data-bs-theme", "light");
+                console.log(2);
+                document.getElementById("bodyAttr").setAttribute("data-bs-theme", "");
                 document.getElementById("bodyAttr").setAttribute("data-sidebar", "light");
-                localStorage.setItem('data_bs_theme', 'light');
+                localStorage.setItem('data_bs_theme', "light");
                 localStorage.setItem('data_sidebar', 'light');
             }
         };
     </script>
-
+    <script>
+        function updateOrgInfo() {
+            $.ajax({
+                url: "{{ route('user_info') }}",
+                method: "GET",
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(res) {
+                    localStorage.setItem('userInfo', JSON.stringify(res.data));
+                    userData();
+                    alertify.set('notifier', 'position', 'bottom-left');
+                    alertify.success('success');
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
+                }
+            });
+        }
+    </script>
     <script>
         $(document).ready(function() {
             @if (session()->has('success'))

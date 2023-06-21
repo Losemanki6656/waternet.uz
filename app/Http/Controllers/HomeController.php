@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ResultsExport;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Sity;
@@ -50,6 +51,28 @@ class HomeController extends Controller
     {
 
         return view('dashboard');
+    }
+
+    public function user_info()
+    {
+        $organization = Organization::with('traffic')->find(auth()->user()->organization_id);
+
+        $a[] = [
+            'clientCount' => $organization->clients_count,
+            'clientCountTraffic' => $organization->traffic->clients_count,
+            'smsCount' => $organization->sms_count,
+            'smsCountTraffic' => $organization->traffic->sms_count,
+            'productsCount' => $organization->products_count,
+            'productsCountTraffic' => $organization->traffic->products_count,
+            'usersCount' => $organization->users_count,
+            'usersCountTraffic' => $organization->traffic->users_count,
+            'balance' => $organization->balance,
+            'date_traffic' => $organization->date_traffic,
+        ];
+
+        return response()->json([
+            'data' => $a[0]
+        ]);
     }
 
     public function index()
@@ -344,6 +367,7 @@ class HomeController extends Controller
 
         $a = [];
         $x = 0;
+        $b = [];
         foreach ($clients as $item) {
             $x++;
             $a[] = [
@@ -356,10 +380,17 @@ class HomeController extends Controller
                 'container' => $item->container,
                 'active' => $item->activated_at->format('Y-m-d')
             ];
+
+            if ($item->activated_at->diffInDays() > 14)
+                $b[] = 'FFC7CE';
+            if ($item->activated_at->diffInDays() >= 7 && $item->activated_at->diffInDays() <= 7)
+                $b[] = 'FFEB9C';
+            if ($item->activated_at->diffInDays() < 7)
+                $b[] = 'C6EFCE';
         }
         $x += 3;
         $organization = auth()->user()->organization;
-        return Excel::download(new ClientsExport($a, $organization, $x), 'Clients.xlsx');
+        return Excel::download(new ClientsExport($a, $organization, $x, $b), 'Clients.xlsx');
 
     }
 
@@ -584,10 +615,6 @@ class HomeController extends Controller
             $zakaz->user_id = auth()->user()->id;
             $zakaz->save();
 
-            $client = Client::find($id);
-            $client->activated_at = now();
-            $client->save();
-
             return redirect()->back()->with('success', __('messages.order_received_successfully'));
 
         } catch (\Exception $e) {
@@ -782,6 +809,7 @@ class HomeController extends Controller
                 if (Product::find($orderinfo->product_id)->container_status != 1)
                     $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
 
+                $client_info->activated_at = now();
                 $client_info->save();
             }
 
@@ -1047,6 +1075,8 @@ class HomeController extends Controller
             $dolgsumm = array_sum($amount);
             $takesumm = array_sum($takecon);
         }
+
+        // dd($entrycon);
         return view('results', [
             'info_org' => $info_org,
             'roles' => $roles,
@@ -1074,6 +1104,164 @@ class HomeController extends Controller
         ]);
     }
 
+    public function export_results(Request $request)
+    {
+
+        if ($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
+        }
+        $info_id = auth()->user()->organization_id;
+        $info_org = Organization::find($info_id);
+
+        $users = UserOrganization::where('organization_id', auth()->user()->organization_id)->get();
+        $x = 0;
+        $y = [];
+        foreach ($users as $user) {
+            $x++;
+            $y[$x] = $user->user_id;
+        }
+
+        $data = User::whereIn('id', $y)->get();
+        $order = [];
+        $takeproduct = [];
+        $soldproducts = [];
+        $soldsumm = [];
+        $entrycon = [];
+        $payment1 = [];
+        $payment2 = [];
+        $payment3 = [];
+        $amount = [];
+        $roles = [];
+
+        foreach ($data as $user) {
+            $order[$user->id] = Order::
+                where('user_id', $user->id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->sum('product_count');
+            $takeproduct[$user->id] = TakeProduct::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('received_id', $user->id)
+                ->sum('product_count');
+            $solds = SuccessOrders::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->whereIn('order_status', [1, 2])->get();
+            $solds2 = ClientPrices::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)->get();
+
+            $soldproducts[$user->id] = $solds->sum('count');
+            $roles[$user->id] = UserOrganization::where('user_id', $user->id)->value('role');
+            $soldsumm[$user->id] = 0;
+            $amount[$user->id] = 0;
+            $payment1[$user->id] = 0;
+            $payment2[$user->id] = 0;
+            $payment3[$user->id] = 0;
+
+            foreach ($solds as $sold) {
+
+                if ($sold->count * $sold->price >= $sold->amount)
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count * $sold->price;
+                else
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
+
+                if ($sold->price_sold < 0)
+                    $amount[$user->id] = $amount[$user->id] + $sold->price_sold;
+
+            }
+
+            foreach ($solds2 as $sold) {
+                if ($sold->status == 1)
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
+
+                if ($sold->payment == 1)
+                    $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
+                if ($sold->payment == 2)
+                    $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
+                if ($sold->payment == 3)
+                    $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
+            }
+            $summorder = array_sum($order);
+            $summtakeproduct = array_sum($takeproduct);
+            $summsoldproducts = array_sum($soldproducts);
+            $summsoldsumm = array_sum($soldsumm);
+
+            $summpayment1 = array_sum($payment1);
+            $summpayment2 = array_sum($payment2);
+            $summpayment3 = array_sum($payment3);
+
+
+            $entrycon[$user->id] = SuccessOrders::
+                where('organization_id', $info_id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->sum('container');
+
+            $takecon[$user->id] = EntryContainer::
+                where('organization_id', $info_id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->sum('product_count');
+
+            $summentrycon = array_sum($entrycon);
+            $amount[$user->id] = (-1) * $amount[$user->id];
+            $dolgsumm = array_sum($amount);
+            $takesumm = array_sum($takecon);
+        }
+
+        $a = [];
+        $x = 0;
+        foreach ($data as $user) {
+            $x++;
+            $a[] = [
+                'num' => $x,
+                'name' => $user->name,
+                'role' => $user->roleName(),
+                'order' => $order[$user->id],
+                'takeproduct' => $takeproduct[$user->id],
+                'soldproduct' => $soldproducts[$user->id],
+                'soldsum' => $soldsumm[$user->id],
+                'entrycon' => $entrycon[$user->id],
+                'takecon' => $takecon[$user->id],
+                'payment1' => $payment1[$user->id],
+                'payment2' => $payment2[$user->id],
+                'payment3' => $payment3[$user->id],
+                'amount' => $amount[$user->id]
+            ];
+        }
+        $x += 3;
+        $organization = auth()->user()->organization;
+
+        return Excel::download(
+            new ResultsExport(
+                $a,
+                $summorder,
+                $summtakeproduct,
+                $summsoldproducts,
+                $summsoldsumm,
+                $summentrycon,
+                $summpayment1,
+                $summpayment2,
+                $summpayment3,
+                $takesumm,
+                $dolgsumm,
+                $organization,
+                $x
+            ),
+            'Results.xlsx'
+        );
+
+
+    }
+
     public function success_order(Request $request, $id)
     {
         try {
@@ -1092,6 +1280,7 @@ class HomeController extends Controller
                 if (Product::find($orderinfo->product_id)->container_status != 1)
                     $client_info->container = $client_info->container - $request->product_count + $request->container - $request->invalid_container_count;
 
+                $client_info->activated_at = now();
                 $client_info->save();
             }
 

@@ -132,7 +132,7 @@
                             <div class="col-lg-3 col-md-6">
                                 <b>{{ __('messages.product') }}:</b>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" value="{{ $order->product->name }}"
+                                    <input type="text" class="form-control" value="{{ $order->product->name ?? '' }}"
                                         disabled>
                                 </div>
                             </div>

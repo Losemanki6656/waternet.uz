@@ -1,64 +1,88 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 @section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.Orders') }}</h4>
 
-<div class="container-fluid">
-    <div class="block-header">
-        <div class="row">
-            <div class="col-lg-5 col-md-8 col-sm-12">
-                <h2>Zakazlar</h2>
-            </div>            
-            <div class="col-lg-7 col-md-4 col-sm-12 text-right">
-                <ul class="breadcrumb justify-content-end">
-                    <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>                            
-                    <li class="breadcrumb-item active">Zakazlar</li>
-                </ul>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.results') }}</a></li>
+                        <li class="breadcrumb-item active">{{ __('messages.Orders') }}</li>
+                    </ol>
+                </div>
+
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="header">
+    <div class="card rounded-4">
+        <div class="card-header">
+            <h5>{{ __('messages.orders_in_the_period') }}: <span class="text-primary">{{ request('date1') }}</span> --
+                <span class="text-primary"> {{ request('date2') }} </span>; {{ __('messages.user') }} -
+                <span class="text-primary">{{ $orders[0]->user->name ?? __('messages.user_not_found') }}</span>
+            </h5>
         </div>
 
-        <div class="body">
+        <div class="card-body">
             <div class="table-responsive">
-                <table class="table m-b-0 table-bordered">
-                    <thead>
+                <table class="table table-sm align-middle table-bordered table-nowrap">
+                    <thead class="table-light">
                         <tr>
-                            <th width="60">#</th>
-                            <th>FIO</th>
-                            <th>Tel raqami</th>
-                            <th>Tovar nomi</th>
-                            <th>Miqdori</th>
-                            <th>Narxi</th>
-                            <th>Vaqti</th>
-                            <th>Izoh </th>
-                            <th>Operator</th>
+                            <th class="text-center fw-bold" width="60">#</th>
+                            <th class="text-center fw-bold">{{ __('messages.fullname') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.phone') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.product') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.count') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.price') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.time') }}</th>
+                            <th class="text-center fw-bold">{{ __('messages.comment') }} </th>
+                            <th class="text-center fw-bold">{{ __('messages.user') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                    
                         @foreach ($orders as $order)
                             <tr>
-                                <td>{{(($orders->currentPage() * 10) - 10) + $loop->index + 1}}</td>
-                            
-                                    @if ($order->client)
-                                        <td>{{$order->client->fullname}}</td>
-                                        <td>{{$order->client->phone}}</td>
-                                    @else
-                                        <td colspan="2"> Mijoz topilmadi</td>
-                                    @endif
-                                <td>{{$order->product->name}}</td>
-                                <td>{{$order->product_count}}</td>
-                                <td>{{$order->price}}</td>
-                                <td>{{$order->created_at}}</td>
-                                <td>{{$order->comment}}</td>
-                                <td>{{$order->user->name}}</td>
-                            </tr> 
-                        @endforeach    
+                                <td class="text-center">{{ $orders->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
+
+                                <td class="text-center">{{ $order->client->fullname ?? __('messages.client_not_found') }}
+                                </td>
+                                <td class="text-center">{{ $order->client->phone ?? '' }}</td>
+                                <td class="text-center">{{ $order->product->name ?? '' }}</td>
+                                <td class="text-center">{{ $order->product_count }}</td>
+                                <td class="text-center">{{ $order->price }}</td>
+                                <td class="text-center">{{ $order->created_at }}</td>
+                                <td class="text-center">{{ $order->comment }}</td>
+                                <td class="text-center">{{ $order->user->name }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td class="text-center fw-bold" colspan="4">{{ __('messages.total') }}:</td>
+                            <td class="text-center fw-bold">
+                                {{ $total }}
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+            @if ($orders->total() > 10)
+                <div class="row justify-content-between">
+                    <div class="col-md-2">
+                        <label class="mx-2">
+                        </label>
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <label class="mb-0 p-0">{{ $orders->onEachSide(1)->withQueryString() }}</label>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <label class="me-2">
+                        </label>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
-</div>
 @endsection
