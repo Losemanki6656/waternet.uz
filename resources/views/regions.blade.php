@@ -80,7 +80,7 @@
                             </div>
 
                             <div class="row mt-3">
-                                <div class="table-responsive" style="max-height: 400px;">
+                                <div class="table-responsive animate__animated animate__fadeIn" style="max-height: 400px;">
                                     <table class="table table-sm align-middle table-bordered table-nowrap">
                                         <thead class="table-light">
                                             <tr>
@@ -214,7 +214,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-3" style="max-height: 400px;">
+                            <div class="table-responsive mt-3 animate__animated animate__fadeIn"
+                                style="max-height: 400px;">
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>

@@ -176,7 +176,7 @@
     <div class="row mt-3">
         @foreach ($users as $user)
             <div class="col-xl-3 col-sm-6">
-                <div class="card">
+                <div class="card animate__animated animate__fadeInUp">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>

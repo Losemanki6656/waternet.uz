@@ -76,7 +76,7 @@
         <div class="col-xl-8">
             <div class="card rounded-4">
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive  animate__animated animate__pulse">
                         <table class="table align-middle mb-0 table-nowrap">
                             <thead class="table-light">
                                 <tr>

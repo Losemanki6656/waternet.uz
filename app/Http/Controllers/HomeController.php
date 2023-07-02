@@ -49,8 +49,83 @@ class HomeController extends Controller
 
     public function dashboard()
     {
+        $date1 = now();
+        $date2 = now();
+        $text = 'Today';
 
-        return view('dashboard');
+        $info_id = auth()->user()->organization_id;
+
+        $amount = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->sum('amount');
+        $amount_cash = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 1)
+            ->sum('amount');
+        $amount_card = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 2)
+            ->sum('amount');
+        $amount_transfer = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 3)
+            ->sum('amount');
+        $amount_cash = ClientPrices::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->where('payment', 1)
+            ->sum('amount');
+
+        $debt = SuccessOrders::where('organization_id', $info_id)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->whereIn('order_status', [1, 2])
+            ->where('price_sold', '<', 0)
+            ->sum('price_sold');
+
+        $users = User::where('organization_id', auth()->user()->organization_id)->get();
+
+        $tableUser = [];
+        foreach ($users as $auser) {
+
+            $p1 = TakeProduct::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('received_id', $auser->id)
+                ->sum('product_count');
+
+            $p2 = SuccessOrders::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $auser->id)
+                ->whereIn('order_status', [1, 2])->sum('count');
+
+            $p3 = EntryContainer::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $auser->id)
+                ->sum('product_count');
+
+            $tableUser[] = [
+                'name' => $auser->name,
+                'takeProd' => $p1,
+                'suc_order' => $p2,
+                'ectryCon' => $p3,
+                'role' => $auser->roleName()
+            ];
+
+        }
+
+        return view('dashboard', [
+            'amount' => $amount,
+            'amount_cash' => $amount_cash,
+            'amount_card' => $amount_card,
+            'amount_transfer' => $amount_transfer,
+            'debt' => $debt,
+            'tableUser' => $tableUser
+
+        ]);
     }
 
     public function user_info()
@@ -260,6 +335,7 @@ class HomeController extends Controller
             $clients = Client::where('organization_id', $info_id)->get()->count();
             $lastclients = Client::where('organization_id', $info_id)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get()->count();
             $products = Product::where('organization_id', $info_id)->get();
+
             return view('statistics', [
                 'users' => $users,
                 'series' => $series,
@@ -511,7 +587,7 @@ class HomeController extends Controller
 
             $organ = auth()->user()->organization_id;
 
-            $client = Client::find($request->id)->delete();
+            Client::find($request->id)->delete();
 
             $count = Organization::find($organ);
             $count->clients_count = $count->clients_count - 1;
@@ -963,6 +1039,7 @@ class HomeController extends Controller
         }
     }
 
+
     public function results(Request $request)
     {
 
@@ -974,18 +1051,27 @@ class HomeController extends Controller
             $date1 = date('Y-m-d', strtotime($request->date1));
             $date2 = date('Y-m-d', strtotime($request->date2));
         }
-        $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
 
-        $users = UserOrganization::where('organization_id', auth()->user()->organization_id)->get();
+        $info_id = auth()->user()->organization_id;
+
+        $data = User::where('organization_id', auth()->user()->organization_id)->get();
+
+        $arrayColors = [
+            'success',
+            // 'info',
+            'primary',
+            'danger',
+            'dark',
+            'warning',
+            'secondary'
+        ];
+
         $x = 0;
-        $y = [];
-        foreach ($users as $user) {
+        foreach ($data as $item) {
             $x++;
-            $y[$x] = $user->user_id;
+            $color[$item->id] = $arrayColors[$x];
         }
 
-        $data = User::whereIn('id', $y)->get();
         $order = [];
         $takeproduct = [];
         $soldproducts = [];
@@ -997,7 +1083,14 @@ class HomeController extends Controller
         $amount = [];
         $roles = [];
 
-        foreach ($data as $user) {
+        $users = User::where('organization_id', auth()->user()->organization_id)
+            ->when(request('formRadios'), function ($query, $formRadios) {
+                $query->where('id', $formRadios);
+            })->get();
+
+        $dataUser = [];
+
+        foreach ($users as $user) {
             $order[$user->id] = Order::
                 where('user_id', $user->id)
                 ->whereDate('created_at', '>=', $date1)
@@ -1007,16 +1100,20 @@ class HomeController extends Controller
                 ->whereDate('created_at', '<=', $date2)
                 ->where('received_id', $user->id)
                 ->sum('product_count');
+
             $solds = SuccessOrders::whereDate('created_at', '>=', $date1)
                 ->whereDate('created_at', '<=', $date2)
                 ->where('user_id', $user->id)
-                ->whereIn('order_status', [1, 2])->get();
+                ->whereIn('order_status', [1, 2])
+                ->get();
+
             $solds2 = ClientPrices::whereDate('created_at', '>=', $date1)
                 ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $user->id)->get();
+                ->where('user_id', $user->id)
+                ->get();
 
             $soldproducts[$user->id] = $solds->sum('count');
-            $roles[$user->id] = UserOrganization::where('user_id', $user->id)->value('role');
+            $roles[$user->id] = $user->roleName();
             $soldsumm[$user->id] = 0;
             $amount[$user->id] = 0;
             $payment1[$user->id] = 0;
@@ -1074,11 +1171,181 @@ class HomeController extends Controller
             $amount[$user->id] = (-1) * $amount[$user->id];
             $dolgsumm = array_sum($amount);
             $takesumm = array_sum($takecon);
+
+            $dataU = [];
+
+            $dataU[] = (int) $order[$user->id];
+            $dataU[] = (int) $takeproduct[$user->id];
+            $dataU[] = (int) $soldproducts[$user->id];
+            $dataU[] = (int) $entrycon[$user->id];
+            $dataU[] = (int) $takecon[$user->id];
+
+            $dataUser[] = [
+                'name' => $user->name,
+                'data' => $dataU
+            ];
         }
 
-        // dd($entrycon);
+        $categories[] = __('messages.given_order');
+        $categories[] = __('messages.given_product');
+        $categories[] = __('messages.sold_product');
+        $categories[] = __('messages.given_container');
+        $categories[] = __('messages.returned_container');
+
         return view('results', [
-            'info_org' => $info_org,
+            'roles' => $roles,
+            'data' => $data,
+            'users' => $users,
+            'order' => $order,
+            'takeproduct' => $takeproduct,
+            'soldproducts' => $soldproducts,
+            'soldsumm' => $soldsumm,
+            'dolgsumm' => $dolgsumm,
+            'entrycon' => $entrycon,
+            'takecon' => $takecon,
+            'amount' => $amount,
+            'payment1' => $payment1,
+            'payment2' => $payment2,
+            'payment3' => $payment3,
+            'summorder' => $summorder,
+            'summtakeproduct' => $summtakeproduct,
+            'summsoldproducts' => $summsoldproducts,
+            'summsoldsumm' => $summsoldsumm,
+            'summentrycon' => $summentrycon,
+            'summpayment1' => $summpayment1,
+            'summpayment2' => $summpayment2,
+            'summpayment3' => $summpayment3,
+            'takesumm' => $takesumm,
+            'color' => $color,
+            'dataUser' => json_encode($dataUser),
+            'categories' => json_encode($categories)
+        ]);
+    }
+
+    public function calendar(Request $request)
+    {
+        if ($request->date1 == null) {
+            $date1 = now();
+            $date2 = now();
+        } else {
+
+            $date1 = date('Y-m-d', strtotime($request->date1));
+            $date2 = date('Y-m-d', strtotime($request->date2));
+        }
+
+        $arrayColors = [
+            'success',
+            // 'info',
+            'primary',
+            'danger',
+            'dark',
+            'warning',
+            'secondary'
+        ];
+
+        $info_id = auth()->user()->organization_id;
+
+        $data = User::where('organization_id', auth()->user()->organization_id)->get();
+
+        $order = [];
+        $takeproduct = [];
+        $soldproducts = [];
+        $soldsumm = [];
+        $entrycon = [];
+        $payment1 = [];
+        $payment2 = [];
+        $payment3 = [];
+        $amount = [];
+        $roles = [];
+        $x = -1;
+
+        foreach ($data as $user) {
+            $order[$user->id] = Order::
+                where('user_id', $user->id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->sum('product_count');
+            $takeproduct[$user->id] = TakeProduct::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('received_id', $user->id)
+                ->sum('product_count');
+
+            $solds = SuccessOrders::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->whereIn('order_status', [1, 2])
+                ->get();
+
+            $solds2 = ClientPrices::whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->get();
+
+            $soldproducts[$user->id] = $solds->sum('count');
+            $roles[$user->id] = $user->roleName();
+            $soldsumm[$user->id] = 0;
+            $amount[$user->id] = 0;
+            $payment1[$user->id] = 0;
+            $payment2[$user->id] = 0;
+            $payment3[$user->id] = 0;
+
+            foreach ($solds as $sold) {
+
+                if ($sold->count * $sold->price >= $sold->amount)
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count * $sold->price;
+                else
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
+
+                if ($sold->price_sold < 0)
+                    $amount[$user->id] = $amount[$user->id] + $sold->price_sold;
+
+            }
+
+            foreach ($solds2 as $sold) {
+                if ($sold->status == 1)
+                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
+
+                if ($sold->payment == 1)
+                    $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
+                if ($sold->payment == 2)
+                    $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
+                if ($sold->payment == 3)
+                    $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
+            }
+            $summorder = array_sum($order);
+            $summtakeproduct = array_sum($takeproduct);
+            $summsoldproducts = array_sum($soldproducts);
+            $summsoldsumm = array_sum($soldsumm);
+
+            $summpayment1 = array_sum($payment1);
+            $summpayment2 = array_sum($payment2);
+            $summpayment3 = array_sum($payment3);
+
+
+            $entrycon[$user->id] = SuccessOrders::
+                where('organization_id', $info_id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->sum('container');
+
+            $takecon[$user->id] = EntryContainer::
+                where('organization_id', $info_id)
+                ->whereDate('created_at', '>=', $date1)
+                ->whereDate('created_at', '<=', $date2)
+                ->where('user_id', $user->id)
+                ->sum('product_count');
+
+            $summentrycon = array_sum($entrycon);
+            $amount[$user->id] = (-1) * $amount[$user->id];
+            $dolgsumm = array_sum($amount);
+            $takesumm = array_sum($takecon);
+
+            $x++;
+            $color[$user->id] = $arrayColors[$x];
+        }
+
+        return view('calendar', [
             'roles' => $roles,
             'data' => $data,
             'order' => $order,
@@ -1100,8 +1367,10 @@ class HomeController extends Controller
             'summpayment1' => $summpayment1,
             'summpayment2' => $summpayment2,
             'summpayment3' => $summpayment3,
-            'takesumm' => $takesumm
+            'takesumm' => $takesumm,
+            'color' => $color
         ]);
+
     }
 
     public function export_results(Request $request)

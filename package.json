@@ -23,6 +23,7 @@
     "dependencies": {
         "animate.css": "^4.1.1",
         "font-awesome": "^4.7.0",
+        "highcharts": "^11.1.0",
         "places.js": "^1.19.0"
     }
 }

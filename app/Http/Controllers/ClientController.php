@@ -968,7 +968,6 @@ class ClientController extends Controller
 
         $takeproducts = TakeProduct::whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
-            ->whereIn('order_status', [1, 2])
             ->where('organization_id', $info_id)
             ->where('received_id', request('id'))
             ->with('received')

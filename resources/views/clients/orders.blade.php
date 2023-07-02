@@ -72,7 +72,7 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-sm align-middle table-bordered table-nowrap">
+                <table class="table table-sm align-middle table-bordered table-nowrap animate__animated animate__fadeIn">
                     <thead class="table-light">
                         <tr>
                             <th class="text-center" width="60">#</th>

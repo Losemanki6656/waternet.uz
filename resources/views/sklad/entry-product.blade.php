@@ -115,7 +115,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-3">
+                            <div class="table-responsive mt-3 animate__animated animate__fadeIn">
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>
@@ -298,7 +298,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-3">
+                            <div class="table-responsive mt-3 animate__animated animate__fadeIn">
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>
@@ -475,7 +475,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-3">
+                            <div class="table-responsive mt-3 animate__animated animate__fadeIn">
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>
@@ -648,7 +648,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-3">
+                            <div class="table-responsive mt-3 animate__animated animate__fadeIn">
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>

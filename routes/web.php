@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get('/results', [App\Http\Controllers\HomeController::class, 'results'])->name('results');
+    Route::get('/calendar', [App\Http\Controllers\HomeController::class, 'calendar'])->name('calendar');
 
     Route::get('/results-export', [App\Http\Controllers\HomeController::class, 'export_results'])->name('export_results');
 
