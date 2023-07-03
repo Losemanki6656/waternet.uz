@@ -114,20 +114,17 @@
                         <div class="dropdown-menu dropdown-menu-end">
 
                             <!-- item-->
-                            <a href="{{ url('change/locale/en') }}" class="dropdown-item notify-item language"
-                                data-lang="en">
+                            <a onclick="Translate('en')" class="dropdown-item notify-item language" data-lang="en">
                                 <img src="{{ asset('assets/images/flags/us.jpg') }}" alt="user-image" class="me-1"
                                     height="12"> <span class="align-middle">English</span>
                             </a>
                             <!-- item-->
-                            <a href="{{ url('change/locale/ru') }}" class="dropdown-item notify-item language"
-                                data-lang="ru">
+                            <a onclick="Translate('ru')" class="dropdown-item notify-item language" data-lang="ru">
                                 <img src="{{ asset('assets/images/flags/russia.jpg') }}" alt="user-image"
                                     class="me-1" height="12"> <span class="align-middle">Russian</span>
                             </a>
                             <!-- item-->
-                            <a href="{{ url('change/locale/uz') }}" class="dropdown-item notify-item language"
-                                data-lang="uz">
+                            <a onclick="Translate('uz')" class="dropdown-item notify-item language" data-lang="uz">
                                 <img src="{{ asset('assets/images/flags/uzb.jpg') }}" alt="user-image"
                                     class="me-1" height="12"> <span class="align-middle">Uzbek</span>
                             </a>
@@ -681,6 +678,13 @@
                     alertify.error(error.responseJSON.message);
                 }
             });
+        }
+    </script>
+    <script>
+        function Translate(lang) {
+            localStorage.setItem('Dason-language', lang);
+            let url = '{{ url('change/locale') }}' + '/' + lang;
+            window.location.href = `${url}`;
         }
     </script>
     <script>
