@@ -114,17 +114,20 @@
                         <div class="dropdown-menu dropdown-menu-end">
 
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="en">
+                            <a href="{{ url('change/locale/en') }}" class="dropdown-item notify-item language"
+                                data-lang="en">
                                 <img src="{{ asset('assets/images/flags/us.jpg') }}" alt="user-image" class="me-1"
                                     height="12"> <span class="align-middle">English</span>
                             </a>
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
+                            <a href="{{ url('change/locale/ru') }}" class="dropdown-item notify-item language"
+                                data-lang="ru">
                                 <img src="{{ asset('assets/images/flags/russia.jpg') }}" alt="user-image"
                                     class="me-1" height="12"> <span class="align-middle">Russian</span>
                             </a>
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="uz">
+                            <a href="{{ url('change/locale/uz') }}" class="dropdown-item notify-item language"
+                                data-lang="uz">
                                 <img src="{{ asset('assets/images/flags/uzb.jpg') }}" alt="user-image"
                                     class="me-1" height="12"> <span class="align-middle">Uzbek</span>
                             </a>

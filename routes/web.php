@@ -216,4 +216,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/organization/admin-app-cart', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_add'])->name('admin_app_cart_add');
     Route::post('/organization/admin-app-cart/{id}', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_edit'])->name('admin_app_cart_edit');
     Route::post('/organization/admin-app-cart-delete/{id}', [App\Http\Controllers\TrafficController::class, 'admin_app_cart_delete'])->name('admin_app_cart_delete');
+
+    Route::get('change/locale/{lang}', function ($lang) {
+        app()->setLocale($lang);
+        Session::put('locale', $lang);
+        return redirect()->back();
+    });
 });
