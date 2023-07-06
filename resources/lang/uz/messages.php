@@ -247,4 +247,5 @@ return [
     'total_other' => "Jami qolgan hisoblar",
     'of_the_total_value' => 'Umumiy miqdordan',
     'given_tara' => 'Tara oldi',
+    'deposit' => 'deposit',
 ];

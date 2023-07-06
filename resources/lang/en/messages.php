@@ -247,4 +247,5 @@ return [
     'total_other' => 'Total Other',
     'of_the_total_value' => 'Of The Total Value',
     'given_tara' => 'Given Tara',
+    'deposit' => 'deposit',
 ];

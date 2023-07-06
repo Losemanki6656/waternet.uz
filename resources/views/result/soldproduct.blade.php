@@ -17,9 +17,35 @@
         </div>
     </div>
 
+    <div class="row mb-2">
+        <div class="col-sm-3 mb-2">
+            <div class="card mb-0">
+                <form action="{{ route('resultsold') }}" method="get" id="form">
+                    <input type="hidden" name="date1" value="{{ request('date1') }}">
+                    <input type="hidden" name="date2" value="{{ request('date2') }}">
+                    <input type="hidden" name="id" value="{{ request('id') }}">
+                    <select class="form-control" data-trigger name="product_id" id="product_id">
+                        @foreach ($products as $product)
+                            <option value={{ $product->id }} @if ($product->id == request('product_id')) selected @endif>
+                                {{ $product->name }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+        </div>
+        @push('scripts')
+            <script>
+                $('#product_id').change(function(e) {
+                    $('#form').submit();
+                });
+            </script>
+        @endpush
+    </div>
+
     <div class="card rounded-4">
         <div class="card-header">
-            <h5>{{ __('messages.given_products_in_the_period') }}: <span class="text-primary">{{ request('date1') }}</span>
+            <h5>{{ __('messages.given_products_in_the_period') }}: <span
+                    class="text-primary">{{ request('date1') }}</span>
                 --
                 <span class="text-primary"> {{ request('date2') }} </span>; {{ __('messages.user') }} -
                 <span class="text-primary">{{ $soldproducts[0]->user->name ?? __('messages.user_not_found') }}</span>

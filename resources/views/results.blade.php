@@ -15,12 +15,12 @@
             </div>
         </div>
     </div>
-    <div class="row mb-3  animate__animated animate__fadeInUp">
+    <div class="row mb-3 animate__animated animate__fadeInUp">
         <div class="accordion" id="accordionExample">
             <div class="accordion-item rounded-3">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        id="accorButton" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         {{ __('messages.old_version_result') }}
                     </button>
                 </h2>
@@ -43,6 +43,7 @@
                                         <th class="text-center fw-bold">{{ __('messages.card') }}</th>
                                         <th class="text-center fw-bold">{{ __('messages.transfer') }}</th>
                                         <th class="text-center fw-bold">{{ __('messages.debt') }}</th>
+                                        <th class="text-center fw-bold">{{ __('messages.deposit') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,6 +95,7 @@
                                                 <a
                                                     href="{{ route('dolgresult', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $amount[$user->id] }}</a>
                                             </td>
+                                            <td></td>
                                         </tr>
                                     @endforeach
                                     <td colspan="2" class="text-center fw-bold"> {{ __('messages.total') }}:</td>
@@ -412,10 +414,27 @@
 
 
 @section('scripts')
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    {{-- <script src="https://code.highcharts.com/highcharts.js"></script> --}}
     <script>
         $(document).ready(function() {
+            let z = localStorage.getItem('accorButton');
+            if (z == 'show') {
+                $('#accorButton').removeClass('collapsed');
+                $('#collapseOne').addClass('show');
+            } else {
+                $('#accorButton').addClass('collapsed');
+                $('#collapseOne').removeClass('show');
+            }
 
+            $('#accorButton').click(function(e) {
+                let x = localStorage.getItem('accorButton');
+                if (x != 'show') {
+                    localStorage.setItem('accorButton', 'show');
+                } else {
+                    localStorage.setItem('accorButton', 'hide');
+                }
+
+            });
         });
     </script>
 

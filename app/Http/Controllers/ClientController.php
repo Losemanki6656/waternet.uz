@@ -923,6 +923,7 @@ class ClientController extends Controller
 
     public function resultorders(Request $request)
     {
+        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
 
         if ($request->date1 == null) {
             $date1 = now();
@@ -935,6 +936,9 @@ class ClientController extends Controller
         $info_id = auth()->user()->organization_id;
 
         $orders = Order::whereDate('created_at', '>=', $date1)
+            ->when(request('product_id'), function ($query, $product_id) {
+                $query->where('product_id', $product_id);
+            })
             ->whereDate('created_at', '<=', $date2)
             ->where('organization_id', $info_id)
             ->where('user_id', request('id'))
@@ -947,13 +951,15 @@ class ClientController extends Controller
 
         return view('result.resultorders', [
             'orders' => $orders->paginate(10),
-            'total' => $total
+            'total' => $total,
+            'products' => $products
         ]);
 
     }
 
     public function resulttakeproducts(Request $request)
     {
+        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
 
         if ($request->date1 == null) {
             $date1 = now();
@@ -967,6 +973,9 @@ class ClientController extends Controller
         $info_id = auth()->user()->organization_id;
 
         $takeproducts = TakeProduct::whereDate('created_at', '>=', $date1)
+            ->when(request('product_id'), function ($query, $product_id) {
+                $query->where('product_id', $product_id);
+            })
             ->whereDate('created_at', '<=', $date2)
             ->where('organization_id', $info_id)
             ->where('received_id', request('id'))
@@ -979,13 +988,15 @@ class ClientController extends Controller
 
         return view('result.resulttake', [
             'takeproducts' => $takeproducts->paginate(10),
-            'total' => $total
+            'total' => $total,
+            'products' => $products
         ]);
 
     }
 
     public function resultsold(Request $request)
     {
+        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
 
         if ($request->date1 == null) {
             $date1 = now();
@@ -999,6 +1010,9 @@ class ClientController extends Controller
         $info_id = auth()->user()->organization_id;
 
         $soldproducts = SuccessOrders::where('organization_id', $info_id)
+            ->when(request('product_id'), function ($query, $product_id) {
+                $query->where('product_id', $product_id);
+            })
             ->where('user_id', request('id'))
             ->whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
@@ -1020,13 +1034,14 @@ class ClientController extends Controller
             'count_total' => $count_total,
             'price_total' => $price_total,
             'container_total' => $container_total,
-            'amount_total' => $amount_total
+            'amount_total' => $amount_total,
+            'products' => $products
         ]);
     }
 
     public function summresult(Request $request)
     {
-
+        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
         if ($request->date1 == null) {
             $date1 = now();
             $date2 = now();
@@ -1039,6 +1054,9 @@ class ClientController extends Controller
         $info_id = auth()->user()->organization_id;
 
         $soldproducts = SuccessOrders::where('organization_id', $info_id)
+            ->when(request('product_id'), function ($query, $product_id) {
+                $query->where('product_id', $product_id);
+            })
             ->where('user_id', request('id'))
             ->whereDate('created_at', '>=', $date1)
             ->whereDate('created_at', '<=', $date2)
@@ -1061,12 +1079,15 @@ class ClientController extends Controller
             'count_total' => $count_total,
             'price_total' => $price_total,
             'container_total' => $container_total,
-            'amount_total' => $amount_total
+            'amount_total' => $amount_total,
+            'products' => $products
         ]);
     }
 
     public function resultentrycontainer(Request $request)
     {
+
+        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
 
         if ($request->date1 == null) {
             $date1 = now();
@@ -1080,6 +1101,9 @@ class ClientController extends Controller
         $info_id = auth()->user()->organization_id;
 
         $entrycontainer = SuccessOrders::whereDate('created_at', '>=', $date1)
+            ->when(request('product_id'), function ($query, $product_id) {
+                $query->where('product_id', $product_id);
+            })
             ->whereDate('created_at', '<=', $date2)
             ->where('organization_id', $info_id)
             ->with('user')
@@ -1095,12 +1119,14 @@ class ClientController extends Controller
         return view('result.resultentryontainer', [
             'entrycontainer' => $entrycontainer->paginate(10),
             'summ_con' => $summ_con,
-            'summ_con_in' => $summ_con_in
+            'summ_con_in' => $summ_con_in,
+            'products' => $products,
         ]);
     }
 
     public function payment1(Request $request)
     {
+
 
         if ($request->date1 == null) {
             $date1 = now();
