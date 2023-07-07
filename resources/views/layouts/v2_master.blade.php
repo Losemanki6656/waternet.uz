@@ -225,7 +225,7 @@
         </header>
 
         <!-- ========== Left Sidebar Start ========== -->
-        <div class="vertical-menu">
+        <div class="vertical-menu animate__animated animate__fadeIn">
 
             <div data-simplebar class="h-100">
 
@@ -290,6 +290,23 @@
                                     <i data-feather="codepen"></i>
                                     <span data-key="t-dashboard">{{ __('messages.warehouse') }}</span>
                                 </a>
+                            </li>
+                        @endcan
+
+                        @can('smsmanager')
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow">
+                                    <i data-feather="message-square"></i>
+                                    <span data-key="t-icons">{{ __('messages.messages') }}</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{ route('members') }}"
+                                            data-key="t-feather">{{ __('messages.members') }}</a></li>
+                                    <li><a href="{{ route('members') }}"
+                                            data-key="t-feather">{{ __('messages.history') }}</a></li>
+                                    <li><a href="{{ route('members') }}"
+                                            data-key="t-feather">{{ __('messages.example_sms') }}</a></li>
+                                </ul>
                             </li>
                         @endcan
 

@@ -248,4 +248,11 @@ return [
     'of_the_total_value' => 'Umumiy miqdordan',
     'given_tara' => 'Tara oldi',
     'deposit' => 'deposit',
+    'messages' => 'Xabarlar',
+    'members' => 'Foydalanuvchilar',
+    'message' => 'Xabar',
+    'send_message' => 'Xabarni Yuborish',
+    'send' => 'Yuborish',
+    'history' => 'Arxiv',
+    'example_sms' => 'Xabar matni',
 ];

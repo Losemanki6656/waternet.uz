@@ -16,14 +16,14 @@
         </div>
     </div>
 
-    <div class="header mb-3">
+    <div class="header mb-3 animate__animated animate__fadeIn">
         <button type="button" class="btn btn-primary btn-lg waves-effect waves-light" data-bs-toggle="modal"
             data-bs-target="#addtask">
             <i class="fa fa-plus-circle"></i> {{ __('messages.add_product') }}
         </button>
 
         <div class="modal fade" id="addtask" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-centered animate__animated animate__zoomInDown" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="myModalLabel">{{ __('messages.add_product') }}</h5>
@@ -76,7 +76,7 @@
         <div class="col-xl-8">
             <div class="card rounded-4">
                 <div class="card-body">
-                    <div class="table-responsive  animate__animated animate__pulse">
+                    <div class="table-responsive animate__animated animate__pulse">
                         <table class="table align-middle mb-0 table-nowrap">
                             <thead class="table-light">
                                 <tr>
@@ -117,7 +117,7 @@
                                                     class="bx bx-trash-alt font-size-16 align-middle"></i></button>
                                         </td>
                                     </tr>
-                                    <div class="modal fade" id="edit{{ $product->id }}" tabindex="-1" role="dialog">
+                                    <div class="modal fade" id="edit{{ $product->id }}" role="dialog">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">

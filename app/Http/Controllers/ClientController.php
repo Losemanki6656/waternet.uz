@@ -737,41 +737,38 @@ class ClientController extends Controller
         ]);
     }
 
-    public function send_message_tg(Request $request)
+    public function members(Request $request)
     {
         $organ = auth()->user()->organization_id;
 
-        $clients = Client::query()
-            ->where('organization_id', $organ)
+        $clients = ClientChat::query()
+            ->whereHas('client', function ($q) use ($organ) {
+                $q->where('organization_id', $organ);
+            })
             ->when(request('city_id'), function ($query, $city_id) {
-                return $query->where('city_id', $city_id);
+                $query->whereHas('client', function ($q) use ($city_id) {
+                    $q->where('city_id', $city_id);
+                });
             })
             ->when(request('area_id'), function ($query, $area_id) {
-                return $query->where('area_id', $area_id);
+                $query->whereHas('client', function ($q) use ($area_id) {
+                    $q->where('area_id', $area_id);
+                });
             })
-            ->with('city')
-            ->orderBy('created_at', 'DESC')
-            ->with('user')
-            ->with('area')
-            ->with('telegrams');
+            ->when(request('search'), function ($query, $search) {
+                $query->whereHas('client', function ($q) use ($search) {
+                    $q->where('fullname', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->with(['client']);
 
         $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
 
-        $products = Product::where('organization_id', $organ)->get();
-        $info_org = Organization::find($organ);
-        $client_count = $clients->count();
-        if (!$request->paginate)
-            $paginate = 10;
-        else
-            $paginate = $request->paginate;
         return view('smsmanager.tg_send_message', [
-            'clients' => $clients->paginate($paginate),
+            'clients' => $clients->paginate(request('per_page', 10)),
             'sities' => $sities,
-            'areas' => $areas,
-            'products' => $products,
-            'info_org' => $info_org,
-            'client_count' => $client_count
+            'areas' => $areas
         ]);
     }
 

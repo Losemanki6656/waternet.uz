@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row  animate__animated animate__fadeIn">
         <div class="col-md-12 col-sm-12 col-lg-8">
             <div class="card rounded-4">
                 <div class="card-header align-items-center d-flex">

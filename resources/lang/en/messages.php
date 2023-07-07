@@ -248,4 +248,11 @@ return [
     'of_the_total_value' => 'Of The Total Value',
     'given_tara' => 'Given Tara',
     'deposit' => 'deposit',
+    'messages' => 'Messages',
+    'members' => 'Members',
+    'message' => 'Message',
+    'send_message' => 'Send Message',
+    'send' => 'Send',
+    'history' => 'Archive',
+    'example_sms' => 'Example Sms Text',
 ];

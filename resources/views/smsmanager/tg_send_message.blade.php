@@ -1,207 +1,198 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 @section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.members') }}</h4>
 
-    @if (\Session::has('msg'))  
-        @if (Session::get('msg') >= 1)
-            <div class="alert alert-success">Sms muvaffaqqiyatli yuborildi!</div>
-        @else
-            <div class="alert alert-danger">Sms uchun ajratilgan tarif limiti tugadi!</div>
-        @endif
-    @endif
-
-    <div class="container-fluid" id="dis">
-        <div class="block-header">
-            <div class="row">
-                <div class="col-lg-5 col-md-8 col-sm-12">
-                    <h2>SmsManager</h2>
-                </div>            
-                <div class="col-lg-7 col-md-4 col-sm-12 text-right">
-                    <ul class="breadcrumb justify-content-end">
-                        <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>                            
-                        <li class="breadcrumb-item active">Sms yuborish</li>
-                    </ul>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item active">{{ __('messages.messages') }}</li>
+                    </ol>
                 </div>
+
             </div>
         </div>
-  
-        <div class="card">   
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active show" href="{{route('send_message_tg')}}"><i class="fa fa-message"></i> Telegram</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{route('send_message')}}"><i class="fa fa-home"></i> Sms yuborish</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{route('success_message')}}"><i class="fa fa-user"></i> Yuborilgan smslar </a></li>
-                <li class="nav-item"><a class="nav-link" href="{{route('sms_text')}}"><i class="fa fa-comment"></i> SmsText </a></li>
-            </ul>
-            <div class="tab-content">            
-                <div class="tab-pane show active">
-                    <div class="card">
-                        <div class="alert alert-warning alert-dismissible mb-3 text-center fw-bold" role="alert">
-                            <i class="fa fa-warning"></i> Tez kunda
-                        </div>
-                        <div class="header" style="padding-bottom: 0">
-                            <div class="row clearfix">
-                                <div class="col-lg-3 col-md-6">
-                                    <div class="input-group mb-3">
-                                        <select class="form-control show-tick select2" id="sity_select" name="city_id" data-placeholder="Regionni tanlang" required>
-                                            <option value=""></option>
-                                            @foreach ($sities as $sity)
-                                                <option value={{$sity->id}} @if($sity->id == request('city_id')) selected @endif>{{$sity->name}}</option> 
-                                            @endforeach
-                                        </select>
-                                    </div>     
-                                </div>
-                                <div class="col-lg-3 col-md-6">
-                                    <div class="input-group mb-3">
-                                        <select class="form-control show-tick select2" id="area_select" name="area_id" data-placeholder="Adresni tanlang" required>
-                                            <option value=""></option>
-                                            @foreach ($areas as $area)
-                                                <option value={{$area->id}} @if($area->id == request('area_id')) selected @endif >{{$area->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>    
-                                </div>
-
-                                @push('scripts')
-                                    <script>
-                                        $('#sity_select').change(function (e) {
-                                            let city_id = $(this).val();
-                                            let paginate = $('#select_paginate').val();
-                                            let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?city_id=${city_id}&paginate=${paginate}`;
-                                        })
-
-                                        $('#area_select').change(function (e) {
-                                            let area_id = $(this).val();
-                                            let city_id = $('#sity_select').val();
-                                            let paginate = $('#select_paginate').val();
-                                            let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
-                                        })
-                                    </script>                       
-                                @endpush
-
-                                <div class="col-lg-3 col-md-6">
-                                    <div class="input-group mb-3">
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#sendsms-modal"><i class="fa fa-send"></i> <span> Xabar yuborish</span></button>
-                                    </div>    
-                                </div>
-                                
-                                <div class="modal fade" id="sendsms-modal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="title" id="defaultModalLabel"> Sms Yuborish</h4>
-                                            </div>
-                                            <form>
-                                                @csrf
-                                                <div class="modal-body">
-                                                    
-                                                    <div class="form-group">
-                                                        <label style="margin-bottom: 0">Sms Text:</label>
-                                                        <textarea form="sendsms" class="form-control" type="text" name="text" placeholder="Sms..."> </textarea>
-                                                    </div> 
-                                                   
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"> Chiqish</button>
-                                                    <button class="btn btn-primary" type="submit" value="Submit" form="sendsms"><i class="fa fa-send"></i> Yuborish</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>
-                        <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th width = "80">#</th>
-                                            <th>FIO</th>
-                                            <th>Tel raqami</th>
-                                            <th>Adres</th>
-                                            <th>Balans</th>
-                                            <th>Idish qarzi</th>
-                                            <th class="text-center">Telegram</th>
-                                            <th>
-                                                <label class="fancy-checkbox">
-                                                    <input class="select-all" type="checkbox" name="checkbox">
-                                                    <span></span>
-                                                </label>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <form id="sendsms" action="{{route('send_sms')}}" method="post">
-                                            @csrf
-                                            @foreach ($clients as $client)
-                                                <tr>
-                                                    <td>{{(($clients->currentPage() * 10) - 10) + $loop->index + 1}}</td>
-                                                    <td>{{$client->fullname}}</td>
-                                                    <td>{{$client->phone}}</td>
-                                                    <td>{{$client->city->name}}, {{$client->area->name}}</td>
-                                                    <td>{{$client->balance}}</td>
-                                                    <td>{{$client->container}}</td>
-                                                    <td width="200" class="text-center">
-                                                        @if ($client->telegrams->count())
-                                                            <span class="badge badge-primary"><i class="fa fa-telegram"></i>  {{$client->telegrams->count()}} ta akkaunt</span></td>
-                                                        @else
-                                                            <span class="badge badge-danger"> <i class="fa fa-telegram"></i> Mavjud emas </span></td>
-                                                        @endif
-                                                        
-                                                        
-                                                    <td style="width: 50px;">
-                                                        <label class="fancy-checkbox">
-                                                            <input class="checkbox-tick" type="checkbox" name="checkbox[{{$client->id}}]">
-                                                            <span></span>
-                                                        </label>
-                                                    </td>
-                                                </tr> 
-                                            @endforeach 
-                                        </form>   
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col d-flex justify-content mt-3">
-                                    <h6 class="mt-2 mr-2">Show</h6>
-                                    <select class="form-control" style="width: 80px" name="select_paginate" id="select_paginate">
-                                        <option value="10" @if (request('paginate') == 10) selected @endif>10</option>
-                                        <option value="50" @if (request('paginate') == 50) selected @endif>50</option>
-                                        <option value="100" @if (request('paginate') == 100) selected @endif>100</option>
-                                        <option value="{{$client_count}}" @if (request('paginate') == $client_count) selected @endif>All</option>
-                                    </select> <h6 class="mt-2 ml-2">entries</h6>
-                                </div>
-                                <div class="col d-flex justify-content-end mt-3">
-                                    {{ $clients->withQueryString()->links() }}
-                                </div>
-                                @push('scripts')
-                                    <script>
-                                        $('#select_paginate').change(function (e) {
-                                            let area_id = $('#area_select').val();
-                                            let city_id = $('#sity_select').val();
-                                            let paginate = $(this).val();
-                                            let url = '{{ route('send_message') }}';
-                                            window.location.href = `${url}?city_id=${city_id}&area_id=${area_id}&paginate=${paginate}`;
-                                        })
-                                    </script>                       
-                                @endpush
-                            </div>
-                        </div>
-                </div>
-                </div>
-
-            </div>
     </div>
 
-   
+    <div class="row mb-2 animate__animated animate__fadeIn">
+        <div class="col-sm-3 mb-2">
+            <div class="card mb-0">
+                <select class="form-control" data-trigger name="city_id" id="city_id">
+                    <option value="">{{ __('messages.select_region') }}</option>
+                    @foreach ($sities as $sity)
+                        <option value={{ $sity->id }} @if ($sity->id == request('city_id')) selected @endif>
+                            {{ $sity->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3 mb-2">
+            <div class="card mb-0">
+                <select class="form-control" data-trigger name="area_id" id="area_id">
+                    <option value="">{{ __('messages.select_city') }}</option>
+                    @foreach ($areas as $area)
+                        <option value={{ $area->id }} @if ($area->id == request('area_id')) selected @endif>
+                            {{ $area->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3 mb-2">
+            <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
+                placeholder="{{ __('messages.search') }}">
+        </div>
+        <div class="col-sm-2 mb-2">
+            <button class="btn btn-primary rounded-3 waves-effect waves-light" data-bs-toggle="offcanvas"
+                data-bs-target="#send" aria-controls="offcanvasBottom">
+                <i class="fab fa-telegram-plane me-2"></i>
+                <span> {{ __('messages.send_message') }}</span></button>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="send" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasBottomLabel"><i class="fab fa-telegram-plane me-2"></i>{{ __('messages.send_message') }}</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form action="{{ route('members') }}" method="get">
+                @csrf
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="mb-0">{{ __('messages.message') }}:</label>
+                        <textarea name="" class="form-control"></textarea>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                            data-bs-dismiss="offcanvas" style="margin-top: 20px"> <i class="fas fa-reply me-2"></i>
+                            {{ __('messages.cancel') }}</button>
+                        <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"
+                            style="margin-top: 20px"> <i class="fab fa-telegram-plane me-2"></i>
+                            {{ __('messages.send') }}</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive animate__animated animate__fadeIn">
+                <table class="table table-sm align-middle table-bordered table-nowrap table-check">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="align-middle text-center">#</th>
+                            <th class="align-middle text-center">FIO</th>
+                            <th class="align-middle text-center">Tel raqami</th>
+                            <th class="align-middle text-center">Adres</th>
+                            <th class="align-middle text-center">Balans</th>
+                            <th class="align-middle text-center">Idish qarzi</th>
+                            <th class="align-middle text-center">Telegram</th>
+                            <th class="align-middle text-center">
+                                <div class="form-check font-size-16 text-center">
+                                    <input class="form-check-input" type="checkbox" id="checkAll" name="checkbox"
+                                        style="float: none">
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form id="sendsms" action="{{ route('send_sms') }}" method="post">
+                            @csrf
+                            @foreach ($clients as $client)
+                                <tr>
+                                    <td class="text-center">{{ $clients->currentPage() * 10 - 10 + $loop->index + 1 }}
+                                    </td>
+                                    <td class="text-center">{{ $client->client->fullname }}</td>
+                                    <td class="text-center">{{ $client->phone }}</td>
+                                    <td class="text-center">{{ $client->client->city->name }},
+                                        {{ $client->client->area->name }}</td>
+                                    <td class="text-center">{{ $client->client->balance }}</td>
+                                    <td class="text-center">{{ $client->client->container }}</td>
+                                    <td width="200" class="text-center">
+                                        <button type="button"
+                                            class="btn btn-soft-primary btn-sm waves-effect waves-light"><i
+                                                class="fab fa-telegram-plane me-2"></i>{{ $client->chat_id }}</button>
+                                    </td>
+
+                                    <td class="text-center"style="width: 50px;">
+                                        <div class="form-check font-size-16 text-center">
+                                            <input class="form-check-input" type="checkbox" style="float: none"
+                                                form="order_all_form" name="checkbox[{{ $client->id }}]">
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </form>
+                    </tbody>
+                </table>
+            </div>
+            @if ($clients->total() > 10)
+                <div class="row justify-content-between">
+                    <div class="col-md-2">
+                        <label>
+                            <select class="form-select mx-3" name="paginate_select" id="paginate_select"
+                                style="max-width: 100px">
+                                <option value="10" @if ($clients->perPage() == 10) selected @endif>10
+                                </option>
+                                <option value="30" @if ($clients->perPage() == 30) selected @endif>30
+                                </option>
+                                <option value="50" @if ($clients->perPage() == 50) selected @endif>50
+                                </option>
+                                <option value="100" @if ($clients->perPage() == 100) selected @endif>100
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-md-10 text-end">
+                        <label class="me-3">{{ $clients->onEachSide(1)->withQueryString() }}</label>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
+    <script>
+        $('#search').keyup(function(e) {
+            if (e.keyCode == 13) {
+                myFilter();
+            }
+        });
 
-<script>
-    $("#dis").find("*").prop('disabled', true);
-</script>
+        $('#city_id').change(function(e) {
+            let search = $('#search').val();
+            let city_id = $('#city_id').val();
+            let paginate_select = $('#paginate_select').val() ?? 10;
+            let page = $('#page').val() ?? 1;
 
-@endpush
+            let url = '{{ route('members') }}';
+            window.location.href =
+                `${url}?search=${search}&city_id=${city_id}&paginate_select=${paginate_select}&page=${page}`;
+        });
+
+        $('#area_id').change(function(e) {
+            myFilter();
+        });
+
+        $('#paginate_select').change(function(e) {
+            myFilter();
+        });
+
+        function myFilter() {
+            let search = $('#search').val();
+            let city_id = $('#city_id').val();
+            let area_id = $('#area_id').val() ?? null;
+            let paginate_select = $('#paginate_select').val() ?? 10;
+            let page = $('#page').val() ?? 1;
+
+            let url = '{{ route('members') }}';
+            window.location.href =
+                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&paginate_select=${paginate_select}&page=${page}`;
+        }
+    </script>
+@endsection

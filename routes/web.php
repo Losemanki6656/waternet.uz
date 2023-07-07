@@ -140,6 +140,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/warehouse/entry-succ-container', [App\Http\Controllers\ClientController::class, 'add_entry_container'])->name('add_entry_container');
     Route::post('/warehouse/take-succ-container', [App\Http\Controllers\ClientController::class, 'take_entry_container'])->name('take_entry_container');
 
+
+    Route::get('/members', [App\Http\Controllers\ClientController::class, 'members'])->name('members');
+
     Route::get('/smsmanager/send-message', [App\Http\Controllers\ClientController::class, 'send_message'])->name('send_message');
     Route::get('/smsmanager/send-message-tg', [App\Http\Controllers\ClientController::class, 'send_message_tg'])->name('send_message_tg');
     Route::get('/smsmanager/success-message', [App\Http\Controllers\ClientController::class, 'success_message'])->name('success_message');

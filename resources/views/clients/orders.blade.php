@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row  animate__animated animate__fadeIn">
         <div class="col-lg-3 col-md-6">
             <div class="card mb-0">
                 <select class="form-control" data-trigger name="city_id" id="sity_select">

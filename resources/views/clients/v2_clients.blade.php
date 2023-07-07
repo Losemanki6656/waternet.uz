@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-2  animate__animated animate__fadeIn">
         <div class="col-sm-8 mb-2">
             <div class="text-sm-start">
                 <div class="d-flex flex-wrap gap-2">
@@ -212,7 +212,7 @@
     </div>
 
 
-    <div class="row mb-2">
+    <div class="row mb-2 animate__animated animate__fadeIn">
         <div class="col-sm-3 mb-2">
             <div class="card mb-0">
                 <select class="form-control" data-trigger name="city_id" id="city_id">
@@ -247,7 +247,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row animate__animated animate__fadeIn">
         <div class="col-12">
             <div class="card rounded-3">
                 <div class="card-body p-0">

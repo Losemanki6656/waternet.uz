@@ -22,7 +22,8 @@
             <div class="card rounded-3">
                 <div class="card-body p-0 mb-0">
                     <div class="table-responsive">
-                        <table class="table table-sm align-middle table-bordered table-nowrap table-check">
+                        <table
+                            class="table table-sm align-middle table-bordered table-nowrap table-check  animate__animated animate__fadeIn">
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-center">{{ __('messages.fullname') }}</th>
