@@ -37,7 +37,7 @@ class RateUserController extends Controller
                 }
 
             }
-
+            if(count($arr))
             $newMessages[] = [
                 'type' => 'rate',
                 'data' => $arr
@@ -61,6 +61,7 @@ class RateUserController extends Controller
 
             }
 
+            if(count($arr))
             $newMessages[] = [
                 'type' => 'newMessage',
                 'data' => $arr
