@@ -14,16 +14,13 @@ class RateUserController extends Controller
     
     public function index()
     {
-        $rates = RateUser::where('client_id', request('client_id',0))
-            ->where('status', false);
-
-        $tg = ClientChat::where('client_id', request('client_id'))->first();
-
+        $rates = RateUser::where('status', false);
         $newMessages = [];
         if($rates->count())
         {
             $arr = [];
             foreach ($rates->get() as $item) {
+                $tg = ClientChat::where('client_id', $item->client_id)->first();
                 if($tg) {
 
                     $order = SuccessOrders::find($item->success_order_id);
@@ -34,8 +31,7 @@ class RateUserController extends Controller
                     $arr[] = [
                         'id' => $item->id,
                         'message' => $text,
-                        'rate_msg' => 'Доставшик хизматини бахоланг ...',
-                        'chat_id' => $tg->chat_id
+                        'rate_msg' => 'Доставшик хизматини бахоланг ...'
                     ];
                 }
 
@@ -43,6 +39,7 @@ class RateUserController extends Controller
 
             $newMessages[] = [
                 'type' => 'rate',
+                'chat_id' => $tg->chat_id,
                 'data' => $arr
             ];
         }
@@ -51,7 +48,8 @@ class RateUserController extends Controller
 
         if($sms->count()) {
             $arr = [];
-            foreach ($sms->get() as $item) {
+            foreach ($sms->get() as $s) {
+                $tg = ClientChat::where('client_id', $s->client_id)->first();
                 if($tg) {
 
                     $arr[] = [
@@ -64,6 +62,7 @@ class RateUserController extends Controller
 
             $newMessages[] = [
                 'type' => 'newMessage',
+                'chat_id' => $tg->chat_id,
                 'data' => $arr
             ];
         }
