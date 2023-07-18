@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RateUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -75,3 +76,7 @@ Route::get('/client/admin/orgswipers', [TrafficController::class, 'admin_orgswip
 Route::get('/client/carts/cart', [TrafficController::class, 'cart_photo']);
 
 Route::get('/client-profile', [TrafficController::class, 'client_profile']);
+
+Route::get('/client/order-rates', [RateUserController::class, 'index']);
+
+Route::put('/client/order-rates/{client_id}/update', [RateUserController::class, 'update']);
