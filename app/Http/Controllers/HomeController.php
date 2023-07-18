@@ -400,6 +400,11 @@ class HomeController extends Controller
             ->when(request('area_id'), function ($query, $area_id) {
                 $query->where('area_id', $area_id);
             })
+            ->with([
+                'city',
+                'area',
+                'orders'
+            ])
             ->orderBy(request('filtr', 'activated_at'), 'DESC');
 
         $sities = Sity::where('organization_id', $organ)->get();
@@ -660,28 +665,32 @@ class HomeController extends Controller
 
     }
 
-    public function add_order(Request $request, $id)
+    public function add_order(Request $request)
     {
 
         try {
 
-            $order = Order::where('client_id', $id)
+            $order = Order::where('client_id', $request->client_id)
                 ->where('product_id', $request->product_id)
                 ->where('status', 0)
                 ->get();
 
-            $client = Client::find($id);
+            $client = Client::find($request->client_id);
 
             if ($order->count() > 0) {
 
-                return redirect()->route('client_order_edit', ['id' => $id])->with('warning', __('messages.this_customer_has_an_order'));
+                return response()->json([
+                    'status' => false,
+                    'message' => __('messages.this_customer_has_an_order')
+                ]);
+
             }
 
             $zakaz = new Order();
             $zakaz->organization_id = auth()->user()->organization_id;
             $zakaz->city_id = $client->city_id;
             $zakaz->area_id = $client->area_id;
-            $zakaz->client_id = $id;
+            $zakaz->client_id = $request->client_id;
             $zakaz->product_id = $request->product_id;
             $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
             $zakaz->product_count = $request->count;
@@ -691,11 +700,16 @@ class HomeController extends Controller
             $zakaz->user_id = auth()->user()->id;
             $zakaz->save();
 
-            return redirect()->back()->with('success', __('messages.order_received_successfully'));
+            return response()->json([
+                'status' => true,
+                'message' => __('messages.order_received_successfully')
+            ]);
 
         } catch (\Exception $e) {
-
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
         }
 
     }

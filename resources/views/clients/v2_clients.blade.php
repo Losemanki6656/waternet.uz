@@ -292,6 +292,24 @@
 
 @section('scripts')
     <script>
+        $(document).ready(function() {
+
+            var L = window.L;
+            var map = L.map('map', {
+                // scrollWheelZoom: false,
+                tap: false
+            });
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            marker = L.marker([41.2942336, 69.2518912]).addTo(map)
+                .bindPopup('asdasd')
+                .openPopup();
+
+            map.setView(new L.LatLng(41.2942336, 69.2518912), 7);
+
+        });
+    </script>
+    <script>
         function onselall() {
             const $this = $("#prod_sel_all");
             const dataVal = $this.find(':selected').data('amount');

@@ -60,6 +60,11 @@ class Client extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class)->where('status', false);
+    }
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);

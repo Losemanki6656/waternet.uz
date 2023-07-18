@@ -1289,14 +1289,15 @@ class ClientController extends Controller
 
     public function client_add_order(Request $request)
     {
-        $order = Order::
-            where('client_id', $request->client_id)
+        $order = Order::where('client_id', $request->client_id)
             ->where('product_id', $request->product_id)
             ->where('status', 0)
-            ->get();
+            ->count();
 
-        if ($order->count() > 0) {
-            return response()->json(['message' => 'Sizda ushbu tovardan tugallanmagan zakaz mavjud!'], 422);
+        if ($order > 0) {
+            return response()->json([
+                'message' => 'Sizda ushbu tovardan tugallanmagan zakaz mavjud!'
+            ], 422);
         }
 
         $client = Client::find($request->client_id);
@@ -1320,6 +1321,42 @@ class ClientController extends Controller
 
         return response()->json($orders, 200);
     }
+
+    public function client_add_order_telegram(Request $request)
+    {
+        $order = Order::where('client_id', $request->client_id)
+            ->where('product_id', $request->product_id)
+            ->where('status', 0)
+            ->count();
+
+        if ($order > 0) {
+            return response()->json([
+                'message' => 'Sizda ushbu tovardan tugallanmagan zakaz mavjud!'
+            ], 422);
+        }
+
+        $client = Client::find($request->client_id);
+        $product = Product::findOrFail($request->product_id);
+
+        $zakaz = new Order();
+        $zakaz->organization_id = $client->organization_id;
+        $zakaz->city_id = $client->city_id;
+        $zakaz->area_id = $client->area_id;
+        $zakaz->client_id = $request->client_id;
+        $zakaz->product_id = $request->product_id;
+        $zakaz->container_status = $product->container_status;
+        $zakaz->product_count = $request->count;
+        $zakaz->price = $product->price;
+        $zakaz->comment = 'Mijoz telegram orqali';
+        $zakaz->status = 0;
+        $zakaz->user_id = $client->user_id;
+        $zakaz->save();
+
+        $orders = Order::where('client_id', $request->client_id)->get();
+
+        return response()->json($orders, 200);
+    }
+
     public function client_order(Request $request)
     {
         $orders = Order::
@@ -1332,8 +1369,6 @@ class ClientController extends Controller
 
     public function client_order_edit(Request $request)
     {
-
-        // return response()->json($request->all(), 200);
 
         $product = Product::find($request->product_id);
 
@@ -1348,11 +1383,37 @@ class ClientController extends Controller
         return response()->json(['message' => 'Zakaz muvaffaqqiyatli taxrirlandi!'], 200);
     }
 
+    public function client_order_edit_telegram(Request $request)
+    {
+
+        $product = Product::find($request->product_id);
+
+        $zakaz = Order::find($request->order_id);
+        $zakaz->product_id = $request->product_id;
+        $zakaz->container_status = $product->container_status;
+        $zakaz->product_count = $request->count;
+        $zakaz->price = $product->price;
+        $zakaz->comment = 'Mijoz telegram orqali taxrirladi';
+        $zakaz->save();
+
+        return response()->json(['message' => 'Zakaz muvaffaqqiyatli taxrirlandi!'], 200);
+    }
+
     public function client_order_delete(Request $request)
     {
         $order = Order::find($request->order_id);
         $order->status = 1;
         $order->comment = "Mijoz mobil ilova orqali o'chirdi";
+        $order->save();
+
+        return response()->json(['message' => 'Zakaz muvaffaqqiyatli ochirildi!'], 200);
+    }
+
+    public function client_order_delete_telegram(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $order->status = 1;
+        $order->comment = "Mijoz telegram orqali o'chirdi";
         $order->save();
 
         return response()->json(['message' => 'Zakaz muvaffaqqiyatli ochirildi!'], 200);
@@ -1436,7 +1497,7 @@ class ClientController extends Controller
 
     public function registration($client_id, Request $request)
     {
-        $client = Client::find($client_id);
+        $client = Client::where('id', $client_id)->first();
         if ($client) {
             $newinfo = new ClientChat();
             $newinfo->client_id = $client_id;

@@ -91,26 +91,32 @@
                             @endif
 
                         </td>
-                        <td class="text-center" width="50px">
+                        <td class="text-center" width="150px">
+                            @if ($client->location != '0')
+                                <span onclick="showLocation('{{ $client->location }}')">
+                                    <button type="button" class="btn btn-soft-warning waves-effect waves-light"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="{{ __('messages.view_location') }}">
+                                        <i class="fa fa-map-marker"></i>
+                                    </button>
+                                </span>
+                            @else
+                                <a class="btn btn-soft-secondary waves-effect waves-light" href="#"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="{{ __('messages.add_location') }}"><i class="fa fa-map-marker"></i></a>
+                            @endif
+
+                            <button type="button" class="btn btn-soft-success waves-effect waves-light"
+                                id="orderButton{{ $client->id }}" onclick="showModal({{ $client->id }})"
+                                @if ($client->orders->count()) disabled @endif><i
+                                    class="fa fa-shopping-cart"></i></button>
+
                             <div class="btn-group dropstart">
                                 <button type="button" class="btn btn-soft-primary waves-effect waves-light"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bx bx-smile font-size-16 align-middle"></i></button>
 
                                 <div class="dropdown-menu dropdownmenu-primary">
-                                    @if ($client->location != '0')
-                                        <a class="dropdown-item"
-                                            href="{{ route('view_location', ['id' => $client->id]) }}">
-                                            <i class="fa fa-map-marker me-2 text-warning"></i>
-                                            {{ __('messages.view_location') }}</a>
-                                    @else
-                                        <a class="dropdown-item" href="#"><i class="fa fa-map-marker me-2"></i>
-                                            {{ __('messages.add_location') }}</a>
-                                    @endif
-                                    <a class="dropdown-item" href="#" data-bs-target="#order{{ $client->id }}"
-                                        data-bs-toggle="modal"><i class="fa fa-shopping-cart me-2 text-primary"></i>
-                                        {{ __('messages.take_order') }}</a>
-
                                     <a class="dropdown-item" href="#"
                                         data-bs-target="#clietnprice{{ $client->id }}" data-bs-toggle="modal"><i
                                             class="fa fa-credit-card me-2 text-success"></i>
@@ -185,61 +191,6 @@
                                             <i class="fas fa-reply me-2"></i>
                                             {{ __('messages.cancel') }}</button>
                                         <button class="btn btn-primary btn-lg waves-effect waves-light"
-                                            type="submit"> <i class="fa fa-save me-2"></i>
-                                            {{ __('messages.save') }}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="order{{ $client->id }}" class="modal fade" tabindex="-1"
-                        aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
-                        <div class="modal-dialog modal-dialog-centered modal-rounded">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="myModalLabel">{{ __('messages.take_order') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <form action="{{ route('add_order', ['id' => $client->id]) }}" method="post">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label>{{ __('messages.product_name') }}:</label>
-                                            <select class="form-select" id="prod_sel{{ $client->id }}"
-                                                name="product_id" onchange="onsel({{ $client->id }})" required>
-                                                @foreach ($products as $product)
-                                                    <option data-amount="{{ $product->price }}"
-                                                        value={{ $product->id }}>{{ $product->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <label>{{ __('messages.amount') }}:</label>
-                                                <input class="form-control" type="text"
-                                                    id="sena_product_order{{ $client->id }}" name="sena"
-                                                    @if ($products->count()) value="{{ $products[0]->price }}" @endif
-                                                    required>
-                                            </div>
-                                            <div class="col">
-                                                <label>{{ __('messages.count') }}:</label>
-                                                <input class="form-control" type="number" value="1"
-                                                    name="count" required>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label>{{ __('messages.comment') }}:</label>
-                                            <textarea class="form-control" name="izoh" id="" rows="2"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button"
-                                            class="btn btn-secondary btn-lg waves-effect waves-light"
-                                            data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
-                                            {{ __('messages.cancel') }}</button>
-                                        <button class="btn btn-success btn-lg waves-effect waves-light"
                                             type="submit"> <i class="fa fa-save me-2"></i>
                                             {{ __('messages.save') }}</button>
                                     </div>
@@ -419,16 +370,117 @@
             </tbody>
         </table>
     </div>
+
+    <div id="Neworder" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+        data-bs-scroll="true">
+        <div class="modal-dialog modal-dialog-centered modal-rounded">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">{{ __('messages.take_order') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>{{ __('messages.product_name') }}:</label>
+                        <select class="form-select" id="prod_sel_new_order" onchange="onsel()" required>
+                            @foreach ($products as $product)
+                                <option data-amount="{{ $product->price }}" value={{ $product->id }}>
+                                    {{ $product->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>{{ __('messages.amount') }}:</label>
+                            <input class="form-control" type="text" id="sena_product_order"
+                                @if ($products->count()) value="{{ $products[0]->price }}" @endif required>
+                        </div>
+                        <div class="col">
+                            <label>{{ __('messages.count') }}:</label>
+                            <input class="form-control" type="number" id="orderCount" value="1"
+                                name="count" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>{{ __('messages.comment') }}:</label>
+                        <textarea class="form-control" name="izoh" id="orderComment" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                        data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                        {{ __('messages.cancel') }}</button>
+                    <button class="btn btn-success btn-lg waves-effect waves-light" type="button"
+                        onclick="TakeOrder()"> <i class="fa fa-save me-2"></i>
+                        {{ __('messages.save') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewLocation" aria-labelledby="offcanvasBottomLabel"
+        style="height: 400px">
+        <div class="offcanvas-body">
+            <div id="map" style="width: 100%; height: 100%;">
+            </div>
+        </div>
+    </div>
 @else
     <h6 for="" class="text-center align-middle mt-3"> NO INFO </h6>
 @endif
 
 @push('scripts')
     <script>
-        function onsel(id) {
-            const $this = $("#prod_sel" + id);
+        function showLocation(location) {
+            var myOffcanvas = document.getElementById('viewLocation');
+            var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
+            bsOffcanvas.show();
+
+        }
+    </script>
+    <script>
+        function showModal(id) {
+            localStorage.setItem('client', id);
+            $('#Neworder').modal('show');
+        }
+    </script>
+    <script>
+        function TakeOrder() {
+            let product_id = $('#prod_sel_new_order').val();
+            let sena = $('#sena_product_order').val();
+            let count = $('#orderCount').val();
+            let izoh = $('#orderComment').val();
+            let id = localStorage.getItem('client');
+            $.ajax({
+                url: "{{ route('add_order') }}",
+                method: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    client_id: id,
+                    product_id: product_id,
+                    sena: sena,
+                    count: count,
+                    izoh: izoh,
+                },
+                success: function(res) {
+                    if (res.status) {
+                        $('#Neworder').modal('hide');
+                        $('#orderButton' + id).prop('disabled', true);
+                        alertify.success(res.message);
+                    } else {
+                        $('#Neworder').modal('hide');
+                        alertify.error(res.message);
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        function onsel() {
+            const $this = $("#prod_sel_new_order");
             const dataVal = $this.find(':selected').data('amount');
-            $('#sena_product_order' + id).val(dataVal);
+            $('#sena_product_order').val(dataVal);
         }
     </script>
     <script>

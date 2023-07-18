@@ -30,6 +30,8 @@
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link href="{{ asset('animate_css/animate.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 </head>
 
@@ -302,7 +304,7 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ route('members') }}"
                                             data-key="t-feather">{{ __('messages.members') }}</a></li>
-                                    <li><a href="{{ route('members') }}"
+                                    <li><a href="{{ route('success_message') }}"
                                             data-key="t-feather">{{ __('messages.history') }}</a></li>
                                     <li><a href="{{ route('members') }}"
                                             data-key="t-feather">{{ __('messages.example_sms') }}</a></li>
@@ -592,6 +594,9 @@
     <!-- apexcharts js -->
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/allchart.js') }}"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
         function sidebarThemeUpdate(color) {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 
@@ -92,6 +94,37 @@ class SettingController extends Controller
         }
 
         dd('success', $x);
+
+    }
+
+    public function setting5()
+    {
+
+        set_time_limit(300);
+
+        $orders = Order::get();
+
+        $a = [];
+        $x = 0;
+        foreach ($orders as $order) {
+
+            $organ = Organization::where('id', $order->organization_id)->count();
+            $city = Sity::where('id', $order->city_id)->count();
+            $area = Area::where('id', $order->area_id)->count();
+            $client = Client::where('id', $order->client_id)->count();
+            $product = Product::where('id', $order->product_id)->count();
+            $user = User::where('id', $order->user_id)->count();
+
+            if (!$organ || !$city || !$area || !$client || !$product || !$user) {
+                $x++;
+                $a[] = $order->id;
+            }
+
+        }
+
+        Order::whereIn('id', $a)->delete();
+
+        dd($x);
 
     }
 

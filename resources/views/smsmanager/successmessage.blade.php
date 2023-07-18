@@ -1,91 +1,88 @@
-@extends('layouts.master')
+@extends('layouts.v2_master')
 @section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.sent_messages') }}</h4>
 
-    <div class="container-fluid">
-        <div class="block-header">
-            <div class="row">
-                <div class="col-lg-5 col-md-8 col-sm-12">
-                    <h2>SmsManager</h2>
-                </div>            
-                <div class="col-lg-7 col-md-4 col-sm-12 text-right">
-                    <ul class="breadcrumb justify-content-end">
-                        <li class="breadcrumb-item"><a href=""><i class="icon-home"></i></a></li>                            
-                        <li class="breadcrumb-item active">Yuborilgan smslar</li>
-                    </ul>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item active">{{ __('messages.sent_messages') }}</li>
+                    </ol>
                 </div>
-            </div>
-        </div>
-  
-        <div class="card">   
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link" href="{{route('send_message_tg')}}"><i class="fa fa-telegram"></i> Telegram</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{route('send_message')}}"><i class="fa fa-home"></i> Sms yuborish</a></li>
-                <li class="nav-item"><a class="nav-link active show" href="{{route('success_message')}}"><i class="fa fa-user"></i> Yuborilgan smslar </a></li>
-                <li class="nav-item"><a class="nav-link" href="{{route('sms_text')}}"><i class="fa fa-comment"></i> SmsText </a></li>
-            </ul>
-        <div class="tab-content">            
-            <div class="tab-pane show active">
-                
-        <div class="card">
-            <div class="header">
-                <div class="row clearfix">
-                    <div class="col-lg-3 col-md-6">
-                        <form action="{{route('success_message')}}" method="get">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
-                                </div>
-                                <input type="date" name="data" value="{{request('data')}}" class="form-control">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i></button>
-                            </div>   
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th width = "80">#</th>
-                                <th width="200px" class="text-center">Kimga</th>
-                                <th class="text-center" style="max-width: 300px">Sms</th>
-                                <th width="200px">Kimdan</th>
-                                <th width="200px">Qachon</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        
-                            @foreach ($smsmanagers as $smsmanager)
-                                <tr>
-                                    <td>{{(($smsmanagers->currentPage() * 10) - 10) + $loop->index + 1}}</td>
-                                    <td> @if ($smsmanager->client)
-                                        {{$smsmanager->client->fullname}}
-                                    @else
-                                         Mijoz topilmadi
-                                    @endif
-                                        </td>
-                                    <td>{{$smsmanager->sms_text}}</td>
-                                    <td>{{$smsmanager->user->name}}</td>
-                                    <td>{{$smsmanager->created_at->format('Y-m-d')}}</td>
-                                </tr> 
-                            @endforeach    
-                        </tbody>
-                    </table>
-                </div>
-                <div class="d-flex justify-content mt-3">             
-                    <ul class="pagination mb-0">
-                        {{ $smsmanagers->withQueryString()->links() }}
-                    </ul> 
-                </div>
-            </div>
-        </div>
-            </div>
 
+            </div>
         </div>
     </div>
 
-   
+    <form action="{{ route('success_message') }}" method="get">
+        <div class="row mb-2 animate__animated animate__fadeIn">
+            <div class="col-sm-3 mb-2">
+                <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
+                    placeholder="{{ __('messages.search') }}">
+            </div>
+            <div class="col-sm-3 mb-2">
+                <input type="date" name="data" value="{{ request('data') }}" class="form-control">
+            </div>
+            <div class="col-sm-2 mb-2">
+                <button class="btn btn-primary rounded-3 waves-effect waves-light" type="submit">
+                    <i class="fas fa-filter me-2"></i>
+                    <span> {{ __('messages.filtr') }}</span></button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive animate__animated animate__fadeIn">
+                <table class="table table-sm align-middle table-bordered table-nowrap">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="align-middle text-center">#</th>
+                            <th class="align-middle text-center">Kimga</th>
+                            <th class="align-middle text-center">Sms</th>
+                            <th class="align-middle text-center">Kimdan</th>
+                            <th class="align-middle text-center">Qachon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach ($smsmanagers as $smsmanager)
+                            <tr>
+                                <td class="text-center">{{ $smsmanagers->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
+                                <td class="text-center">{{ $smsmanager->client->fullname ?? '' }} </td>
+                                <td class="text-center">{{ $smsmanager->sms_text }}</td>
+                                <td class="text-center">{{ $smsmanager->user->name ?? '' }}</td>
+                                <td class="text-center">{{ $smsmanager->created_at->format('Y-m-d') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @if ($smsmanagers->total() > 10)
+                <div class="row justify-content-between">
+                    <div class="col-md-2">
+                        <label>
+                            <select class="form-select mx-3" name="paginate_select" id="paginate_select"
+                                style="max-width: 100px">
+                                <option value="10" @if ($smsmanagers->perPage() == 10) selected @endif>10
+                                </option>
+                                <option value="30" @if ($smsmanagers->perPage() == 30) selected @endif>30
+                                </option>
+                                <option value="50" @if ($smsmanagers->perPage() == 50) selected @endif>50
+                                </option>
+                                <option value="100" @if ($smsmanagers->perPage() == 100) selected @endif>100
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-md-10 text-end">
+                        <label class="me-3">{{ $smsmanagers->onEachSide(1)->withQueryString() }}</label>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 @endsection
 

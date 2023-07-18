@@ -68,7 +68,7 @@
                         <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
                             data-bs-dismiss="offcanvas" style="margin-top: 20px"> <i class="fas fa-reply me-2"></i>
                             {{ __('messages.cancel') }}</button>
-                        <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"
+                        <button class="btn btn-primary btn-lg waves-effect waves-light" type="submit"
                             style="margin-top: 20px"> <i class="fab fa-telegram-plane me-2"></i>
                             {{ __('messages.send') }}</button>
                     </div>
@@ -85,12 +85,12 @@
                     <thead class="table-light">
                         <tr>
                             <th class="align-middle text-center">#</th>
-                            <th class="align-middle text-center">FIO</th>
-                            <th class="align-middle text-center">Tel raqami</th>
-                            <th class="align-middle text-center">Adres</th>
-                            <th class="align-middle text-center">Balans</th>
-                            <th class="align-middle text-center">Idish qarzi</th>
-                            <th class="align-middle text-center">Telegram</th>
+                            <th class="align-middle text-center"> {{ __('messages.fullname') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.phone') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.address') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.balance') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.container') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.telegram') }}</th>
                             <th class="align-middle text-center">
                                 <div class="form-check font-size-16 text-center">
                                     <input class="form-check-input" type="checkbox" id="checkAll" name="checkbox"

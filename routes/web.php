@@ -24,6 +24,7 @@ Route::get('/setting1', [App\Http\Controllers\SettingController::class, 'setting
 Route::get('/setting2', [App\Http\Controllers\SettingController::class, 'setting2'])->name('setting2');
 Route::get('/setting3', [App\Http\Controllers\SettingController::class, 'setting3'])->name('setting3');
 Route::get('/setting4', [App\Http\Controllers\SettingController::class, 'setting4'])->name('setting4');
+Route::get('/setting5', [App\Http\Controllers\SettingController::class, 'setting5'])->name('setting5');
 
 
 Route::get('/search/areas', [App\Http\Controllers\HomeController::class, 'search_areas'])->name('search_areas');
@@ -82,7 +83,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/results-export', [App\Http\Controllers\HomeController::class, 'export_results'])->name('export_results');
 
-    Route::post('/add-order/{id}', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
+    Route::post('/add-order', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
     Route::post('/add-order-check', [App\Http\Controllers\HomeController::class, 'add_order_check'])->name('add_order_check');
 
     Route::post('/delete-Order', [App\Http\Controllers\HomeController::class, 'delete_Order'])->name('delete_Order');

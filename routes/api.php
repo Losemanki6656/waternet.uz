@@ -32,19 +32,19 @@ Route::group([
 Route::group([
     'middleware' => 'auth:api'
 ], function ($router) {
-    Route::get('/user-profile', [AuthController::class, 'userProfile']);     
-    Route::get('/orders', [AuthController::class, 'orders']);      
-    Route::get('/order/status', [AuthController::class, 'order_status']);   
-    Route::get('/payment/types', [AuthController::class, 'payments']);   
+    Route::get('/user-profile', [AuthController::class, 'userProfile']);
+    Route::get('/orders', [AuthController::class, 'orders']);
+    Route::get('/order/status', [AuthController::class, 'order_status']);
+    Route::get('/payment/types', [AuthController::class, 'payments']);
     Route::post('/success-order', [HomeController::class, 'success_order_api']);
     Route::post('/client/add-location', [HomeController::class, 'add_location']);
-    
-    Route::get('/driver/regions', [HomeController::class, 'driver_regions']);   
-    Route::post('/driver/areas', [HomeController::class, 'areas']);   
-    Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);    
-    Route::get('/driver/monitoring', [HomeController::class, 'monitoring']);   
 
-    
+    Route::get('/driver/regions', [HomeController::class, 'driver_regions']);
+    Route::post('/driver/areas', [HomeController::class, 'areas']);
+    Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);
+    Route::get('/driver/monitoring', [HomeController::class, 'monitoring']);
+
+
 });
 
 
@@ -58,14 +58,14 @@ Route::get('/client/products', [ClientController::class, 'client_products']);
 
 Route::get('/client/add-order', [ClientController::class, 'client_add_order']);
 Route::post('/client/create/order', [ClientController::class, 'client_add_order']);
+Route::put('/client/order/update', [ClientController::class, 'client_order_edit']);
+Route::delete('/client/order/delete', [ClientController::class, 'client_order_delete']);
 
 Route::get('/client/orders', [ClientController::class, 'client_order']);
 
 Route::get('/client/edit-order', [ClientController::class, 'client_order_edit']);
-Route::put('/client/order/update', [ClientController::class, 'client_order_edit']);
 
 Route::get('/client/delete-order', [ClientController::class, 'client_order_delete']);
-Route::delete('/client/order/delete', [ClientController::class, 'client_order_delete']);
 
 Route::get('/client/success/orders', [ClientController::class, 'cl_succ_orders']);
 Route::get('/client/admin/carts', [TrafficController::class, 'admin_carts_api']);
@@ -75,3 +75,9 @@ Route::get('/client/admin/orgswipers', [TrafficController::class, 'admin_orgswip
 Route::get('/client/carts/cart', [TrafficController::class, 'cart_photo']);
 
 Route::get('/client-profile', [TrafficController::class, 'client_profile']);
+
+
+
+Route::post('/telegram/client/create/order', [ClientController::class, 'client_add_order_telegram']);
+Route::put('/telegram/client/order/update', [ClientController::class, 'client_order_edit_telegram']);
+Route::delete('/telegram/client/order/delete', [ClientController::class, 'client_order_delete_telegram']);
