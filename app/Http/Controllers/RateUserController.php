@@ -31,6 +31,7 @@ class RateUserController extends Controller
                     $arr[] = [
                         'id' => $item->id,
                         'message' => $text,
+                        'chat_id' => $tg->chat_id,
                         'rate_msg' => 'Доставшик хизматини бахоланг ...'
                     ];
                 }
@@ -39,7 +40,6 @@ class RateUserController extends Controller
 
             $newMessages[] = [
                 'type' => 'rate',
-                'chat_id' => $tg->chat_id,
                 'data' => $arr
             ];
         }
@@ -54,6 +54,7 @@ class RateUserController extends Controller
 
                     $arr[] = [
                         'message' => 'message',
+                        'chat_id' => $tg->chat_id,
                         'photo' => 'https://yobte.ru/uploads/posts/2019-11/devushki-v-lesu-75-foto-62.jpg'
                     ];
                 }
@@ -62,7 +63,6 @@ class RateUserController extends Controller
 
             $newMessages[] = [
                 'type' => 'newMessage',
-                'chat_id' => $tg->chat_id,
                 'data' => $arr
             ];
         }
