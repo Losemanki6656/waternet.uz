@@ -44,7 +44,7 @@ class RateUserController extends Controller
             ];
         }
 
-        $sms = Sms::where('client_id', request('client_id',0));
+        $sms = Sms::take(3);
 
         if($sms->count()) {
             $arr = [];
