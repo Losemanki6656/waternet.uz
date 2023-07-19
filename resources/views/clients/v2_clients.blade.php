@@ -307,6 +307,7 @@
 
             map.setView(new L.LatLng(41.2942336, 69.2518912), 7);
 
+            window.map = map;
         });
     </script>
     <script>

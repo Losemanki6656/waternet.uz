@@ -93,7 +93,7 @@
                         </td>
                         <td class="text-center" width="150px">
                             @if ($client->location != '0')
-                                <span onclick="showLocation('{{ $client->location }}')">
+                                <span onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}')">
                                     <button type="button" class="btn btn-soft-warning waves-effect waves-light"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="{{ __('messages.view_location') }}">
@@ -432,10 +432,20 @@
 
 @push('scripts')
     <script>
-        function showLocation(location) {
+        function showLocation(location, fullname) {
             var myOffcanvas = document.getElementById('viewLocation');
             var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
             bsOffcanvas.show();
+
+            const myArray = location.split(",");
+
+            var map = window.map;
+
+            marker = L.marker([myArray[0], myArray[1]]).addTo(map)
+                .bindPopup(fullname)
+                .openPopup();
+
+            map.setView(new L.LatLng(myArray[0], myArray[1]), 15);
 
         }
     </script>
