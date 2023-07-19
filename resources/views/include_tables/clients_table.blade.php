@@ -93,7 +93,8 @@
                         </td>
                         <td class="text-center" width="150px">
                             @if ($client->location != '0')
-                                <span onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}')">
+                                <span
+                                    onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}',{{ $client->id }})">
                                     <button type="button" class="btn btn-soft-warning waves-effect waves-light"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="{{ __('messages.view_location') }}">
@@ -102,6 +103,7 @@
                                 </span>
                             @else
                                 <a class="btn btn-soft-secondary waves-effect waves-light" href="#"
+                                    onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}',{{ $client->id }})"
                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="{{ __('messages.add_location') }}"><i class="fa fa-map-marker"></i></a>
                             @endif
@@ -422,7 +424,17 @@
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewLocation" aria-labelledby="offcanvasBottomLabel"
         style="height: 400px">
         <div class="offcanvas-body">
-            <div id="map" style="width: 100%; height: 100%;">
+            <div class="row row-cols-auto mb-2">
+                <label for="horizontal-firstname-input" id="locationLabel" class="col col-form-label"></label>
+                <div class="col-4">
+                    <input type="text" class="form-control" id="locationInput" readonly>
+                </div>
+                <div class="col">
+                    <button class="btn btn-warning waves-effect waves-light" onclick="addLocation()" type="button">
+                        {{ __('messages.update_location') }}</button>
+                </div>
+            </div>
+            <div id="map" style="width: 100%; height: 85%;">
             </div>
         </div>
     </div>
@@ -432,20 +444,59 @@
 
 @push('scripts')
     <script>
-        function showLocation(location, fullname) {
+        function addLocation() {
+            let location = $('#locationInput').val();
+            let id = localStorage.getItem('client');
+
+            let url = '{{ route('update_location') }}';
+            window.location.href =
+                `${url}?client_id=${id}&location=${location}`;
+        }
+    </script>
+    <script>
+        function showLocation(location, fullname, id) {
+            localStorage.setItem('client', id);
             var myOffcanvas = document.getElementById('viewLocation');
             var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
             bsOffcanvas.show();
 
-            const myArray = location.split(",");
+            if (location.length > 3) {
+                const myArray = location.split(",");
 
-            var map = window.map;
+                var map = window.map;
+                map.removeLayer(marker);
+                marker = L.marker([myArray[0], myArray[1]]).addTo(map)
+                    .bindPopup(fullname)
+                    .openPopup();
 
-            marker = L.marker([myArray[0], myArray[1]]).addTo(map)
-                .bindPopup(fullname)
-                .openPopup();
+                map.setView(new L.LatLng(myArray[0], myArray[1]), 15);
 
-            map.setView(new L.LatLng(myArray[0], myArray[1]), 15);
+                $('#locationLabel').html(fullname);
+
+                map.on('click', function(ev) {
+                    marker.setLatLng(ev.latlng);
+                    var latlng = map.mouseEventToLatLng(ev.originalEvent);
+                    $('#locationInput').val(latlng.lat + ', ' + latlng.lng);
+                });
+
+            } else {
+
+                var map = window.map;
+                map.removeLayer(marker);
+                marker = L.marker([39.7706790971256, 64.4232798737373]).addTo(map)
+                    .bindPopup(fullname)
+                    .openPopup();
+
+                map.setView(new L.LatLng(39.7706790971256, 64.4232798737373), 15);
+
+                $('#locationLabel').html(fullname);
+
+                map.on('click', function(ev) {
+                    marker.setLatLng(ev.latlng);
+                    var latlng = map.mouseEventToLatLng(ev.originalEvent);
+                    $('#locationInput').val(latlng.lat + ', ' + latlng.lng);
+                });
+            }
 
         }
     </script>

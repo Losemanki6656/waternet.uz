@@ -715,6 +715,23 @@ class HomeController extends Controller
 
     }
 
+    public function update_location(Request $request)
+    {
+
+        try {
+
+            $client = Client::find($request->client_id);
+            $client->location = $request->location ?? '';
+            $client->save();
+
+            return redirect()->back()->with('success', __('messages.location_updated_successfully'));
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
+    }
+
     public function delete_Order()
     {
         try {

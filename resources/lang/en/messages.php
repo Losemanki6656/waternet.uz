@@ -255,4 +255,6 @@ return [
     'send' => 'Send',
     'history' => 'Archive',
     'example_sms' => 'Example Sms Text',
+    'update_location' => 'Update Location',
+    'location_updated_successfully' => 'Location Updated Successfully!',
 ];

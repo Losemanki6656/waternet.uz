@@ -91,6 +91,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get('/location', [App\Http\Controllers\HomeController::class, 'location'])->name('location');
+    Route::get('/location-update', [App\Http\Controllers\HomeController::class, 'update_location'])->name('update_location');
     Route::get('/location/{id}', [App\Http\Controllers\HomeController::class, 'location_id'])->name('location_id');
     Route::get('/view-location/{id}', [App\Http\Controllers\ClientController::class, 'view_location'])->name('view_location');
 

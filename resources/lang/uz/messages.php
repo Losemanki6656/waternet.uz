@@ -255,4 +255,6 @@ return [
     'send' => 'Yuborish',
     'history' => 'Arxiv',
     'example_sms' => 'Xabar matni',
+    'update_location' => 'Lokatsiyani yangilash',
+    'location_updated_successfully' => 'Lokatsiya muvaffaqqiyatli yangilandi!',
 ];
