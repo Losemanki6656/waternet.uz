@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RateUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -76,8 +77,6 @@ Route::get('/client/carts/cart', [TrafficController::class, 'cart_photo']);
 
 Route::get('/client-profile', [TrafficController::class, 'client_profile']);
 
+Route::get('/client/order-rates', [RateUserController::class, 'index']);
 
-
-Route::post('/telegram/client/create/order', [ClientController::class, 'client_add_order_telegram']);
-Route::put('/telegram/client/order/update', [ClientController::class, 'client_order_edit_telegram']);
-Route::delete('/telegram/client/order/delete', [ClientController::class, 'client_order_delete_telegram']);
+Route::put('/client/order-rates/{client_id}/update', [RateUserController::class, 'update']);

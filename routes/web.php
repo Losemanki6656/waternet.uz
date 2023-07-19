@@ -31,7 +31,7 @@ Route::get('/search/areas', [App\Http\Controllers\HomeController::class, 'search
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/privace', [App\Http\Controllers\TrafficController::class, 'politica'])->name('politica');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('roles', RoleController::class);
@@ -122,7 +122,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/warehouse', [App\Http\Controllers\ClientController::class, 'entry_container'])->name('entry_container');
     Route::get('/warehouse/take-products', [App\Http\Controllers\ClientController::class, 'take_products'])->name('take_products');
     Route::get('/warehouse/entry-products', [App\Http\Controllers\ClientController::class, 'entry_products'])->name('entry_products');
-    Route::get('/warehouse/entry-container', [App\Http\Controllers\ClientController::class, 'entry_container'])->name('entry_container');
     Route::get('/warehouse/take-container', [App\Http\Controllers\ClientController::class, 'take_container'])->name('take_container');
 
 
