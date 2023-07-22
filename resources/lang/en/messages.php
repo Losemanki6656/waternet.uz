@@ -257,4 +257,12 @@ return [
     'example_sms' => 'Example Sms Text',
     'update_location' => 'Update Location',
     'location_updated_successfully' => 'Location Updated Successfully!',
+    'type' => 'Type',
+    'sms' => 'Sms',
+    'telegram' => 'Telegram',
+    'text' => 'Text',
+    'sent_messages' => 'Sent Messages',
+    'Clients_and_Orders' => 'Clients',
+    'Warehouse' => 'Warehouse',
+    'Others' => "Others",
 ];

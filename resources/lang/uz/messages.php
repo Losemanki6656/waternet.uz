@@ -257,4 +257,12 @@ return [
     'example_sms' => 'Xabar matni',
     'update_location' => 'Lokatsiyani yangilash',
     'location_updated_successfully' => 'Lokatsiya muvaffaqqiyatli yangilandi!',
+    'type' => 'Tizim',
+    'sms' => 'Sms',
+    'telegram' => 'Telegram',
+    'text' => 'Text',
+    'sent_messages' => 'Yuborilgan smslar',
+    'Clients_and_Orders' => 'Mijozlar',
+    'Warehouse' => 'Ombor',
+    'Others' => "Qo'shimcha",
 ];

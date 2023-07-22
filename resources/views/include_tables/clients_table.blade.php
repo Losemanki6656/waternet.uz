@@ -31,7 +31,9 @@
                         <td class="text-center">
                             {{ $clients->currentPage() * $clients->perPage() - $clients->perPage() + $loop->index + 1 }}</a>
                         </td>
-                        <td class="text-center">{{ $client->fullname }}</td>
+                        <td class="text-center"><a href="{{ route('soldproducts', ['id' => $client->id]) }}"
+                                class="fw-bold text-dark">{{ $client->fullname }}</a>
+                        </td>
                         <td class="text-center">
                             <strong>{{ $client->phone }}</strong>
                             @if ($client->phone2)
@@ -127,10 +129,10 @@
                                         data-bs-target="#container{{ $client->id }}" data-bs-toggle="modal"><i
                                             class="fa fa-download me-2 text-dark"></i>
                                         {{ __('messages.back_container') }}</a>
-                                    <a class="dropdown-item"
+                                    {{-- <a class="dropdown-item"
                                         href="{{ route('soldproducts', ['id' => $client->id]) }}"><i
                                             class="fa fa-cube me-2 text-info"></i>
-                                        {{ __('messages.result') }}</a>
+                                        {{ __('messages.result') }}</a> --}}
                                     <a class="dropdown-item" href="#" data-bs-toggle="offcanvas"
                                         data-bs-target="#update{{ $client->id }}" aria-controls="offcanvasBottom"><i
                                             class="fa fa-edit me-2"></i>

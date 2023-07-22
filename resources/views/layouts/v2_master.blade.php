@@ -235,7 +235,7 @@
                 <div id="sidebar-menu">
                     <!-- Left Menu Start -->
                     <ul class="metismenu list-unstyled" id="side-menu">
-                        <li class="menu-title" data-key="t-menu">{{ __('messages.menu') }}</li>
+                        <li class="menu-title" data-key="t-menu">{{ __('messages.Statistics') }}</li>
 
                         @can('bosh-menu')
                             <li>
@@ -246,6 +246,17 @@
                                 </a>
                             </li>
                         @endcan
+
+                        @can('results')
+                            <li>
+                                <a href="{{ route('results') }}">
+                                    <i data-feather="monitor"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.results') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        <li class="menu-title" data-key="t-menu">{{ __('messages.Clients_and_Orders') }}</li>
                         @can('clients')
                             <li>
                                 <a href="{{ route('clients') }}">
@@ -262,6 +273,9 @@
                                 </a>
                             </li>
                         @endcan
+
+                        <li class="menu-title" data-key="t-menu">{{ __('messages.Warehouse') }}</li>
+
                         @can('products')
                             <li>
                                 <a href="{{ route('products') }}">
@@ -270,6 +284,16 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('sklad')
+                            <li>
+                                <a href="{{ route('entry_products') }}">
+                                    <i data-feather="codepen"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.warehouse') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        <li class="menu-title" data-key="t-menu">{{ __('messages.Others') }}</li>
                         @can('regions')
                             <li>
                                 <a href="{{ route('regions') }}">
@@ -286,14 +310,6 @@
                                 </a>
                             </li>
                         @endcan
-                        @can('sklad')
-                            <li>
-                                <a href="{{ route('entry_products') }}">
-                                    <i data-feather="codepen"></i>
-                                    <span data-key="t-dashboard">{{ __('messages.warehouse') }}</span>
-                                </a>
-                            </li>
-                        @endcan
 
                         @can('smsmanager')
                             <li>
@@ -306,18 +322,11 @@
                                             data-key="t-feather">{{ __('messages.members') }}</a></li>
                                     <li><a href="{{ route('success_message') }}"
                                             data-key="t-feather">{{ __('messages.history') }}</a></li>
-                                    <li><a href="{{ route('members') }}"
-                                            data-key="t-feather">{{ __('messages.example_sms') }}</a></li>
+                                    <li><a href="#" data-key="t-feather">
+                                            <span
+                                                class="badge rounded-pill bg-warning-subtle text-warning float-end">new</span>
+                                            {{ __('messages.example_sms') }}</a></li>
                                 </ul>
-                            </li>
-                        @endcan
-
-                        @can('results')
-                            <li>
-                                <a href="{{ route('results') }}">
-                                    <i data-feather="monitor"></i>
-                                    <span data-key="t-dashboard">{{ __('messages.results') }}</span>
-                                </a>
                             </li>
                         @endcan
 

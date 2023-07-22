@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">{{ $client->fullname }}</h4>
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.client_result') }}</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
@@ -18,6 +18,27 @@
     </div>
 
     <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="d-flex align-items-end mt-3 mt-sm-0">
+                <div class="flex-shrink-0">
+                    <div class="avatar-xxl me-3">
+                        <img src="{{ asset('assets/images/users/avatar-10.jpg') }}" alt=""
+                            class="img-fluid rounded-circle d-block img-thumbnail">
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <div>
+                        <h5 class="font-size-16 mb-2"> {{ $client->fullname }} </h5>
+                        <h5 class="font-size-13"> <i class="fas fa-sort-amount-down text-warning"></i> <span
+                                class="counter-value text-warning" data-target="{{ $summ }}">0</span> UZS
+                        </h5>
+                        <p class="text-muted font-size-13"><i class="fas fa-phone text-primary"></i> <span
+                                class="text-primary fw-bold">{{ $client->phone }}. {{ $client->phone2 }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
         <div class="col-xl-3 col-md-6">
             <!-- card -->
             <div class="card card-h-100  rounded-4">
@@ -94,15 +115,14 @@
             </div><!-- end card -->
         </div><!-- end col -->
 
-        <div class="col-xl-3 col-md-6">
+        {{-- <div class="col-xl-3 col-md-6">
             <!-- card -->
             <div class="card card-h-100 rounded-4">
                 <!-- card body -->
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span
-                                class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.all_amounts') }}</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.all_amounts') }}</span>
                             <h4 class="mb-3">
                                 <span class="counter-value" data-target="{{ $summ }}">0</span> UZS
                             </h4>
@@ -117,7 +137,7 @@
                     </div>
                 </div><!-- end card body -->
             </div><!-- end card -->
-        </div><!-- end col -->
+        </div><!-- end col --> --}}
     </div>
 
 
@@ -217,7 +237,8 @@
                                         <td>
                                             @if ($clientcontainer->count() == $loop->index + 1)
                                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#container_edit"> {{ $container->user->name }}
+                                                    data-bs-target="#container_edit">
+                                                    {{ $container->user->name }}
                                                 </button>
                                             @else
                                                 {{ $container->user->name ?? '' }}

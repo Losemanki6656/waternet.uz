@@ -40,10 +40,11 @@
                     <thead class="table-light">
                         <tr>
                             <th class="align-middle text-center">#</th>
-                            <th class="align-middle text-center">Kimga</th>
-                            <th class="align-middle text-center">Sms</th>
-                            <th class="align-middle text-center">Kimdan</th>
-                            <th class="align-middle text-center">Qachon</th>
+                            <th class="align-middle text-center">{{ __('messages.to_whom') }}</th>
+                            <th class="align-middle text-center">{{ __('messages.type') }}</th>
+                            <th class="align-middle text-center">{{ __('messages.text') }}</th>
+                            <th class="align-middle text-center">{{ __('messages.from_whom') }}</th>
+                            <th class="align-middle text-center">{{ __('messages.when') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +52,17 @@
                         @foreach ($smsmanagers as $smsmanager)
                             <tr>
                                 <td class="text-center">{{ $smsmanagers->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
-                                <td class="text-center">{{ $smsmanager->client->fullname ?? '' }} </td>
+                                <td class="text-center"><a
+                                        href="{{ route('soldproducts', ['id' => $smsmanager->client->id]) }}"
+                                        class="fw-bold text-dark">
+                                        {{ $smsmanager->client->fullname ?? '' }} </a></td>
+                                <td class="text-center">
+                                    @if ($smsmanager->type == 0)
+                                        <span class="badge bg-primary fs-7">{{ __('messages.sms') }}</span>
+                                    @else
+                                        <span class="badge bg-success fs-7">{{ __('messages.telegram') }}</span>
+                                    @endif
+                                </td>
                                 <td class="text-center">{{ $smsmanager->sms_text }}</td>
                                 <td class="text-center">{{ $smsmanager->user->name ?? '' }}</td>
                                 <td class="text-center">{{ $smsmanager->created_at->format('Y-m-d') }}</td>

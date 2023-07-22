@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Sms;
 use Illuminate\Http\Request;
 
 
@@ -123,6 +124,36 @@ class SettingController extends Controller
         }
 
         Order::whereIn('id', $a)->delete();
+
+        dd($x);
+
+    }
+
+    public function setting6()
+    {
+
+        set_time_limit(300);
+
+        $orders = Sms::get();
+
+        $a = [];
+        $x = 0;
+        foreach ($orders as $order) {
+
+            $organ = Organization::where('id', $order->organization_id)->count();
+            $city = Sity::where('id', $order->city_id)->count();
+            $area = Area::where('id', $order->area_id)->count();
+            $client = Client::where('id', $order->client_id)->count();
+            $user = User::where('id', $order->user_id)->count();
+
+            if (!$organ || !$city || !$area || !$client || !$user) {
+                $x++;
+                $a[] = $order->id;
+            }
+
+        }
+
+        Sms::whereIn('id', $a)->delete();
 
         dd($x);
 

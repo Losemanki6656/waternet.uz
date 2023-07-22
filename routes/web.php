@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +23,7 @@ Route::get('/setting2', [App\Http\Controllers\SettingController::class, 'setting
 Route::get('/setting3', [App\Http\Controllers\SettingController::class, 'setting3'])->name('setting3');
 Route::get('/setting4', [App\Http\Controllers\SettingController::class, 'setting4'])->name('setting4');
 Route::get('/setting5', [App\Http\Controllers\SettingController::class, 'setting5'])->name('setting5');
+Route::get('/setting6', [App\Http\Controllers\SettingController::class, 'setting6'])->name('setting6');
 
 
 Route::get('/search/areas', [App\Http\Controllers\HomeController::class, 'search_areas'])->name('search_areas');
