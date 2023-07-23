@@ -40,6 +40,11 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
+            <label class="col-form-label"> {{ __('messages.orders_count') }} <span
+                    class="text-primary fw-bold">{{ $summ_order }};</span>
+                {{ __('messages.client_count') }} - <span class="counter-value text-primary fw-bold"
+                    data-target="{{ $orders->total() }}">0</span>
+            </label>
         </div>
         <div class="col-lg-3 col-md-6">
             <form action="{{ route('orders') }}" method="get">
@@ -104,28 +109,25 @@
                                 <td class="text-center">{{ $order->created_at->format('Y-m-d') }}</td>
                                 <td class="text-center">{{ $order->comment }}</td>
                                 <td class="text-center">{{ $order->user->name }}</td>
-                                <td class="align-middle text-center">
-                                    <div class="btn-group dropstart">
-                                        <button type="button" class="btn btn-soft-primary waves-effect waves-light"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bx bx-smile font-size-16 align-middle"></i></button>
+                                <td class="align-middle text-center" width="120px">
+                                    <a type="button" href="{{ route('success_order_view', ['id' => $order->id]) }}"
+                                        class="btn btn-soft-success waves-effect waves-light" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="{{ __('messages.accept') }}">
+                                        <i class="fa fa-check-circle"></i></a>
 
-                                        <div class="dropdown-menu dropdownmenu-primary">
-                                            <a class="dropdown-item"
-                                                href="{{ route('success_order_view', ['id' => $order->id]) }}"><i
-                                                    class="fa fa-check-circle me-2 text-success"></i>
-                                                {{ __('messages.accept') }}</a>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#orderedit{{ $order->id }}"
-                                                aria-controls="offcanvasBottom"><i class="fa fa-edit me-2"></i>
-                                                {{ __('messages.update') }}</a>
+                                    <span data-bs-toggle="modal" data-bs-target="#orderedit{{ $order->id }}"
+                                        aria-controls="offcanvasBottom">
+                                        <button type="button" class="btn btn-soft-dark waves-effect waves-light"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ __('messages.update') }}">
+                                            <i class="fa fa-edit"></i></button>
+                                    </span>
 
-                                            <a class="dropdown-item" href="#" class="text-danger"
-                                                onclick="DeleteOrder('{{ $order->client->fullname }}', {{ $order->id }})"><i
-                                                    class="fa fa-trash me-2 text-danger"></i>
-                                                {{ __('messages.delete') }}</a>
-                                        </div>
-                                    </div>
+                                    <button type="button" class="btn btn-soft-danger waves-effect waves-light"
+                                        onclick="DeleteOrder('{{ $order->client->fullname }}', {{ $order->id }})"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="{{ __('messages.delete') }}">
+                                        <i class="fa fa-trash"></i></button>
 
                                 </td>
                             </tr>

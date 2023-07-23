@@ -390,7 +390,7 @@
 
             let url = '{{ route('clients') }}';
             window.location.href =
-                `${url}?search=${search}&city_id=${city_id}&paginate_select=${paginate_select}&page=${page}&filtr=${filtr}`;
+                `${url}?search=${search}&city_id=${city_id}&page=${page}&filtr=${filtr}`;
         });
 
         $('#area_id').change(function(e) {
@@ -398,8 +398,10 @@
         });
 
         $('#paginate_select').change(function(e) {
-            console.log(e);
-            myFilter();
+            let paginate_select = $('#paginate_select').val() ?? 10;
+            let url = '{{ route('update_per_page') }}';
+            window.location.href =
+                `${url}?paginate_select=${paginate_select}`;
         });
 
         $('#page').keyup(function(e) {
@@ -418,12 +420,11 @@
             let search = $('#search').val();
             let city_id = $('#city_id').val();
             let area_id = $('#area_id').val() ?? null;
-            let paginate_select = $('#paginate_select').val() ?? 10;
             let page = $('#page').val() ?? 1;
 
             let url = '{{ route('clients') }}';
             window.location.href =
-                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&paginate_select=${paginate_select}&page=${page}&filtr=${filtr}`;
+                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}`;
         }
     </script>
     <script>
@@ -437,7 +438,7 @@
 
             let url = '{{ route('ClientsExportToExcel') }}';
             window.location.href =
-                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&paginate_select=${paginate_select}&page=${page}&filtr=${filtr}`;
+                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}`;
         }
     </script>
 @endsection

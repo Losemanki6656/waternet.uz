@@ -104,16 +104,22 @@
                                     </button>
                                 </span>
                             @else
-                                <a class="btn btn-soft-secondary waves-effect waves-light" href="#"
+                                <a class="btn btn-soft-dark waves-effect waves-light" href="#"
                                     onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}',{{ $client->id }})"
                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="{{ __('messages.add_location') }}"><i class="fa fa-map-marker"></i></a>
                             @endif
 
-                            <button type="button" class="btn btn-soft-success waves-effect waves-light"
-                                id="orderButton{{ $client->id }}" onclick="showModal({{ $client->id }})"
-                                @if ($client->orders->count()) disabled @endif><i
-                                    class="fa fa-shopping-cart"></i></button>
+                            @if ($client->orders->count())
+                                <a type="button" href="{{ route('orders', ['client_id' => $client->id]) }}"
+                                    class="btn btn-soft-dark waves-effect waves-light"><i
+                                        class="fa fa-shopping-cart"></i></a>
+                            @else
+                                <button type="button" class="btn btn-soft-success waves-effect waves-light"
+                                    id="orderButton{{ $client->id }}" onclick="showModal({{ $client->id }})"><i
+                                        class="fa fa-shopping-cart"></i></button>
+                            @endif
+
 
                             <div class="btn-group dropstart">
                                 <button type="button" class="btn btn-soft-primary waves-effect waves-light"
@@ -129,13 +135,9 @@
                                         data-bs-target="#container{{ $client->id }}" data-bs-toggle="modal"><i
                                             class="fa fa-download me-2 text-dark"></i>
                                         {{ __('messages.back_container') }}</a>
-                                    {{-- <a class="dropdown-item"
-                                        href="{{ route('soldproducts', ['id' => $client->id]) }}"><i
-                                            class="fa fa-cube me-2 text-info"></i>
-                                        {{ __('messages.result') }}</a> --}}
                                     <a class="dropdown-item" href="#" data-bs-toggle="offcanvas"
-                                        data-bs-target="#update{{ $client->id }}" aria-controls="offcanvasBottom"><i
-                                            class="fa fa-edit me-2"></i>
+                                        data-bs-target="#update{{ $client->id }}"
+                                        aria-controls="offcanvasBottom"><i class="fa fa-edit me-2"></i>
                                         {{ __('messages.update') }}</a>
 
                                     <a class="dropdown-item" href="#" class="text-danger"
@@ -402,7 +404,7 @@
                         </div>
                         <div class="col">
                             <label>{{ __('messages.count') }}:</label>
-                            <input class="form-control" type="number" id="orderCount" value="1"
+                            <input class="form-control" type="number" id="orderCount" value="0"
                                 name="count" required>
                         </div>
                     </div>
@@ -445,6 +447,18 @@
 @endif
 
 @push('scripts')
+    <script>
+        $("#orderCount").keyup(function(event) {
+            if (event.keyCode === 13) {
+                TakeOrder();
+            }
+        });
+        $("#orderComment").keyup(function(event) {
+            if (event.keyCode === 13) {
+                TakeOrder();
+            }
+        });
+    </script>
     <script>
         function addLocation() {
             let location = $('#locationInput').val();

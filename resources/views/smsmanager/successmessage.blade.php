@@ -16,22 +16,15 @@
         </div>
     </div>
 
-    <form action="{{ route('success_message') }}" method="get">
-        <div class="row mb-2 animate__animated animate__fadeIn">
-            <div class="col-sm-3 mb-2">
-                <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
-                    placeholder="{{ __('messages.search') }}">
-            </div>
-            <div class="col-sm-3 mb-2">
-                <input type="date" name="data" value="{{ request('data') }}" class="form-control">
-            </div>
-            <div class="col-sm-2 mb-2">
-                <button class="btn btn-primary rounded-3 waves-effect waves-light" type="submit">
-                    <i class="fas fa-filter me-2"></i>
-                    <span> {{ __('messages.filtr') }}</span></button>
-            </div>
+    <div class="row mb-2 animate__animated animate__fadeIn">
+        <div class="col-sm-3 mb-2">
+            <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
+                placeholder="{{ __('messages.search') }}">
         </div>
-    </form>
+        <div class="col-sm-3 mb-2">
+            <input type="date" name="data" id="data" value="{{ request('data') }}" class="form-control">
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-body p-0">
@@ -98,4 +91,29 @@
 @endsection
 
 @push('scripts')
+    <script>
+        $('#search').keyup(function(e) {
+            if (e.keyCode == 13) {
+                myFilter();
+            }
+        });
+
+        $('#data').change(function(e) {
+            myFilter();
+        });
+
+        $('#paginate_select').change(function(e) {
+            myFilter();
+        });
+
+        function myFilter() {
+            let search = $('#search').val();
+            let data = $('#data').val();
+            let paginate_select = $('#paginate_select').val() ?? 10;
+
+            let url = '{{ route('success_message') }}';
+            window.location.href =
+                `${url}?search=${search}&per_page=${paginate_select}&data=${data}`;
+        }
+    </script>
 @endpush

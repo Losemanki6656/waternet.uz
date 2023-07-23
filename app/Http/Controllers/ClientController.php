@@ -791,18 +791,24 @@ class ClientController extends Controller
 
         $smsmanagers = Sms::query()
             ->where('organization_id', $organ)
+
+            ->when(request('search'), function ($query, $search) {
+                return $query->whereHas(
+                    'client',
+                    function ($q) use ($search) {
+                        $q->where('fullname', 'LIKE', '%' . $search . '%');
+                    }
+                );
+            })
             ->when(request('data'), function ($query, $data) {
                 return $query->whereDate('created_at', $data);
-            })->orderBy('created_at', 'DESC')
+            })
+            ->orderBy('created_at', 'DESC')
             ->with('client')
             ->with('user');
 
-
-        $info_org = Organization::find($organ);
-
         return view('smsmanager.successmessage', [
-            'smsmanagers' => $smsmanagers->paginate(10),
-            'info_org' => $info_org
+            'smsmanagers' => $smsmanagers->paginate(request('per_page', 10))
         ]);
     }
 

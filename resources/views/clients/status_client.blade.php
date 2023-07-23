@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                                <a type="button" href="{{ route('clients') }}"
+                                <a type="button" href="{{ route('orders') }}"
                                     class="btn btn-outline-primary btn-lg text-center rounded-5 waves-effect waves-light">
                                     <i class="fas fa-reply me-2"></i>{{ __('messages.return_to_list') }} </a>
                             </div>

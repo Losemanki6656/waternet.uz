@@ -384,6 +384,7 @@ class HomeController extends Controller
 
     public function clients(Request $request)
     {
+
         $organ = auth()->user()->organization_id;
 
         $clients = Client::query()
@@ -415,11 +416,20 @@ class HomeController extends Controller
         $products = Product::where('organization_id', $organ)->get();
 
         return view('clients.v2_clients', [
-            'clients' => $clients->paginate(request('paginate_select', 10)),
+            'clients' => $clients->paginate(session('per_page', 10)),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products
         ]);
+    }
+
+    public function update_per_page()
+    {
+        session([
+            'per_page' => request('paginate_select')
+        ]);
+
+        return redirect()->route('clients');
     }
 
     public function export_clients(Request $request)
@@ -798,13 +808,16 @@ class HomeController extends Controller
     public function orders()
     {
         $organ = auth()->user()->organization_id;
-        $info_org = Organization::find($organ);
 
         $orders = Order::query()
+            ->when(request('client_id'), function ($query, $client_id) {
+                return $query->where('client_id', $client_id);
+            })
             ->where('status', 0)
             ->where('organization_id', $organ)
-            ->has('client')->with('user')->with('product')
-
+            ->has('client')
+            ->with('user')
+            ->with('product')
             ->when(request('search'), function ($query, $search) {
                 $query->whereHas('client', function ($query) use ($search) {
                     $query->where('fullname', 'like', '%' . $search . '%')
@@ -824,15 +837,14 @@ class HomeController extends Controller
 
         $products = Product::where('organization_id', $organ)->get();
 
-        if ($info_org->date_traffic < now())
-            return view('error');
+        $summ_order = $orders->sum('product_count');
 
         return view('clients.orders', [
             'orders' => $orders->paginate(10),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products,
-            'info_org' => $info_org
+            'summ_order' => $summ_order
         ]);
     }
 
