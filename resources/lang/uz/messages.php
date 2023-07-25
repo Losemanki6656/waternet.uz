@@ -265,4 +265,5 @@ return [
     'Clients_and_Orders' => 'Mijozlar',
     'Warehouse' => 'Ombor',
     'Others' => "Qo'shimcha",
+    'traffics' => "Trafiklar",
 ];

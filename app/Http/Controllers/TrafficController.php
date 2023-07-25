@@ -58,24 +58,10 @@ class TrafficController extends Controller
     {
         $traffics = Traffic::all();
 
-        $x = explode(',',ActiveTraffic::find(1)->string1);
+        
 
-            $q = [];
-            foreach ($traffics as $traffic) {
-                $q[$traffic->id] = false;
-                foreach ($x as $y) {
-                    if($traffic->id == $y) 
-                    {
-                        $q[$traffic->id] = true;
-                        break;
-                    }
-                   
-                }
-            }
-
-        return view('administration.traffics',[
-            'traffics' => $traffics,
-            'q' => $q
+        return view('traffics',[
+            'traffics' => $traffics
         ]);
       
     }
