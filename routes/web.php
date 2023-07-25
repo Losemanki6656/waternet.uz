@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/smsmanager/send-message-tg', [App\Http\Controllers\ClientController::class, 'send_message_tg'])->name('send_message_tg');
     Route::get('/smsmanager/success-message', [App\Http\Controllers\ClientController::class, 'success_message'])->name('success_message');
     Route::get('/smsmanager/sms-text', [App\Http\Controllers\ClientController::class, 'sms_text'])->name('sms_text');
+    Route::post('/smsmanager/send', [App\Http\Controllers\TelegramController::class, 'send'])->name('send_telegram');
 
     Route::post('/smsmanager/sms-text-new', [App\Http\Controllers\ClientController::class, 'sms_text_new'])->name('sms_text_new');
 

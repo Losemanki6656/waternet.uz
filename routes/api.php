@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RateUserController;
+use App\Http\Controllers\TelegramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -80,3 +81,5 @@ Route::get('/client-profile', [TrafficController::class, 'client_profile']);
 Route::get('/client/order-rates', [RateUserController::class, 'index']);
 
 Route::put('/client/order-rates/{client_id}/update', [RateUserController::class, 'update']);
+
+Route::any('/' . env('TELEGRAM_TOKEN'), [TelegramController::class, 'index'])->name('webhook');

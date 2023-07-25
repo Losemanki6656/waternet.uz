@@ -57,7 +57,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <form action="{{ route('members') }}" method="get">
+            <form action="{{ route('send_telegram') }}" method="post">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-8">
