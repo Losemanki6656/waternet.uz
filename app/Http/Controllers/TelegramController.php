@@ -9,12 +9,12 @@ class TelegramController extends Controller
 {
     public function send()
     {
-        $res = Http::get('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/getWebhookInfo');
+        // $res = Http::get('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/getWebhookInfo');
 
-        dd($res->body());
+        // dd($res->body());
 
         $res = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/setWebhook', [
-            'url' => url(route('webhook'))
+            'url' => 'http://test.waternet.uz/api/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY'
         ]);
 
         dd($res->body());
