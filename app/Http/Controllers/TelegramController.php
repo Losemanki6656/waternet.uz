@@ -20,7 +20,7 @@ class TelegramController extends Controller
     {
         Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
             'chat_id' => 5011373330,
-            'text' => 'salom'
+            'text' => 'waternet'
         ]);
 
 
