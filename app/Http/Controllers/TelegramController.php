@@ -14,7 +14,7 @@ class TelegramController extends Controller
         // dd($res->body());
 
         $res = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/setWebhook', [
-            'url' => 'http://test.waternet.uz/api/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY'
+            'url' => 'http://cadry.waternet.uz/api/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY'
         ]);
 
         dd($res->body());
