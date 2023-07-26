@@ -58,14 +58,16 @@ class TelegramController extends Controller
 
             $text = "Hello";
             $option = [
-                [
-                    'text' => 'Mening',
-                    'callback_data' => 'sadasd'
-                ],
-                [
-                    'text' => '789',
-                    'callback_data' => '12313'
-                ],
+                'inline_keyboard' => [
+                    [
+                        'text' => 'Mening',
+                        'callback_data' => 'sadasd'
+                    ],
+                    [
+                        'text' => '789',
+                        'callback_data' => '12313'
+                    ],
+                ]
             ];
 
             $keyboard = [
