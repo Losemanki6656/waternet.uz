@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientChat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Log;
@@ -11,23 +12,7 @@ class TelegramController extends Controller
 {
     public function send()
     {
-        $x = public_path('assets\images\bg-1.jpg');
-
-        $response = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendPhoto', [
-            'chat_id' => 5011373330,
-            'photo' => 'https://cdn.dribbble.com/users/1556616/screenshots/4393685/attachments/999670/as_logo_pure.jpg',
-        ]);
-
-        // $response = Telegram::sendPhoto([
-        //     'chat_id' => 5011373330,
-        //     'photo' => 'https://cdn.dribbble.com/users/1556616/screenshots/4393685/attachments/999670/as_logo_pure.jpg',
-        //     'caption' => 'Some caption'
-        // ]);
-        dd($response);
-        // $res = Http::get('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/getWebhookInfo');
-
-        // dd($res->body());
-
+    
         $res = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/setWebhook', [
             'url' => 'https://cadry.waternet.uz/api/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY'
         ]);
@@ -51,42 +36,69 @@ class TelegramController extends Controller
 
         if ($action == '/start') {
 
-            $text = "Hello";
-            $option = [
-                [
-                    "🛍 Mahsulotlar", "📗 Buyurtmalarim"
-                ],
-                [
-                    "✅ Ma'lumotlarim", "⤵️ Profildan chiqish"
-                ]
-            ];
+            $client = ClientChat::where('chat_id', $userID)->first();
+            if($client) {
+                Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+                    'chat_id' => $userID,
+                    'text' => 'Assalom aleykum '. $client->name . '. Bizning Waternet botimizga xush kelibsiz!',
+                    "parse_mode" => "HTML",
+                    'reply_markup' => $this->keyBoard()
+                ]);
+            }
+            else {
+                Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/setWebhook', [
+                    'url' => url(route('webhook_tg_login'))
+                ]);
 
-            // $keyboard = array(
-            //     "inline_keyboard" => array(
-            //         array(
-            //             array(
-            //                 "text" => "My Button Text", 
-            //                 "callback_data" => "myCallbackData"
-            //             )
-            //         )
-            //     )
-            // );
-
-            $keyboard = [
-                'keyboard' => $option,
-                'resize_keyboard' => true,
-                'one_time_keyboard' => true,
-                'selective' => true
-            ];
-
-            $keyboard = json_encode($keyboard);
-
-            Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-                'chat_id' => $userID,
-                'text' => 'Hello',
-                "parse_mode" => "HTML",
-                'reply_markup' => $keyboard
-            ]);
+                Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+                    'chat_id' => $userID,
+                    'text' => "Assalom aleykum. Bizning Waternet botimizga xush kelibsiz! Iltimos Botdan to'liq foydalanish uchun ro'yxatdan o'ting! <br> Waternet saytidagi loginni kiriting..."
+                ]);
+            }
+           
         }
+    }
+
+    public function login()
+    {
+
+        Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+            'chat_id' => 5011373330,
+            'text' => 'login'
+        ]);
+    }
+
+    public function keyBoard()
+    {
+        $option = [
+            [
+                "🛍 Mahsulotlar", "📗 Buyurtmalarim"
+            ],
+            [
+                "✅ Ma'lumotlarim", "⤵️ Profildan chiqish"
+            ]
+        ];
+
+        // $keyboard = array(
+        //     "inline_keyboard" => array(
+        //         array(
+        //             array(
+        //                 "text" => "My Button Text", 
+        //                 "callback_data" => "myCallbackData"
+        //             )
+        //         )
+        //     )
+        // );
+
+        $keyboard = [
+            'keyboard' => $option,
+            'resize_keyboard' => true,
+            'one_time_keyboard' => true,
+            'selective' => true
+        ];
+
+        $keyboard = json_encode($keyboard);
+
+        return $keyboard;
     }
 }
