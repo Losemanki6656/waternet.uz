@@ -47,51 +47,42 @@ class TelegramController extends Controller
         
         $action = $result->message->text;
         
-        // Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-        //     'chat_id' => 5011373330,
-        //     'text' => $action
-        // ]);
+        Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+            'chat_id' => 5011373330,
+            'text' => $action
+        ]);
 
         $userID = $result->message->from->id;
 
         if ($action == '/start') {
 
-            $response = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendPhoto', [
-                'chat_id' => 5011373330,
-                'photo' => 'https://cdn.dribbble.com/users/1556616/screenshots/4393685/attachments/999670/as_logo_pure.jpg',
-            ]);
-
             $text = "Hello";
             $option = [
-                'inline_keyboard' => [
-                    [
-                        'text' => 'Mening',
-                        'callback_data' => 'sadasd'
-                    ],
-                    [
-                        'text' => '789',
-                        'callback_data' => '12313'
-                    ],
+                [
+                    "🛍 Mahsulotlar", "Buyurtmalarim"
+                ],
+                [
+                    "Ma'lumotlarim", "Profildan chiqish"
                 ]
             ];
 
-            $keyboard = array(
-                "inline_keyboard" => array(
-                    array(
-                        array(
-                            "text" => "My Button Text", 
-                            "callback_data" => "myCallbackData"
-                        )
-                    )
-                )
-            );
+            // $keyboard = array(
+            //     "inline_keyboard" => array(
+            //         array(
+            //             array(
+            //                 "text" => "My Button Text", 
+            //                 "callback_data" => "myCallbackData"
+            //             )
+            //         )
+            //     )
+            // );
 
-            // $keyboard = [
-            //     'keyboard' => $option,
-            //     'resize_keyboard' => true,
-            //     'one_time_keyboard' => true,
-            //     'selective' => true
-            // ];
+            $keyboard = [
+                'keyboard' => $option,
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+                'selective' => true
+            ];
 
             $keyboard = json_encode($keyboard);
 
