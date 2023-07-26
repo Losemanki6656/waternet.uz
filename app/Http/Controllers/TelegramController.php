@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TelegramController extends Controller
 {
@@ -29,8 +30,17 @@ class TelegramController extends Controller
 
 
         $result = json_decode(file_get_contents('php://input'));
+        Log::info($result);
+        
         $action = $result->message->text;
         $userID = $result->message->from->id;
+
+        if ($action == '/info1') {
+            Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+                'chat_id' => 5011373330,
+                'text' => 'info1'
+            ]);
+        }
 
         if ($action == '/start') {
             $text = "Hello";
