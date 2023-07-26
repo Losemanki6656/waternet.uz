@@ -43,8 +43,8 @@ class TelegramController extends Controller
         if ($action == '/start') {
             $text = "Hello";
             $option = [
-                ['info1', 'info2'],
-                ['info3', 'info4']
+                ['info1' => 'Mening'],
+                ['info2' => 'Hello']
             ];
 
             $keyboard = [
