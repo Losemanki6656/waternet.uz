@@ -59,10 +59,10 @@ class TelegramController extends Controller
             $text = "Hello";
             $option = [
                 [
-                    "🛍 Mahsulotlar", "Buyurtmalarim"
+                    "🛍 Mahsulotlar", "📗 Buyurtmalarim"
                 ],
                 [
-                    "Ma'lumotlarim", "Profildan chiqish"
+                    "✅ Ma'lumotlarim", "⤵️ Profildan chiqish"
                 ]
             ];
 
