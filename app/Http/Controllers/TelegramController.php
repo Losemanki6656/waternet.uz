@@ -35,15 +35,8 @@ class TelegramController extends Controller
         $action = $result->message->text;
 
         Log::info($action);
-        
-        $userID = $result->message->from->id;
 
-        if ($action == '/info1') {
-            Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-                'chat_id' => 5011373330,
-                'text' => 'info1'
-            ]);
-        }
+        $userID = $result->message->from->id;
 
         if ($action == '/start') {
             $text = "Hello";
