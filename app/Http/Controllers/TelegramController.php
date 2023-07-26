@@ -30,9 +30,12 @@ class TelegramController extends Controller
 
 
         $result = json_decode(file_get_contents('php://input'));
-        Log::info($result);
         
+
         $action = $result->message->text;
+
+        Log::info($action);
+        
         $userID = $result->message->from->id;
 
         if ($action == '/info1') {
