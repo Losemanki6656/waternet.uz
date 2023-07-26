@@ -11,6 +11,19 @@ class TelegramController extends Controller
 {
     public function send()
     {
+        $x = public_path('assets\images\bg-1.jpg');
+
+        $response = Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendPhoto', [
+            'chat_id' => 5011373330,
+            'photo' => 'https://cdn.dribbble.com/users/1556616/screenshots/4393685/attachments/999670/as_logo_pure.jpg',
+        ]);
+
+        // $response = Telegram::sendPhoto([
+        //     'chat_id' => 5011373330,
+        //     'photo' => 'https://cdn.dribbble.com/users/1556616/screenshots/4393685/attachments/999670/as_logo_pure.jpg',
+        //     'caption' => 'Some caption'
+        // ]);
+        dd($response);
         // $res = Http::get('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/getWebhookInfo');
 
         // dd($res->body());
@@ -43,53 +56,32 @@ class TelegramController extends Controller
 
         if ($action == '/start') {
 
-            $keyboard = [
-                ['7', '8', '9'],
-                ['4', '5', '6'],
-                ['1', '2', '3'],
-                     ['0']
+            $text = "Hello";
+            $option = [
+                [
+                    'text' => 'Mening',
+                    'callback_data' => 'sadasd'
+                ],
+                [
+                    'text' => '789',
+                    'callback_data' => '12313'
+                ],
             ];
-            
-            $reply_markup = Telegram::replyKeyboardMarkup([
-                'keyboard' => $keyboard,
+
+            $keyboard = [
+                'keyboard' => $option,
                 'resize_keyboard' => true,
-                'one_time_keyboard' => true
-            ]);
-            
-            $response = Telegram::sendMessage([
+                'one_time_keyboard' => true,
+                'selective' => true
+            ];
+
+            $keyboard = json_encode($keyboard);
+
+            Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
                 'chat_id' => $userID,
-                'text' => 'Hello World',
-                'reply_markup' => $reply_markup
+                'text' => 'Hello',
+                'reply_markup' => $keyboard
             ]);
-
-            $messageId = $response->getMessageId();
-            
-            // $text = "Hello";
-            // $option = [
-            //     [
-            //         'text' => 'Mening',
-            //         'url' => 'sadasd'
-            //     ],
-            //     [
-            //         'text' => '789',
-            //         'url' => '12313'
-            //     ],
-            // ];
-
-            // $keyboard = [
-            //     'keyboard' => $option,
-            //     'resize_keyboard' => true,
-            //     'one_time_keyboard' => true,
-            //     'selective' => true
-            // ];
-
-            // $keyboard = json_encode($keyboard);
-
-            // Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-            //     'chat_id' => $userID,
-            //     'text' => 'Hello',
-            //     'reply_markup' => $keyboard
-            // ]);
         }
     }
 }
