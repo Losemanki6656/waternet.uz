@@ -34,10 +34,10 @@ class TelegramController extends Controller
         
         $action = $result->message->text;
         
-        Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-            'chat_id' => 5011373330,
-            'text' => $action
-        ]);
+        // Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
+        //     'chat_id' => 5011373330,
+        //     'text' => $action
+        // ]);
 
         $userID = $result->message->from->id;
 
@@ -61,6 +61,8 @@ class TelegramController extends Controller
                 'text' => 'Hello World',
                 'reply_markup' => $reply_markup
             ]);
+
+            $messageId = $response->getMessageId();
             
             // $text = "Hello";
             // $option = [
