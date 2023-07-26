@@ -27,12 +27,6 @@ class TelegramController extends Controller
         
         $action = $result->message->text;
         $userID = $result->message->from->id;
-        
-        Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
-            'chat_id' => 5011373330,
-            'text' => $userID
-        ]);
-
 
         if ($action == '/start') {
 
@@ -52,7 +46,8 @@ class TelegramController extends Controller
 
                 Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
                     'chat_id' => $userID,
-                    'text' => "Assalom aleykum. Bizning Waternet botimizga xush kelibsiz! Iltimos Botdan to'liq foydalanish uchun ro'yxatdan o'ting! <br> Waternet saytidagi loginni kiriting..."
+                    'text' => "Assalom aleykum. Bizning Waternet botimizga xush kelibsiz! Iltimos Botdan to'liq foydalanish uchun ro'yxatdan o'ting! <br> Waternet saytidagi loginni kiriting...",
+                    "parse_mode" => "HTML",
                 ]);
             }
            
