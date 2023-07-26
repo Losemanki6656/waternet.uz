@@ -33,9 +33,25 @@ class TelegramController extends Controller
         $userID = $result->message->from->id;
 
         if ($action == '/start') {
+            $text = "Hello";
+            $option = [
+                ['info1', 'info2'],
+                ['info3', 'info4']
+            ];
+
+            $keyboard = [
+                'keyboard' => $option,
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+                'selective' => true
+            ];
+
+            $keyboard = json_encode($keyboard);
+
             Http::post('https://api.telegram.org/bot6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY/sendMessage', [
                 'chat_id' => $userID,
-                'text' => 'salom'
+                'text' => 'Hello',
+                'reply_markup' => $keyboard
             ]);
         }
     }
