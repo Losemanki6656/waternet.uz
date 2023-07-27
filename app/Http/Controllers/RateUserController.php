@@ -11,22 +11,21 @@ use Illuminate\Http\Request;
 
 class RateUserController extends Controller
 {
-    
+
     public function index()
     {
         $rates = RateUser::where('status', false);
         $newMessages = [];
-        if($rates->count())
-        {
+        if ($rates->count()) {
             $arr = [];
             foreach ($rates->get() as $item) {
                 $tg = ClientChat::where('client_id', $item->client_id)->first();
-                if($tg) {
+                if ($tg) {
 
                     $order = SuccessOrders::find($item->success_order_id);
-        
-                    $text = "Получено - ".$order->amount.", Доставлено - ".$order->count.", Возврат тар - ".
-                    $order->container.", Предоплата ".Client::find($order->client_id)->balance.". Спасибо за покупки!";
+
+                    $text = "Получено - " . $order->amount . ", Доставлено - " . $order->count . ", Возврат тар - " .
+                        $order->container . ", Предоплата " . Client::find($order->client_id)->balance . ". Спасибо за покупки!";
 
                     $arr[] = [
                         'id' => $item->id,
@@ -37,20 +36,20 @@ class RateUserController extends Controller
                 }
 
             }
-            if(count($arr))
-            $newMessages[] = [
-                'type' => 'rate',
-                'data' => $arr
-            ];
+            if (count($arr))
+                $newMessages[] = [
+                    'type' => 'rate',
+                    'data' => $arr
+                ];
         }
 
         $sms = Sms::take(3);
 
-        if($sms->count()) {
+        if ($sms->count()) {
             $arr = [];
             foreach ($sms->get() as $s) {
                 $tg = ClientChat::where('client_id', $s->client_id)->first();
-                if($tg) {
+                if ($tg) {
 
                     $arr[] = [
                         'message' => 'message',
@@ -61,29 +60,32 @@ class RateUserController extends Controller
 
             }
 
-            if(count($arr))
-            $newMessages[] = [
-                'type' => 'newMessage',
-                'data' => $arr
-            ];
+            if (count($arr))
+                $newMessages[] = [
+                    'type' => 'newMessage',
+                    'data' => $arr
+                ];
         }
-       
+
 
         return response()->json([
             'messages' => $newMessages
         ]);
-    } 
+    }
 
-    public function update($rate)
+    public function update($client_id, Request $request)
     {
-        $rates = RateUser::findOrFail($rate);
 
+        $callback = explode('_', $request->callback);
+
+        $rates = RateUser::find($callback[2]);
+        $rates->rate = $callback[1];
         $rates->status = true;
-        $rates->comment = request('comment','');
+        $rates->comment = request('comment', '');
         $rates->save();
 
         return response()->json([
-            'message' => 'success'
+            'message' => 'Бизнинг хизматдан фойдаланганингиз учун рахмат!'
         ]);
-    } 
+    }
 }

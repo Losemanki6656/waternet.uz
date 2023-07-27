@@ -1318,9 +1318,12 @@ class ClientController extends Controller
         $zakaz->container_status = $product->container_status;
         $zakaz->product_count = $request->count;
         $zakaz->price = $product->price;
-        if ($request->type == "telegram")
+        if ($request->type == "telegram") {
             $zakaz->comment = 'Telegram bot orqali';
-        else
+            $zakaz->type = 1;
+            $client_chat = ClientChat::where('chat_id', $request->chat_id)->first();
+            $zakaz->client_chat_id = $client_chat->id ?? null;
+        } else
             $zakaz->comment = 'Mijoz mobil ilova orqali';
 
         $zakaz->status = 0;

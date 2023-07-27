@@ -83,4 +83,3 @@ Route::get('/client/order-rates', [RateUserController::class, 'index']);
 Route::put('/client/order-rates/{client_id}/update', [RateUserController::class, 'update']);
 
 Route::post('/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY', [TelegramController::class, 'index'])->name('webhook');
-Route::post('/tg-login/6379098700:AAGxRC5F6EwLE9hE4XcsZJzfzS_lNspGVZY', [TelegramController::class, 'login'])->name('webhook_tg_login');
