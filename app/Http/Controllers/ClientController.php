@@ -1318,7 +1318,11 @@ class ClientController extends Controller
         $zakaz->container_status = $product->container_status;
         $zakaz->product_count = $request->count;
         $zakaz->price = $product->price;
-        $zakaz->comment = 'Mijoz mobil ilova orqali';
+        if ($request->type == "telegram")
+            $zakaz->comment = 'Telegram bot orqali';
+        else
+            $zakaz->comment = 'Mijoz mobil ilova orqali';
+
         $zakaz->status = 0;
         $zakaz->user_id = $client->user_id;
         $zakaz->save();
