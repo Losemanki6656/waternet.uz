@@ -1729,11 +1729,11 @@ class HomeController extends Controller
                     'text' => $text,
                     "parse_mode" => "HTML"
                 ]);
-
+                sleep(3);
                 $rate_text = "Доставшик хизматини бахоланг ...";
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
                     'chat_id' => $bot->chat_id,
-                    'text' => $text . $rate_text,
+                    'text' => $rate_text,
                     "parse_mode" => "HTML",
                     'reply_markup' => $keyboard
                 ]);
