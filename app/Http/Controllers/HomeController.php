@@ -1729,6 +1729,7 @@ class HomeController extends Controller
                     'text' => $text,
                     "parse_mode" => "HTML"
                 ]);
+
                 $rate_text = "Доставшик хизматини бахоланг ...";
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
                     'chat_id' => $bot->chat_id,
