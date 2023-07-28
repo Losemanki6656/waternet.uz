@@ -1721,7 +1721,7 @@ class HomeController extends Controller
                     )
                 );
                 $keyboard = json_encode($keyboard);
-                $text = "Xaridingiz uchun raxmat! <br> Olindi - " . $successorder->amount . ", Yetqazildi - " . $successorder->count . ", Idish qaytarildi - " .
+                $text = "Xaridingiz uchun raxmat! Olindi - " . $successorder->amount . ", Yetqazildi - " . $successorder->count . ", Idish qaytarildi - " .
                     $successorder->container . ", Oldindan to'lov " . $client_info->balance;
 
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
