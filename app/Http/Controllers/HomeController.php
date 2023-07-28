@@ -1731,6 +1731,7 @@ class HomeController extends Controller
                     'reply_markup' => $keyboard
                 ]);
 
+                dd($text);
             }
 
 
