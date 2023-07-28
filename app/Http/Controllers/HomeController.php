@@ -1076,17 +1076,22 @@ class HomeController extends Controller
                     )
                 );
                 $keyboard = json_encode($keyboard);
-
-                $text = "Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
-                    $successorder->container . ", Предоплата " . $client_info->balance . ". Спасибо за покупки! <br> Доставшик хизматини бахоланг ...";
+                $text = "🥳 Спасибо за покупки! Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
+                    $successorder->container . ", Предоплата " . $client_info->balance . " 🥳";
 
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
                     'chat_id' => $bot->chat_id,
                     'text' => $text,
-                    "parse_mode" => "HTML",
-                    'reply_markup' => $this->keyBoard()
+                    "parse_mode" => "HTML"
                 ]);
 
+                $rate_text = "⭐️ Доставшик хизматини бахоланг ... ⭐️";
+                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                    'chat_id' => $bot->chat_id,
+                    'text' => $rate_text,
+                    "parse_mode" => "HTML",
+                    'reply_markup' => $keyboard
+                ]);
             }
 
             $client_info = Client::find($orderinfo->client_id);
@@ -1666,79 +1671,6 @@ class HomeController extends Controller
             $or->save();
 
             $info_id = auth()->user()->organization_id;
-
-            $bot = ClientChat::where('id', $orderinfo->client_chat_id)->where('status', true)->first();
-            if ($bot) {
-                $newRate = new RateUser();
-                $newRate->user_id = auth()->user()->id;
-                $newRate->client_id = $orderinfo->client_id;
-                $newRate->success_order_id = $successorder->id;
-                $newRate->rate = 0;
-                $newRate->save();
-
-                $keyboard = array(
-                    "inline_keyboard" => array(
-                        [
-                            [
-                                "text" => "1",
-                                "callback_data" => "rate_1_" . $newRate->id
-                            ],
-                            [
-                                "text" => "2",
-                                "callback_data" => "rate_2_" . $newRate->id
-                            ],
-                            [
-                                "text" => "3",
-                                "callback_data" => "rate_3_" . $newRate->id
-                            ],
-                            [
-                                "text" => "4",
-                                "callback_data" => "rate_4_" . $newRate->id
-                            ],
-                            [
-                                "text" => "5",
-                                "callback_data" => "rate_5_" . $newRate->id
-                            ]
-                        ],
-                        [
-                            [
-                                "text" => "6",
-                                "callback_data" => "rate_6_" . $newRate->id
-                            ],
-                            [
-                                "text" => "7",
-                                "callback_data" => "rate_7_" . $newRate->id
-                            ],
-                            [
-                                "text" => "8",
-                                "callback_data" => "rate_8_" . $newRate->id
-                            ],
-                            [
-                                "text" => "9",
-                                "callback_data" => "rate_9_" . $newRate->id
-                            ]
-                        ]
-                    )
-                );
-                $keyboard = json_encode($keyboard);
-                $text = "🥳 Спасибо за покупки! Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
-                    $successorder->container . ", Предоплата " . $client_info->balance . " 🥳";
-
-                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-                    'chat_id' => $bot->chat_id,
-                    'text' => $text,
-                    "parse_mode" => "HTML"
-                ]);
-
-                $rate_text = "⭐️ Доставшик хизматини бахоланг ... ⭐️";
-                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-                    'chat_id' => $bot->chat_id,
-                    'text' => $rate_text,
-                    "parse_mode" => "HTML",
-                    'reply_markup' => $keyboard
-                ]);
-            }
-
 
             if ($request->order_status == 1 || $request->order_status == 2) {
 
