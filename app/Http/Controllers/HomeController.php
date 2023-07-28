@@ -1728,8 +1728,7 @@ class HomeController extends Controller
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
                     'chat_id' => $bot->chat_id,
                     'text' => $text,
-                    "parse_mode" => "HTML",
-                    'reply_markup' => $keyboard
+                    "parse_mode" => "HTML"
                 ]);
 
             }
