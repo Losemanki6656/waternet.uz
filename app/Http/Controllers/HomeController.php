@@ -1730,13 +1730,13 @@ class HomeController extends Controller
                     "parse_mode" => "HTML"
                 ]);
                 sleep(3);
-                $rate_text = "Доставшик хизматини бахоланг ...";
-                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-                    'chat_id' => $bot->chat_id,
-                    'text' => $rate_text,
-                    "parse_mode" => "HTML",
-                    'reply_markup' => $keyboard
-                ]);
+                // $rate_text = "Доставшик хизматини бахоланг ...";
+                // Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                //     'chat_id' => $bot->chat_id,
+                //     'text' => $rate_text,
+                //     "parse_mode" => "HTML",
+                //     'reply_markup' => $keyboard
+                // ]);
             }
 
 
