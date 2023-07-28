@@ -1729,7 +1729,7 @@ class HomeController extends Controller
                     'chat_id' => $bot->chat_id,
                     'text' => $text,
                     "parse_mode" => "HTML",
-                    'reply_markup' => $this->keyBoard()
+                    'reply_markup' => $keyboard
                 ]);
 
             }
