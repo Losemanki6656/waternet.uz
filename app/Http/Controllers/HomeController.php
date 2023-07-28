@@ -1725,6 +1725,7 @@ class HomeController extends Controller
                 $text = "Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
                     $successorder->container . ", Предоплата " . $client_info->balance . ". Спасибо за покупки! <br> Доставшик хизматини бахоланг ...";
 
+                dd($text, $keyboard);
                 Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
                     'chat_id' => $bot->chat_id,
                     'text' => $text,
