@@ -1036,41 +1036,41 @@ class HomeController extends Controller
                         [
                             [
                                 "text" => "1",
-                                "callback_data" => "rate_1_" . $newRate->id
+                                "callback_data" => "water_rate_1_" . $newRate->id
                             ],
                             [
                                 "text" => "2",
-                                "callback_data" => "rate_2_" . $newRate->id
+                                "callback_data" => "water_rate_2_" . $newRate->id
                             ],
                             [
                                 "text" => "3",
-                                "callback_data" => "rate_3_" . $newRate->id
+                                "callback_data" => "water_rate_3_" . $newRate->id
                             ],
                             [
                                 "text" => "4",
-                                "callback_data" => "rate_4_" . $newRate->id
+                                "callback_data" => "water_rate_4_" . $newRate->id
                             ],
                             [
                                 "text" => "5",
-                                "callback_data" => "rate_5_" . $newRate->id
+                                "callback_data" => "water_rate_5_" . $newRate->id
                             ]
                         ],
                         [
                             [
                                 "text" => "6",
-                                "callback_data" => "rate_6_" . $newRate->id
+                                "callback_data" => "water_rate_6_" . $newRate->id
                             ],
                             [
                                 "text" => "7",
-                                "callback_data" => "rate_7_" . $newRate->id
+                                "callback_data" => "water_rate_7_" . $newRate->id
                             ],
                             [
                                 "text" => "8",
-                                "callback_data" => "rate_8_" . $newRate->id
+                                "callback_data" => "water_rate_8_" . $newRate->id
                             ],
                             [
                                 "text" => "9",
-                                "callback_data" => "rate_9_" . $newRate->id
+                                "callback_data" => "water_rate_9_" . $newRate->id
                             ]
                         ]
                     )
@@ -1079,14 +1079,14 @@ class HomeController extends Controller
                 $text = "🥳 Спасибо за покупки! Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
                     $successorder->container . ", Предоплата " . $client_info->balance . " 🥳";
 
-                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                Http::post('https://api.telegram.org/bot6195186408:AAFh9FYhoJNJqtteYIx6tZ8rTccwq2vTD3U/sendMessage', [
                     'chat_id' => $bot->chat_id,
                     'text' => $text,
                     "parse_mode" => "HTML"
                 ]);
 
                 $rate_text = "⭐️ Доставшик хизматини бахоланг ... ⭐️";
-                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                Http::post('https://api.telegram.org/bot6195186408:AAFh9FYhoJNJqtteYIx6tZ8rTccwq2vTD3U/sendMessage', [
                     'chat_id' => $bot->chat_id,
                     'text' => $rate_text,
                     "parse_mode" => "HTML",
