@@ -1721,7 +1721,6 @@ class HomeController extends Controller
                     )
                 );
                 $keyboard = json_encode($keyboard);
-                dd($bot->chat_id);
                 $text = "Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
                     $successorder->container . ", Предоплата " . $client_info->balance . ". Спасибо за покупки! <br> Доставшик хизматини бахоланг ...";
 
