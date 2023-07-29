@@ -1,4 +1,9 @@
 @extends('layouts.v2_master')
+
+@section('styles')
+    <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -51,31 +56,38 @@
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="send" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="send" aria-labelledby="offcanvasBottomLabel"
+        style="height: 260px">
         <div class="offcanvas-header">
             <h5 id="offcanvasBottomLabel"><i class="fab fa-telegram-plane me-2"></i>{{ __('messages.send_message') }}</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-            <form action="{{ route('send_telegram') }}" method="post">
-                @csrf
+        <form id="send_message" action="{{ route('send_telegram') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="offcanvas-body">
                 <div class="row mb-3">
                     <div class="col-8">
-                        <label class="mb-0">{{ __('messages.message') }}:</label>
-                        <textarea name="" class="form-control"></textarea>
+                        <label class="mb-0 fw-bold">{{ __('messages.select_file') }}:</label>
+                        <input name="photo" type="file" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="mb-0 fw-bold">{{ __('messages.message') }}:</label>
+                        <textarea name="message" class="form-control"></textarea>
                     </div>
                     <div class="col-4">
                         <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
-                            data-bs-dismiss="offcanvas" style="margin-top: 20px"> <i class="fas fa-reply me-2"></i>
+                            data-bs-dismiss="offcanvas" style="margin-top: 30px"> <i class="fas fa-reply me-2"></i>
                             {{ __('messages.cancel') }}</button>
                         <button class="btn btn-primary btn-lg waves-effect waves-light" type="submit"
-                            style="margin-top: 20px"> <i class="fab fa-telegram-plane me-2"></i>
+                            style="margin-top: 30px"> <i class="fab fa-telegram-plane me-2"></i>
                             {{ __('messages.send') }}</button>
                     </div>
 
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 
     <div class="card">
@@ -90,6 +102,7 @@
                             <th class="align-middle text-center"> {{ __('messages.address') }}</th>
                             <th class="align-middle text-center"> {{ __('messages.balance') }}</th>
                             <th class="align-middle text-center"> {{ __('messages.container') }}</th>
+                            <th class="align-middle text-center"> {{ __('messages.status') }}</th>
                             <th class="align-middle text-center"> {{ __('messages.telegram') }}</th>
                             <th class="align-middle text-center">
                                 <div class="form-check font-size-16 text-center">
@@ -100,33 +113,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <form id="sendsms" action="{{ route('send_sms') }}" method="post">
-                            @csrf
-                            @foreach ($clients as $client)
-                                <tr>
-                                    <td class="text-center">{{ $clients->currentPage() * 10 - 10 + $loop->index + 1 }}
-                                    </td>
-                                    <td class="text-center">{{ $client->client->fullname }}</td>
-                                    <td class="text-center">{{ $client->phone }}</td>
-                                    <td class="text-center">{{ $client->client->city->name }},
-                                        {{ $client->client->area->name }}</td>
-                                    <td class="text-center">{{ $client->client->balance }}</td>
-                                    <td class="text-center">{{ $client->client->container }}</td>
-                                    <td width="200" class="text-center">
-                                        <button type="button"
-                                            class="btn btn-soft-primary btn-sm waves-effect waves-light"><i
-                                                class="fab fa-telegram-plane me-2"></i>{{ $client->chat_id }}</button>
-                                    </td>
 
-                                    <td class="text-center"style="width: 50px;">
-                                        <div class="form-check font-size-16 text-center">
-                                            <input class="form-check-input" type="checkbox" style="float: none"
-                                                form="order_all_form" name="checkbox[{{ $client->id }}]">
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </form>
+                        @foreach ($clients as $client)
+                            <tr>
+                                <td class="text-center">{{ $clients->currentPage() * 10 - 10 + $loop->index + 1 }}
+                                </td>
+                                <td class="text-center">{{ $client->client->fullname }}</td>
+                                <td class="text-center">{{ $client->phone }}</td>
+                                <td class="text-center">{{ $client->client->city->name }},
+                                    {{ $client->client->area->name }}</td>
+                                <td class="text-center">{{ $client->client->balance }}</td>
+                                <td class="text-center">{{ $client->client->container }}</td>
+                                <td class="text-center">
+                                    @if ($client->status)
+                                        <span class="badge badge-soft-success">on</span>
+                                    @else
+                                        <span class="badge badge-soft-danger">off</span>
+                                    @endif
+                                </td>
+                                <td width="200" class="text-center">
+                                    <button type="button" class="btn btn-soft-primary btn-sm waves-effect waves-light"><i
+                                            class="fab fa-telegram-plane me-2"></i>{{ $client->chat_id }}</button>
+                                </td>
+
+                                <td class="text-center"style="width: 50px;">
+                                    <div class="form-check font-size-16 text-center">
+                                        <input class="form-check-input" type="checkbox" form="send_message"
+                                            style="float: none" name="checkbox[]" value="{{ $client->id }}">
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -157,6 +174,7 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('assets/libs/dropzone/min/dropzone.min.js') }}"></script>
     <script>
         $('#search').keyup(function(e) {
             if (e.keyCode == 13) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClientChat;
+use App\Models\Sms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Log;
@@ -10,17 +11,93 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
-    public function send()
+    public function send(Request $request)
     {
 
-        Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-            'chat_id' => 5011373330,
-            'text' => 'Assalom aleykum. Bizning Waternet botimizga xush kelibsiz!',
-            "parse_mode" => "HTML",
-            'reply_markup' => $this->keyBoard()
-        ]);
+        $url = null;
+        if ($request->photo) {
+            $fileName = auth()->user()->id . time() . '.' . $request->photo->extension();
+            $path = $request->photo->storeAs('photos', $fileName);
+            $url = url(asset('storage/' . $path));
+        }
 
-        return 1;
+        try {
+            $clients = ClientChat::whereIn('id', $request->checkbox)->with('client')->get();
+            $user = auth()->user()->id;
+            $org = auth()->user()->organization_id;
+
+            if ($url && $request->message) {
+                foreach ($clients as $item) {
+                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                        'chat_id' => $item->chat_id,
+                        'text' => $request->message,
+                        'photo' => $url,
+                        "parse_mode" => "HTML",
+                    ]);
+
+                    Sms::create([
+                        'organization_id' => $org,
+                        'client_id' => $item->client_id,
+                        'user_id' => $user,
+                        'city_id' => $item->client->city_id,
+                        'area_id' => $item->client->area_id,
+                        'fullname' => $item->client->fullname,
+                        'phone' => $item->phone,
+                        'sms_text' => $request->message,
+                        'type' => 1,
+                        'photo' => $path
+                    ]);
+                }
+            } else if (!$url && $request->message) {
+                foreach ($clients as $item) {
+                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                        'chat_id' => $item->chat_id,
+                        'text' => $request->message,
+                        "parse_mode" => "HTML",
+                    ]);
+
+                    Sms::create([
+                        'organization_id' => $org,
+                        'client_id' => $item->client_id,
+                        'user_id' => $user,
+                        'city_id' => $item->client->city_id,
+                        'area_id' => $item->client->area_id,
+                        'fullname' => $item->client->fullname,
+                        'phone' => $item->phone,
+                        'sms_text' => $request->message,
+                        'type' => 1
+                    ]);
+                }
+            } else if ($url && !$request->message) {
+                foreach ($clients as $item) {
+                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                        'chat_id' => $item->chat_id,
+                        'photo' => $url,
+                        "parse_mode" => "HTML",
+                    ]);
+
+                    Sms::create([
+                        'organization_id' => $org,
+                        'client_id' => $item->client_id,
+                        'user_id' => $user,
+                        'city_id' => $item->client->city_id,
+                        'area_id' => $item->client->area_id,
+                        'fullname' => $item->client->fullname,
+                        'phone' => $item->phone,
+                        'sms_text' => '',
+                        'type' => 1,
+                        'photo' => $path
+                    ]);
+                }
+            }
+
+            return redirect()->back()->with('success', __('messages.message_successfully_sent'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
     public function index()
