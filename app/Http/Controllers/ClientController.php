@@ -1512,14 +1512,19 @@ class ClientController extends Controller
     {
         $client = Client::where('id', $client_id)->first();
         if ($client) {
-            $newinfo = new ClientChat();
-            $newinfo->client_id = $client_id;
-            $newinfo->name = $request->fullname;
-            $newinfo->phone = $request->phone;
-            $newinfo->chat_id = $request->chat_id;
-            $newinfo->save();
 
-
+            $chat = ClientChat::where('client_id', $client_id)
+                ->where('chat_id', $request->chat_id)
+                ->count();
+                
+            if(!$chat) {
+                $newinfo = new ClientChat();
+                $newinfo->client_id = $client_id;
+                $newinfo->name = $request->fullname;
+                $newinfo->phone = $request->phone;
+                $newinfo->chat_id = $request->chat_id;
+                $newinfo->save();
+            }
             return response()->json([
                 'message' => "success"
             ]);
