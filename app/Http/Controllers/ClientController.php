@@ -1515,6 +1515,7 @@ class ClientController extends Controller
 
             $chat = ClientChat::where('client_id', $client_id)
                 ->where('chat_id', $request->chat_id)
+                ->where('status', true)
                 ->count();
                 
             if(!$chat) {
