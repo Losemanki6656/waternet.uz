@@ -78,10 +78,13 @@ class RateUserController extends Controller
 
         $callback = explode('_', $request->callback);
 
+        $comment = request('comment'); 
+        if($comment == 'No comment') $comment = '';
+
         $rates = RateUser::find($callback[3]);
         $rates->rate = $callback[2];
         $rates->status = true;
-        $rates->comment = request('comment', '');
+        $rates->comment = $comment;
         $rates->save();
 
         return response()->json([

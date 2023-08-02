@@ -266,4 +266,13 @@ return [
     'Warehouse' => 'Warehouse',
     'Others' => "Others",
     'traffics' => "Traffics",
+    'sort' => "Sort",
+    'order_sortabled_successfully' => "Order sortabled successfully!",
+    'rate_users' => "Rate Users",
+    'rate' => "Rate",
+    'date' => "Datetime",
+    'status' => "Status",
+    'select_file' => "Select File",
+    'message_successfully_sent' => "Message Successfully Sent",
+    'file' => "File",
 ];

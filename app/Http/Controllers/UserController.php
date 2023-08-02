@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RateUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -239,5 +240,47 @@ class UserController extends Controller
 
         return redirect()->route('users')
             ->with('success', __('messages.User_deleted_successfully'));
+    }
+
+    public function rate_users(Request $request)
+    {
+        $users = RateUser::query()
+            ->whereHas('client', function ($q) {
+                $q->where('organization_id', auth()->user()->organization_id);
+            })
+            ->when(request('search'), function ($query, $search) {
+                $query->whereHas('client', function ($q) use ($search) {
+                    $q->where('fullname', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->when(request('data'), function ($query, $data) {
+                return $query->whereDate('created_at', $data);
+            })
+            ->where('status', true)
+            ->paginate(request('per_page', 10));
+
+        $rateMax = RateUser::groupBy('user_id')
+            ->select([DB::raw('AVG(rate) as rateMax'), 'user_id'])
+            ->with(['user'])
+            ->orderBy('rateMax','desc')
+            ->first();
+
+        $rateMin = RateUser::groupBy('user_id')
+            ->select([DB::raw('AVG(rate) as rateMax'), 'user_id'])
+            ->with(['user'])
+            ->orderBy('rateMax','asc')
+            ->first();
+
+
+        // dd($rate);
+
+        return view('rate_users.rate_users', [
+            'users' => $users,
+            'rateMax' => $rateMax,
+            'rateMin' => $rateMin
+        ]);
     }
 }

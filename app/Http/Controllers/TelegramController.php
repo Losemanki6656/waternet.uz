@@ -14,6 +14,7 @@ class TelegramController extends Controller
     public function send(Request $request)
     {
 
+
         $url = null;
         if ($request->photo) {
             $fileName = auth()->user()->id . time() . '.' . $request->photo->extension();
@@ -22,22 +23,25 @@ class TelegramController extends Controller
         }
 
         try {
-            $clients = ClientChat::whereIn('id', $request->checkbox)->with('client')->get();
+            $clients = ClientChat::whereIn('id', $request->checkbox)
+                ->with('client')
+                ->get();
             $user = auth()->user()->id;
             $org = auth()->user()->organization_id;
 
             if ($url && $request->message) {
                 foreach ($clients as $item) {
-                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+
+                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendPhoto', [
                         'chat_id' => $item->chat_id,
-                        'text' => $request->message,
-                        'photo' => $url,
-                        "parse_mode" => "HTML",
+                        'caption' => $request->message,
+                        'photo' => $url
                     ]);
 
                     Sms::create([
                         'organization_id' => $org,
                         'client_id' => $item->client_id,
+                        'client_chat_id' => $item->id,
                         'user_id' => $user,
                         'city_id' => $item->client->city_id,
                         'area_id' => $item->client->area_id,
@@ -59,6 +63,7 @@ class TelegramController extends Controller
                     Sms::create([
                         'organization_id' => $org,
                         'client_id' => $item->client_id,
+                        'client_chat_id' => $item->id,
                         'user_id' => $user,
                         'city_id' => $item->client->city_id,
                         'area_id' => $item->client->area_id,
@@ -70,15 +75,15 @@ class TelegramController extends Controller
                 }
             } else if ($url && !$request->message) {
                 foreach ($clients as $item) {
-                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendPhoto', [
                         'chat_id' => $item->chat_id,
-                        'photo' => $url,
-                        "parse_mode" => "HTML",
+                        'photo' => $url
                     ]);
 
                     Sms::create([
                         'organization_id' => $org,
                         'client_id' => $item->client_id,
+                        'client_chat_id' => $item->id,
                         'user_id' => $user,
                         'city_id' => $item->client->city_id,
                         'area_id' => $item->client->area_id,

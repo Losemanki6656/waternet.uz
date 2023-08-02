@@ -36,6 +36,7 @@
                             <th class="align-middle text-center">{{ __('messages.to_whom') }}</th>
                             <th class="align-middle text-center">{{ __('messages.type') }}</th>
                             <th class="align-middle text-center">{{ __('messages.text') }}</th>
+                            <th class="align-middle text-center">{{ __('messages.file') }}</th>
                             <th class="align-middle text-center">{{ __('messages.from_whom') }}</th>
                             <th class="align-middle text-center">{{ __('messages.when') }}</th>
                         </tr>
@@ -57,8 +58,13 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $smsmanager->sms_text }}</td>
+                                <td class="text-center">
+                                    @if ($smsmanager->photo)
+                                        <a href="{{url('/storage/' . $smsmanager->photo)}}" target="_blank"> <i class="far fa-file-image"></i> </a>
+                                    @endif
+                                </td>
                                 <td class="text-center">{{ $smsmanager->user->name ?? '' }}</td>
-                                <td class="text-center">{{ $smsmanager->created_at->format('Y-m-d') }}</td>
+                                <td class="text-center">{{ $smsmanager->created_at}}</td>
                             </tr>
                         @endforeach
                     </tbody>

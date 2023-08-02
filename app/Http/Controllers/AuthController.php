@@ -134,6 +134,7 @@ class AuthController extends Controller
                     ->when(request('area_id'), function ($query, $area_id) {
                         return $query->where('area_id', $area_id);
                     })
+                    ->orderBy('sort', 'asc')
                     ->get()
             );
         else {
@@ -149,6 +150,7 @@ class AuthController extends Controller
                     ->when(request('area_id'), function ($query, $area_id) {
                         return $query->where('area_id', $area_id);
                     })
+                    ->orderBy('sort', 'asc')
                     ->get()
             );
         }

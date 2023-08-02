@@ -77,9 +77,10 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-sm align-middle table-bordered table-nowrap animate__animated animate__fadeIn">
+                <table class="table table-sm align-middle table-bordered table-nowrap animate__animated animate__fadeIn" id="table_order">
                     <thead class="table-light">
                         <tr>
+                            <th class="text-center fw-bold"></th>
                             <th class="text-center" width="60">#</th>
                             <th class="text-center">{{ __('messages.fullname') }}</th>
                             <th class="text-center">{{ __('messages.phone') }}</th>
@@ -95,7 +96,8 @@
                     </thead>
                     <tbody>
                         @foreach ($orders as $order)
-                            <tr>
+                            <tr class="row1" data-id="{{ $order->id }}">
+                                <td class="text-center"><i class="fas fa-stream" style="color: blue; cursor: pointer"></i> </td>
                                 <td class="text-center">{{ $orders->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
                                 <td class="text-center">{{ $order->client->fullname }}</td>
                                 <td class="text-center">{{ $order->client->phone }}</td>
@@ -211,6 +213,34 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+        $("table tbody").sortable({
+
+            update: function(event, ui) {
+                var order = [];
+                $('tr.row1').each(function(index, element) {
+                    order.push({
+                        id: $(this).attr('data-id'),
+                        position: index + 1
+                    });
+                });
+                console.log(order);
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ url('orders/sortable') }}",
+                    data: {
+                        order: order,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alertify.success(response.message);
+                    }
+                });
+            }
+        });
+    </script>
     <script>
         function DeleteOrder(fullname, id) {
             Swal.fire({

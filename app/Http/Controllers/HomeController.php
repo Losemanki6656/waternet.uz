@@ -832,7 +832,8 @@ class HomeController extends Controller
             })
             ->when(request('area_id'), function ($query, $area_id) {
                 return $query->where('area_id', $area_id);
-            });
+            })
+            ->orderBy('sort', 'asc');
 
         $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
@@ -848,6 +849,26 @@ class HomeController extends Controller
             'products' => $products,
             'summ_order' => $summ_order
         ]);
+    }
+
+    public function orders_sortable(Request $request)
+    {
+
+        $tasks = Order::where('organization_id', auth()->user()->organization_id)->get();
+
+        foreach ($tasks as $task) {
+            $task->timestamps = false; 
+            $id = $task->id;
+
+            foreach ($request->order as $order) {
+                if ($order['id'] == $id) {
+                    $task->update(['sort' => $order['position']]);
+                }
+            }
+        }
+        return response()->json([
+            'message' =>  __('messages.order_sortabled_successfully')
+        ], 200);   
     }
 
     public function client_order_edit($id)
@@ -1672,7 +1693,10 @@ class HomeController extends Controller
 
             $info_id = auth()->user()->organization_id;
 
-            $bot = ClientChat::where('id', $orderinfo->client_chat_id)->where('status', true)->first();
+            $bot = ClientChat::where('id', $orderinfo->client_chat_id)
+                ->where('status', true)
+                ->first();
+                
             if ($bot) {
                 $newRate = new RateUser();
                 $newRate->user_id = auth()->user()->id;

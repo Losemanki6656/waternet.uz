@@ -266,4 +266,6 @@ return [
     'Warehouse' => 'Ombor',
     'Others' => "Qo'shimcha",
     'traffics' => "Trafiklar",
+    'sort' => "Sort",
+    'order_sortabled_successfully' => "Buyurtmalar muvaffaqqiyatli tartiblandi!",
 ];

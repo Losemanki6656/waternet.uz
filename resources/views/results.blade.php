@@ -120,7 +120,7 @@
     </div>
 
     <div class="row  animate__animated animate__fadeInUp">
-        <div class="col-xl-2 col-md-6">
+        <div class="col-xxl-2 col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>
@@ -142,7 +142,7 @@
             <!--end card-->
         </div>
         <!--end col-->
-        <div class="col-xl-2 ms-md-auto col-md-6">
+        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>
@@ -161,7 +161,7 @@
             <!--end card-->
         </div>
         <!--end col-->
-        <div class="col-xl-2 ms-md-auto col-md-6">
+        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>
@@ -180,7 +180,7 @@
             <!--end card-->
         </div>
         <!--end col-->
-        <div class="col-xl-2 ms-md-auto col-md-6">
+        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>
@@ -199,7 +199,7 @@
             </div>
             <!--end card-->
         </div>
-        <div class="col-xl-2 ms-md-auto col-md-6">
+        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>
@@ -218,7 +218,7 @@
             </div>
             <!--end card-->
         </div>
-        <div class="col-xl-2 ms-md-auto col-md-6">
+        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
             <div class="card rounded-3">
                 <div class="card-body">
                     <div>

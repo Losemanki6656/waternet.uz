@@ -30,8 +30,7 @@
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link href="{{ asset('animate_css/animate.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="{{ asset('assets/leaflet/leaflet.css') }}" />
 
 
 
@@ -339,6 +338,13 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a href="{{ route('rate_users') }}">
+                                <i data-feather="star"></i>
+                                <span data-key="t-dashboard">{{ __('messages.rate_users') }}</span>
+                            </a>
+                        </li>
+
                         @can('admin')
                             <li class="menu-title" data-key="t-apps">Administration</li>
 
@@ -408,7 +414,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                {{ __('messages.design_develop') }} <a href=""
+                                {{ __('messages.design_develop') }} <a href="https://www.instagram.com/losemanki_official/"
                                     class="text-decoration-underline">Waternet</a>
                             </div>
                         </div>
@@ -612,9 +618,8 @@
     <!-- apexcharts js -->
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/allchart.js') }}"></script>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    {{-- <script src="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> --}}
+    <script src="{{asset('assets/leaflet/leaflet.js')}}"></script>
 
     <script>
         function sidebarThemeUpdate(color) {

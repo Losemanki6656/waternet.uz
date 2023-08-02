@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/administration/active-traffics', [App\Http\Controllers\HomeController::class, 'active_traffics'])->name('active_traffics');
 
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
+    Route::get('/rate-users', [App\Http\Controllers\UserController::class, 'rate_users'])->name('rate_users');
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/add-region', [App\Http\Controllers\HomeController::class, 'add_region'])->name('add_region');
 
     Route::get('/orders', [App\Http\Controllers\HomeController::class, 'orders'])->name('orders');
+    Route::post('/orders/sortable', [App\Http\Controllers\HomeController::class, 'orders_sortable'])->name('orders_sortable');
 
     Route::get('/products', [App\Http\Controllers\HomeController::class, 'products'])->name('products');
     Route::post('/add-product', [App\Http\Controllers\HomeController::class, 'add_product'])->name('add_product');
