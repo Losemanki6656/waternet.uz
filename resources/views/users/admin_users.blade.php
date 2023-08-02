@@ -18,6 +18,28 @@
         </div>
     </div>
 
+    <div class="row animate__animated animate__fadeIn">
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-0">
+                <select class="form-control" data-trigger name="org_id" id="org_id">
+                    <option value="">{{ __('messages.shops') }}</option>
+                    @foreach ($shops as $shop)
+                        <option value={{ $shop->id }} @if ($shop->id == request('org_id')) selected @endif>
+                            {{ $shop->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-0">
+                <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
+                    placeholder="{{ __('messages.search') }}">
+            </div>
+        </div>
+
+    </div>
+
     <div class="row mt-3">
         @foreach ($users as $user)
             <div class="col-xl-3 col-sm-6">
@@ -117,18 +139,22 @@
             myFilter();
         });
 
+        $('#org_id').change(function(e) {
+            myFilter();
+        });
+
         $('#paginate_select').change(function(e) {
             myFilter();
         });
 
         function myFilter() {
             let search = $('#search').val();
-            let data = $('#data').val();
+            let org_id = $('#org_id').val();
             let paginate_select = $('#paginate_select').val() ?? 10;
 
             let url = '{{ route('users_admin') }}';
             window.location.href =
-                `${url}?search=${search}&per_page=${paginate_select}&data=${data}`;
+                `${url}?search=${search}&per_page=${paginate_select}&org_id=${org_id}`;
         }
     </script>
     <script>

@@ -52,10 +52,19 @@ class UserController extends Controller
         //     }
         // }
 
-        $users = User::with('organization')->paginate(request('per_page', 8));
+        $shops = Organization::get();
+        $users = User::query()
+            ->when(request('search'), function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->when(request('org_id'), function ($query, $org_id) {
+                $query->where('organization_id', $org_id);
+            })
+            ->with('organization')->paginate(request('per_page', 8));
 
         return view('users.admin_users', [
-            'users' => $users
+            'users' => $users,
+            'shops' => $shops
         ]);
     }
 
