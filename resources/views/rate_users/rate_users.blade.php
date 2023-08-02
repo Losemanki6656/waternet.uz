@@ -35,14 +35,13 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span
-                                class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.evaluations') }}</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.evaluations') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="{{$users->total()}}">0</span>
+                                <span class="counter-value" data-target="{{ $users->total() }}">0</span>
                             </h4>
                             <div class="text-nowrap">
-                                <span class="badge bg-success-subtle text-success">+$20.9k</span>
-                                <span class="ms-1 text-muted font-size-13">Since last week</span>
+                                <span class="badge bg-success-subtle text-success">{{ $users->total() }} ta</span>
+                                <span class="ms-1 text-muted font-size-13">{{ __('messages.all_time') }}</span>
                             </div>
                         </div>
 
@@ -61,14 +60,14 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span
-                                class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.best_user') }}</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.best_user') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="{{$rateMax->rateMax}}">0</span>
+                                <span class="counter-value" data-target="{{ round($rateMax->rateMax ?? 0) }}">0</span>
                             </h4>
                             <div class="text-nowrap">
-                                <span class="badge bg-danger-subtle text-danger">-29 Trades</span>
-                                <span class="ms-1 text-muted font-size-13">{{$rateMax->user->name}}k</span>
+                                <span class="badge bg-danger-subtle text-danger">{{ round($rateMax->rateMax ?? 0) }}
+                                    ball</span>
+                                <span class="ms-1 text-muted font-size-13">{{ $rateMax->user->name ?? '' }}</span>
                             </div>
                         </div>
                         <div class="flex-shrink-0 text-end">
@@ -86,14 +85,14 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span
-                                class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.worst_user') }}</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.worst_user') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="{{$rateMin->rateMax}}">0</span>
+                                <span class="counter-value" data-target="{{ round($rateMin->rateMax ?? 0) }}">0</span>
                             </h4>
                             <div class="text-nowrap">
-                                <span class="badge bg-primary-subtle text-primary">+ $2.8k</span>
-                                <span class="ms-1 text-muted font-size-13">{{$rateMin->user->name}}</span>
+                                <span class="badge bg-primary-subtle text-primary">{{ round($rateMin->rateMax ?? 0) }}
+                                    ball</span>
+                                <span class="ms-1 text-muted font-size-13">{{ $rateMin->user->name ?? '' }}</span>
                             </div>
                         </div>
                         <div class="flex-shrink-0 text-end">
@@ -111,17 +110,18 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.all_amounts') }}</span>
+                            <span
+                                class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.most_rated_client') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="">0</span> UZS
+                                <span class="counter-value" data-target="{{ $clientMax->total ?? 0 }}">0</span>
                             </h4>
                             <div class="text-nowrap">
-                                <span class="badge bg-warning-subtle text-warning">+5.32%</span>
-                                <span class="ms-1 text-muted font-size-13">Since last week</span>
+                                <span class="badge bg-warning-subtle text-warning">{{ $clientMax->total ?? 0 }} ta</span>
+                                <span class="ms-1 text-muted font-size-13">{{ $clientMax->client->fullname ?? 0 }}</span>
                             </div>
                         </div>
                         <div class="flex-shrink-0 text-end">
-                            <i class="fas fa-sort-amount-down fa-2x text-warning"></i>
+                            <i class="fas fa-sort-amount-up fa-2x text-warning"></i>
                         </div>
                     </div>
                 </div><!-- end card body -->
@@ -149,8 +149,7 @@
                             <tr>
                                 <td class="text-center">{{ $users->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
                                 <td class="text-center">{{ $user->user->name ?? '' }}</td>
-                                <td class="text-center"><a
-                                        href="{{ route('soldproducts', ['id' => $user->client->id]) }}"
+                                <td class="text-center"><a href="{{ route('soldproducts', ['id' => $user->client->id]) }}"
                                         class="fw-bold text-dark">
                                         {{ $user->client->fullname ?? '' }} </a></td>
                                 <td class="text-center">

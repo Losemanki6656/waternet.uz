@@ -160,16 +160,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/smsmanager/send-client-message/{id}', [App\Http\Controllers\ClientController::class, 'send_client_message'])->name('send_client_message');
 
 
-    Route::get('/administration/organization/organizations', [App\Http\Controllers\TrafficController::class, 'organizations'])->name('organizations');
+    Route::get('/admin/shops', [App\Http\Controllers\TrafficController::class, 'organizations'])->name('organizations');
     Route::get('/administration/traffics', [App\Http\Controllers\TrafficController::class, 'traffics'])->name('traffics');
     Route::get('/administration/user_organizations', [App\Http\Controllers\TrafficController::class, 'user_organizations'])->name('user_organizations');
-    Route::get('/administration/users-admin', [App\Http\Controllers\UserController::class, 'users_admin'])->name('users_admin');
+    Route::get('/admin/users-admin', [App\Http\Controllers\UserController::class, 'users_admin'])->name('users_admin');
 
 
     Route::post('/administration/add-traffic', [App\Http\Controllers\TrafficController::class, 'add_traffic'])->name('add_traffic');
-    Route::post('/administration/add-organization', [App\Http\Controllers\TrafficController::class, 'add_organization'])->name('add_organization');
-    Route::post('/administration/edit-organization/{id}', [App\Http\Controllers\TrafficController::class, 'edit_organization'])->name('edit_organization');
-    Route::post('/administration/delete-organization/{id}', [App\Http\Controllers\TrafficController::class, 'delete_organization'])->name('delete_organization');
+    Route::post('/admin/add-organization', [App\Http\Controllers\TrafficController::class, 'add_organization'])->name('add_organization');
+    Route::post('/admin/edit-organization/{id}', [App\Http\Controllers\TrafficController::class, 'edit_organization'])->name('edit_organization');
+    Route::post('/admin/delete-organization', [App\Http\Controllers\TrafficController::class, 'delete_organization'])->name('delete_organization');
     Route::post('/administration/edit-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'edit_traffic'])->name('edit_traffic');
     Route::post('/administration/delete-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'delete_traffic'])->name('delete_traffic');
 
@@ -192,14 +192,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/send-sms', [App\Http\Controllers\ClientController::class, 'send_sms'])->name('send_sms');
     Route::get('/reklama', [App\Http\Controllers\TrafficController::class, 'reklama'])->name('reklama');
-    Route::get('/organization/trafficorgan/{id}', [App\Http\Controllers\TrafficController::class, 'trafficorgan'])->name('trafficorgan');
-    Route::get('/organization/addpriceorgan/{id}', [App\Http\Controllers\TrafficController::class, 'indexpriceorgan'])->name('addpriceorgan');
+    Route::get('/trafficorgan/{id}', [App\Http\Controllers\TrafficController::class, 'trafficorgan'])->name('trafficorgan');
+    Route::get('/addpriceorgan/{id}', [App\Http\Controllers\TrafficController::class, 'indexpriceorgan'])->name('addpriceorgan');
     Route::post('/organization/add-success-price-org/{id}', [App\Http\Controllers\TrafficController::class, 'add_price_organization'])->name('add_price_organization');
     Route::post('/organization/add-success-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'add_traffic_organization'])->name('add_traffic_organization');
     Route::post('/organization/edit-success-price-org/{id}', [App\Http\Controllers\TrafficController::class, 'edit_price_organization'])->name('edit_price_organization');
-    Route::post('/organization/delete-success-price-org/{id}', [App\Http\Controllers\TrafficController::class, 'delete_price_organization'])->name('delete_price_organization');
+    Route::post('/admin/delete-success-price-org', [App\Http\Controllers\TrafficController::class, 'delete_price_organization'])->name('delete_price_organization');
     Route::post('/organization/edit-success-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'edit_traffic_organization'])->name('edit_traffic_organization');
-    Route::get('/organization/delete-traffic-org/{id}', [App\Http\Controllers\TrafficController::class, 'delete_traffic_organ'])->name('delete_traffic_organ');
+    Route::post('/organization/delete-traffic-org', [App\Http\Controllers\TrafficController::class, 'delete_traffic_organ'])->name('delete_traffic_organ');
 
 
     Route::get('/organization/client-app', [App\Http\Controllers\TrafficController::class, 'client_app'])->name('client_app');

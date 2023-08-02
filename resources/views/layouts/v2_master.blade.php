@@ -345,29 +345,31 @@
                             </a>
                         </li>
 
-                        @can('admin')
-                            <li class="menu-title" data-key="t-apps">Administration</li>
+                        @can('smsmanager')
+                            <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>
 
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('organizations') }}"><i
                                         data-feather="user-check"></i><span>Reklama</span>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li>
                                 <a href="{{ route('organizations') }}"><i
-                                        data-feather="user-check"></i><span>Magazinlar</span>
+                                        data-feather="award"></i><span>{{ __('messages.shops') }}</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('traffics') }}"><i data-feather="user-check"></i><span>Tariflar</span>
+                                <a href="{{ route('traffics') }}"><i
+                                        data-feather="tag"></i><span>{{ __('messages.traffics') }}</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('users_admin') }}"><i data-feather="user-check"></i><span>Users</span>
+                                <a href="{{ route('users_admin') }}"><i
+                                        data-feather="users"></i><span>{{ __('messages.users') }}</span>
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('client_app') }}"><i data-feather="user-check"></i><span>App
                                         Photos</span>
                                 </a>
@@ -383,7 +385,7 @@
                                 <a href="{{ route('organization_app_cart') }}"><i data-feather="user-check"></i><span>App
                                         Orgnization Swipers</span>
                                 </a>
-                            </li>
+                            </li> --}}
                         @endcan
 
                     </ul>
@@ -414,7 +416,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                {{ __('messages.design_develop') }} <a href="https://www.instagram.com/losemanki_official/"
+                                {{ __('messages.design_develop') }} <a
+                                    href="https://www.instagram.com/losemanki_official/"
                                     class="text-decoration-underline">Waternet</a>
                             </div>
                         </div>
@@ -619,7 +622,7 @@
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/allchart.js') }}"></script>
     {{-- <script src="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> --}}
-    <script src="{{asset('assets/leaflet/leaflet.js')}}"></script>
+    <script src="{{ asset('assets/leaflet/leaflet.js') }}"></script>
 
     <script>
         function sidebarThemeUpdate(color) {
