@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="flex-shrink-0 text-end">
-                            <i class="fas fa-2x fa-dollar-sign text-success"></i>
+                            <i class="fas fa-2x fa-hashtag text-success"></i>
                         </div>
                     </div>
                 </div><!-- end card body -->
@@ -64,7 +64,7 @@
                             <span
                                 class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.best_user') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="{{$rateMax->rate}}">0</span>
+                                <span class="counter-value" data-target="{{$rateMax->rateMax}}">0</span>
                             </h4>
                             <div class="text-nowrap">
                                 <span class="badge bg-danger-subtle text-danger">-29 Trades</span>
@@ -89,7 +89,7 @@
                             <span
                                 class="text-muted mb-3 lh-1 d-block text-truncate">{{ __('messages.worst_user') }}</span>
                             <h4 class="mb-3">
-                                <span class="counter-value" data-target="{{$rateMin->rate}}">0</span>
+                                <span class="counter-value" data-target="{{$rateMin->rateMax}}">0</span>
                             </h4>
                             <div class="text-nowrap">
                                 <span class="badge bg-primary-subtle text-primary">+ $2.8k</span>

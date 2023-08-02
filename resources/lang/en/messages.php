@@ -275,4 +275,8 @@ return [
     'select_file' => "Select File",
     'message_successfully_sent' => "Message Successfully Sent",
     'file' => "File",
+    'evaluations' => "Evaluations",
+    'best_user' => "The Best User",
+    'worst_user' => "The Worst User",
+    // 'evaluations' => "Evaluations",
 ];
