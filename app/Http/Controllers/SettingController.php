@@ -88,10 +88,10 @@ class SettingController extends Controller
         $x = 0;
         foreach ($clients as $client) {
             $org = Organization::where('id', $client->organization_id)->count();
-            $reg = Sity::where('id', $client->city_id)->count();
-            $area = Area::where('id', $client->area_id)->count();
 
             if (!$org) {
+                $reg = Sity::where('id', $client->city_id)->count();
+                $area = Area::where('id', $client->area_id)->count();
                 if (!$reg || !$area) {
                     $client->delete();
                     $x++;
