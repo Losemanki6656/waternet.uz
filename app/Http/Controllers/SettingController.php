@@ -94,12 +94,12 @@ class SettingController extends Controller
 
             if (!$reg) {
                 // $client->city_id = Sity::where('organization_id')->first();
-                // $client->save();
+                $client->delete();
                 $x++;
             }
             $area = Area::where('id', $client->area_id)->count();
             if (!$area) {
-                // $client->delete();
+                $client->delete();
                 $x++;
             }
             // }
