@@ -49,10 +49,13 @@ class SettingController extends Controller
 
         foreach ($cities as $city) {
             $org = Organization::where('id', $city->organization_id)->count();
-            $reg = Sity::where('id', $city->city_id)->count();
 
-            if (!$org || !$reg) {
-                $city->delete();
+            $clients = Client::where('area_id', $city->id)->count();
+
+            if (!$org && !$clients) {
+                $reg = Sity::where('id', $city->city_id)->count();
+                if (!$reg)
+                    $city->delete();
             }
         }
 

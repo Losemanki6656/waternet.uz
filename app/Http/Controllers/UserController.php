@@ -60,7 +60,8 @@ class UserController extends Controller
             ->when(request('org_id'), function ($query, $org_id) {
                 $query->where('organization_id', $org_id);
             })
-            ->with('organization')->paginate(request('per_page', 8));
+            ->with('organization')
+            ->paginate(request('per_page', 8));
 
         return view('users.admin_users', [
             'users' => $users,
