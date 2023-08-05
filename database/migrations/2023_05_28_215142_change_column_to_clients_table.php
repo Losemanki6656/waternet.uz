@@ -14,13 +14,13 @@ class ChangeColumnToClientsTable extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->BigInteger('organization_id')->nullable()->unsigned()->change();
-            $table->index('organization_id');
-            $table->foreign('organization_id')->references('id')->on('organizations');
+            // $table->BigInteger('organization_id')->nullable()->unsigned()->change();
+            // $table->index('organization_id');
+            // $table->foreign('organization_id')->references('id')->on('organizations');
 
-            $table->BigInteger('user_id')->nullable()->unsigned()->change();
-            $table->index('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->BigInteger('user_id')->nullable()->unsigned()->change();
+            // $table->index('user_id');
+            // $table->foreign('user_id')->references('id')->on('users');
 
             $table->BigInteger('city_id')->nullable()->unsigned()->change();
             $table->index('city_id');

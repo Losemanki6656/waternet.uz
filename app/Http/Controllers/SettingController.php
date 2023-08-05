@@ -87,16 +87,22 @@ class SettingController extends Controller
 
         $x = 0;
         foreach ($clients as $client) {
-            $org = Organization::where('id', $client->organization_id)->count();
+            // $org = Organization::where('id', $client->organization_id)->count();
 
-            if (!$org) {
-                $reg = Sity::where('id', $client->city_id)->count();
-                $area = Area::where('id', $client->area_id)->count();
-                if (!$reg || !$area) {
-                    $client->delete();
-                    $x++;
-                }
+            // if (!$org) {
+            $reg = Sity::where('id', $client->city_id)->count();
+
+            if (!$reg) {
+                // $client->city_id = Sity::where('organization_id')->first();
+                // $client->save();
+                $x++;
             }
+            $area = Area::where('id', $client->area_id)->count();
+            if (!$area) {
+                // $client->delete();
+                $x++;
+            }
+            // }
         }
 
         dd('success', $x);
