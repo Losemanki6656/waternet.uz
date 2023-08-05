@@ -49,13 +49,10 @@ class SettingController extends Controller
 
         foreach ($cities as $city) {
             $org = Organization::where('id', $city->organization_id)->count();
+            $reg = Sity::where('id', $city->city_id)->count();
 
-            $clients = Client::where('area_id', $city->id)->count();
-
-            if (!$org && !$clients) {
-                $reg = Sity::where('id', $city->city_id)->count();
-                if (!$reg)
-                    $city->delete();
+            if (!$org || !$reg) {
+                $city->delete();
             }
         }
 
@@ -87,22 +84,14 @@ class SettingController extends Controller
 
         $x = 0;
         foreach ($clients as $client) {
-            // $org = Organization::where('id', $client->organization_id)->count();
-
-            // if (!$org) {
+            $org = Organization::where('id', $client->organization_id)->count();
             $reg = Sity::where('id', $client->city_id)->count();
-
-            if (!$reg) {
-                // $client->city_id = Sity::where('organization_id')->first();
-                $client->delete();
-                $x++;
-            }
             $area = Area::where('id', $client->area_id)->count();
-            if (!$area) {
+
+            if (!$org || !$reg || !$area) {
                 $client->delete();
                 $x++;
             }
-            // }
         }
 
         dd('success', $x);
@@ -120,14 +109,14 @@ class SettingController extends Controller
         $x = 0;
         foreach ($orders as $order) {
 
-            // $organ = Organization::where('id', $order->organization_id)->count();
-            // $city = Sity::where('id', $order->city_id)->count();
-            // $area = Area::where('id', $order->area_id)->count();
+            $organ = Organization::where('id', $order->organization_id)->count();
+            $city = Sity::where('id', $order->city_id)->count();
+            $area = Area::where('id', $order->area_id)->count();
             $client = Client::where('id', $order->client_id)->count();
-            // $product = Product::where('id', $order->product_id)->count();
-            // $user = User::where('id', $order->user_id)->count();
+            $product = Product::where('id', $order->product_id)->count();
+            $user = User::where('id', $order->user_id)->count();
 
-            if (!$client) {
+            if (!$organ || !$city || !$area || !$client || !$product || !$user) {
                 $x++;
                 $a[] = $order->id;
             }
