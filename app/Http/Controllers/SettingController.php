@@ -120,14 +120,14 @@ class SettingController extends Controller
         $x = 0;
         foreach ($orders as $order) {
 
-            $organ = Organization::where('id', $order->organization_id)->count();
-            $city = Sity::where('id', $order->city_id)->count();
-            $area = Area::where('id', $order->area_id)->count();
+            // $organ = Organization::where('id', $order->organization_id)->count();
+            // $city = Sity::where('id', $order->city_id)->count();
+            // $area = Area::where('id', $order->area_id)->count();
             $client = Client::where('id', $order->client_id)->count();
-            $product = Product::where('id', $order->product_id)->count();
-            $user = User::where('id', $order->user_id)->count();
+            // $product = Product::where('id', $order->product_id)->count();
+            // $user = User::where('id', $order->user_id)->count();
 
-            if (!$organ || !$city || !$area || !$client || !$product || !$user) {
+            if (!$client) {
                 $x++;
                 $a[] = $order->id;
             }

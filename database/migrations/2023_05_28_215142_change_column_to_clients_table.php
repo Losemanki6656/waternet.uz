@@ -14,25 +14,25 @@ class ChangeColumnToClientsTable extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            // $table->BigInteger('organization_id')->nullable()->unsigned()->change();
-            // $table->index('organization_id');
-            // $table->foreign('organization_id')->references('id')->on('organizations');
+            $table->BigInteger('organization_id')->nullable()->unsigned()->change();
+            $table->index('organization_id');
+            $table->foreign('organization_id')->references('id')->on('organizations');
 
-            // $table->BigInteger('user_id')->nullable()->unsigned()->change();
-            // $table->index('user_id');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->BigInteger('user_id')->nullable()->unsigned()->change();
+            $table->index('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
 
-            // $table->BigInteger('city_id')->nullable()->unsigned()->change();
-            // $table->index('city_id');
+            $table->BigInteger('city_id')->nullable()->unsigned()->change();
+            $table->index('city_id');
             $table->foreign('city_id')->references('id')->on('sities');
 
-            // $table->BigInteger('area_id')->nullable()->unsigned()->change();
+            $table->BigInteger('area_id')->nullable()->unsigned()->change();
             $table->index('area_id');
             $table->foreign('area_id')->references('id')->on('areas');
 
-            // $table->integer('balance')->default(0)->change();
+            $table->integer('balance')->default(0)->change();
 
-            // $table->boolean('status')->default(true)->after('activated_at');
+            $table->boolean('status')->default(true)->after('activated_at');
         });
     }
 
@@ -44,7 +44,7 @@ class ChangeColumnToClientsTable extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            // $table->dropColumn("status");
+            $table->dropColumn("status");
         });
     }
 }
