@@ -345,7 +345,7 @@
                             </a>
                         </li>
 
-                        @can('smsmanager')
+                        @can('admin')
                             <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>
 
                             {{-- <li>
