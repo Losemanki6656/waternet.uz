@@ -22,11 +22,11 @@ class ChangeColumnToClientsTable extends Migration
             // $table->index('user_id');
             // $table->foreign('user_id')->references('id')->on('users');
 
-            $table->BigInteger('city_id')->nullable()->unsigned()->change();
-            $table->index('city_id');
+            // $table->BigInteger('city_id')->nullable()->unsigned()->change();
+            // $table->index('city_id');
             $table->foreign('city_id')->references('id')->on('sities');
 
-            $table->BigInteger('area_id')->nullable()->unsigned()->change();
+            // $table->BigInteger('area_id')->nullable()->unsigned()->change();
             $table->index('area_id');
             $table->foreign('area_id')->references('id')->on('areas');
 
