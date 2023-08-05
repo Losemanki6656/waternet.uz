@@ -30,9 +30,9 @@ class ChangeColumnToClientsTable extends Migration
             $table->index('area_id');
             $table->foreign('area_id')->references('id')->on('areas');
 
-            $table->integer('balance')->default(0)->change();
+            // $table->integer('balance')->default(0)->change();
 
-            $table->boolean('status')->default(true)->after('activated_at');
+            // $table->boolean('status')->default(true)->after('activated_at');
         });
     }
 
@@ -44,7 +44,7 @@ class ChangeColumnToClientsTable extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->dropColumn("status");
+            // $table->dropColumn("status");
         });
     }
 }
