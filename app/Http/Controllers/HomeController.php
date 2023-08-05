@@ -857,7 +857,7 @@ class HomeController extends Controller
         $tasks = Order::where('organization_id', auth()->user()->organization_id)->get();
 
         foreach ($tasks as $task) {
-            $task->timestamps = false; 
+            $task->timestamps = false;
             $id = $task->id;
 
             foreach ($request->order as $order) {
@@ -867,8 +867,8 @@ class HomeController extends Controller
             }
         }
         return response()->json([
-            'message' =>  __('messages.order_sortabled_successfully')
-        ], 200);   
+            'message' => __('messages.order_sortabled_successfully')
+        ], 200);
     }
 
     public function client_order_edit($id)
@@ -1696,7 +1696,7 @@ class HomeController extends Controller
             $bot = ClientChat::where('id', $orderinfo->client_chat_id)
                 ->where('status', true)
                 ->first();
-                
+
             if ($bot) {
                 $newRate = new RateUser();
                 $newRate->user_id = auth()->user()->id;
@@ -2044,17 +2044,10 @@ class HomeController extends Controller
     {
         $str = implode(',', $request->areas);
 
-        if (RegionUser::where('user_id', Auth::user()->id)->count() == 0) {
-            $areas = new RegionUser();
-            $areas->user_id = Auth::user()->id;
-            $areas->areas = $str;
-            $areas->save();
-        } else {
-            $id = RegionUser::where('user_id', Auth::user()->id)->value('id');
-            $areas = RegionUser::find($id);
-            $areas->areas = $str;
-            $areas->save();
-        }
+        $areas = auth()->user();
+        $areas->areas = $str;
+        $areas->save();
+
         return response()->json(['message' => 'success']);
     }
 

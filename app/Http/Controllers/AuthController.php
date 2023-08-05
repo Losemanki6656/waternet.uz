@@ -124,7 +124,7 @@ class AuthController extends Controller
     public function orders(Request $request)
     {
 
-        if (RegionUser::where('user_id', Auth::user()->id)->get()->count() == 0)
+        if (!auth()->user()->areas)
             return response()->json(
                 Order::query()
                     ->where('status', 0)
@@ -138,7 +138,7 @@ class AuthController extends Controller
                     ->get()
             );
         else {
-            $str = explode(',', RegionUser::where('user_id', Auth::user()->id)->value('areas'));
+            $str = explode(',', auth()->user()->areas);
             $intareas = array_map('intval', $str);
             return response()->json(
                 Order::query()
