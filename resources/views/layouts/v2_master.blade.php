@@ -332,13 +332,6 @@
                         @endcan
 
                         <li>
-                            <a href="{{ route('traffics') }}">
-                                <i data-feather="tag"></i>
-                                <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
-                            </a>
-                        </li>
-
-                        <li>
                             <a href="{{ route('rate_users') }}">
                                 <i data-feather="star"></i>
                                 <span data-key="t-dashboard">{{ __('messages.rate_users') }}</span>
@@ -346,6 +339,13 @@
                         </li>
 
                         @can('admin')
+                            <li>
+                                <a href="{{ route('traffics') }}">
+                                    <i data-feather="tag"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
+                                </a>
+                            </li>
+
                             <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>
 
                             {{-- <li>
