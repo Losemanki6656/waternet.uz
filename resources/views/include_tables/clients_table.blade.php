@@ -519,6 +519,8 @@
     <script>
         function showModal(id) {
             localStorage.setItem('client', id);
+            $('#orderComment').val('');
+            $('#orderCount').val(0);
             $('#Neworder').modal('show');
         }
     </script>
