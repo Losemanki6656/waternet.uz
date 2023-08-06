@@ -105,12 +105,13 @@
                                     <div class="col" style="margin-top: 0px">
                                         <div class="mb-3">
                                             <label class="mb-0"> {{ __('messages.phone') }}: </label>
-                                            <input type="text" name="phone" class="form-control" id="phone_user"
-                                                required>
+                                            <input type="text" name="phone" value="{{ $user->phone }}"
+                                                class="form-control" id="phone_user" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="mb-0"> {{ __('messages.address') }}: </label>
-                                            <input type="text" name="address" class="form-control" required>
+                                            <input type="text" name="address" value="{{ $user->address }}"
+                                                class="form-control" required>
                                         </div>
                                         <div class="mt-3">
                                             <div class="row">

@@ -41,20 +41,31 @@ class UserController extends Controller
 
     public function users_admin(Request $request)
     {
-        $data = User::where('role', 4)->get();
-        $org = [];
+        // $data = User::where('role', 4)->get();
+        // $org = [];
 
-        foreach ($data as $dat) {
-            $x = $dat->organization_id;
-            if ($x != 0) {
-                $d = Organization::find($x);
-                $org[$dat->id] = $d->name;
-            }
-        }
+        // foreach ($data as $dat) {
+        //     $x = $dat->organization_id;
+        //     if ($x != 0) {
+        //         $d = Organization::find($x);
+        //         $org[$dat->id] = $d->name;
+        //     }
+        // }
 
-        return view('users.index', [
-            'data' => $data,
-            'org' => $org
+        $shops = Organization::get();
+        $users = User::query()
+            ->when(request('search'), function ($query, $search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->when(request('org_id'), function ($query, $org_id) {
+                $query->where('organization_id', $org_id);
+            })
+            ->with('organization')
+            ->paginate(request('per_page', 8));
+
+        return view('users.admin_users', [
+            'users' => $users,
+            'shops' => $shops
         ]);
     }
 
@@ -184,6 +195,8 @@ class UserController extends Controller
 
         $input = $request->all();
 
+        // dd($input);
+
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
@@ -216,12 +229,18 @@ class UserController extends Controller
 
         $us = UserOrganization::where('user_id', $id)
             ->value('id');
+
         $x = UserOrganization::find($us);
         $x->role = $request->role;
         $x->save();
 
         $user->role = $request->role;
         $user->save();
+
+        if (auth()->user()->id == 1) {
+            return redirect()->route('users_admin')
+                ->with('success', __('messages.User_updated_successfully'));
+        }
 
         return redirect()->route('users')
             ->with('success', __('messages.User_updated_successfully'));
@@ -244,43 +263,36 @@ class UserController extends Controller
 
     public function rate_users(Request $request)
     {
-        $users = RateUser::query()
-            ->whereHas('client', function ($q) {
-                $q->where('organization_id', auth()->user()->organization_id);
-            })
-            ->when(request('search'), function ($query, $search) {
-                $query->whereHas('client', function ($q) use ($search) {
-                    $q->where('fullname', 'LIKE', '%' . $search . '%');
-                })
-                ->orWhereHas('user', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', '%' . $search . '%');
-                });
-            })
-            ->when(request('data'), function ($query, $data) {
-                return $query->whereDate('created_at', $data);
-            })
-            ->where('status', true)
+        $users = RateUser::Filter()
+            ->with(['client', 'user'])
             ->paginate(request('per_page', 10));
 
-        $rateMax = RateUser::groupBy('user_id')
+        $rateMax = RateUser::Filter()
+            ->groupBy('user_id')
             ->select([DB::raw('AVG(rate) as rateMax'), 'user_id'])
             ->with(['user'])
-            ->orderBy('rateMax','desc')
+            ->orderBy('rateMax', 'desc')
             ->first();
 
-        $rateMin = RateUser::groupBy('user_id')
+        $rateMin = RateUser::Filter()
+            ->groupBy('user_id')
             ->select([DB::raw('AVG(rate) as rateMax'), 'user_id'])
             ->with(['user'])
-            ->orderBy('rateMax','asc')
+            ->orderBy('rateMax', 'asc')
             ->first();
 
-
-        // dd($rate);
+        $clientMax = RateUser::Filter()
+            ->select('client_id', DB::raw('count(*) as total'))
+            ->groupBy('client_id')
+            ->orderBy('total', 'desc')
+            ->with('client')
+            ->first();
 
         return view('rate_users.rate_users', [
             'users' => $users,
             'rateMax' => $rateMax,
-            'rateMin' => $rateMin
+            'rateMin' => $rateMin,
+            'clientMax' => $clientMax
         ]);
     }
 }

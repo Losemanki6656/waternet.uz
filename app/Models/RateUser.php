@@ -23,4 +23,24 @@ class RateUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeFilter()
+    {
+        return self::query()
+            ->whereHas('client', function ($q) {
+                $q->where('organization_id', auth()->user()->organization_id);
+            })
+            ->when(request('search'), function ($query, $search) {
+                $query->whereHas('client', function ($q) use ($search) {
+                    $q->where('fullname', 'LIKE', '%' . $search . '%');
+                })
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'LIKE', '%' . $search . '%');
+                    });
+            })
+            ->when(request('data'), function ($query, $data) {
+                return $query->whereDate('created_at', $data);
+            })
+            ->where('status', true);
+    }
 }
