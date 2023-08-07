@@ -389,30 +389,46 @@ class HomeController extends Controller
 
         $organ = auth()->user()->organization_id;
 
-        if(request('search')) {
-
+        if(!request('search')) {
+            $clients = Client::query()
+                ->where('organization_id', $organ)
+                ->when(request('search'), function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->orWhere('fullname', 'like', '%' . $search . '%')
+                            ->orWhere('phone', 'like', '%' . $search . '%')
+                            ->orWhere('address', 'like', '%' . $search . '%');
+                    });
+                })
+                ->when(request('city_id'), function ($query, $city_id) {
+                    $query->where('city_id', $city_id);
+                })
+                ->when(request('area_id'), function ($query, $area_id) {
+                    $query->where('area_id', $area_id);
+                })
+                ->with([
+                    'city',
+                    'area',
+                    'orders'
+                ])
+                ->orderBy(request('filtr', 'activated_at'), 'DESC');
+        } else {
+            $clients = Client::query()
+                ->where('organization_id', $organ)
+                ->when(request('search'), function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->orWhere('fullname', 'like', '%' . $search . '%')
+                            ->orWhere('phone', 'like', '%' . $search . '%')
+                            ->orWhere('address', 'like', '%' . $search . '%');
+                    });
+                })
+                ->with([
+                    'city',
+                    'area',
+                    'orders'
+                ])
+                ->orderBy(request('filtr', 'activated_at'), 'DESC');
         }
-        $clients = Client::query()
-            ->where('organization_id', $organ)
-            ->when(request('search'), function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->orWhere('fullname', 'like', '%' . $search . '%')
-                        ->orWhere('phone', 'like', '%' . $search . '%')
-                        ->orWhere('address', 'like', '%' . $search . '%');
-                });
-            })
-            ->when(request('city_id'), function ($query, $city_id) {
-                $query->where('city_id', $city_id);
-            })
-            ->when(request('area_id'), function ($query, $area_id) {
-                $query->where('area_id', $area_id);
-            })
-            ->with([
-                'city',
-                'area',
-                'orders'
-            ])
-            ->orderBy(request('filtr', 'activated_at'), 'DESC');
+       
 
         $sities = Sity::where('organization_id', $organ)->orderBy('sort', 'asc')->get();
 
