@@ -139,6 +139,10 @@
                         <input class="form-control" type="text" name="password" id="create_password" required>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <label class="mb-0">{{ __('messages.comment') }}:</label>
+                    <textarea name="address" class="form-control"></textarea>
+                </div>
 
                 <div class="row mb-3">
                     <div class="col">
@@ -382,15 +386,7 @@
         });
 
         $('#city_id').change(function(e) {
-            let filtr = $('#filtr').val();
-            let search = $('#search').val();
-            let city_id = $('#city_id').val();
-            let paginate_select = $('#paginate_select').val() ?? 10;
-            let page = $('#page').val() ?? 1;
-
-            let url = '{{ route('clients') }}';
-            window.location.href =
-                `${url}?search=${search}&city_id=${city_id}&page=${page}&filtr=${filtr}`;
+            myFilter();
         });
 
         $('#area_id').change(function(e) {
@@ -398,10 +394,7 @@
         });
 
         $('#paginate_select').change(function(e) {
-            let paginate_select = $('#paginate_select').val() ?? 10;
-            let url = '{{ route('update_per_page') }}';
-            window.location.href =
-                `${url}?paginate_select=${paginate_select}`;
+            myFilter();
         });
 
         $('#page').keyup(function(e) {
@@ -420,11 +413,12 @@
             let search = $('#search').val();
             let city_id = $('#city_id').val();
             let area_id = $('#area_id').val() ?? null;
-            let page = $('#page').val() ?? 1;
+            let page = 1;
+            let paginate_select = $('#paginate_select').val() ?? 10;
 
             let url = '{{ route('clients') }}';
             window.location.href =
-                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}`;
+                `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}&paginate_select=${paginate_select}`;
         }
     </script>
     <script>

@@ -228,7 +228,7 @@
         </header>
 
         <!-- ========== Left Sidebar Start ========== -->
-        <div class="vertical-menu animate__animated animate__fadeIn">
+        <div class="vertical-menu">
 
             <div data-simplebar class="h-100">
 

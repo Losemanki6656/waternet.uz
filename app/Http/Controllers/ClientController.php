@@ -609,7 +609,9 @@ class ClientController extends Controller
 
         try {
 
-            Product::find(request('id'))->delete();
+            Product::find(request('id'))->update([
+                'status' => false
+            ]);
 
             return response()->json([
                 'message' => __('messages.product_deleted_successfully')
@@ -1517,8 +1519,8 @@ class ClientController extends Controller
                 ->where('chat_id', $request->chat_id)
                 ->where('status', true)
                 ->count();
-                
-            if(!$chat) {
+
+            if (!$chat) {
                 $newinfo = new ClientChat();
                 $newinfo->client_id = $client_id;
                 $newinfo->name = $request->fullname;

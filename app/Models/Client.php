@@ -30,8 +30,19 @@ class Client extends Model
         'bonus',
         'phone',
         'phone2',
-        'activated_at'
+        'activated_at',
+        'status'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('status', function ($builder) {
+            $builder->where('status', true);
+        });
+    }
+
 
 
     protected $casts = [

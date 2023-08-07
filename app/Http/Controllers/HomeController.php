@@ -389,7 +389,7 @@ class HomeController extends Controller
 
         $organ = auth()->user()->organization_id;
 
-        if(!request('search')) {
+        if (!request('search')) {
             $clients = Client::query()
                 ->where('organization_id', $organ)
                 ->when(request('search'), function ($query, $search) {
@@ -428,7 +428,7 @@ class HomeController extends Controller
                 ])
                 ->orderBy(request('filtr', 'activated_at'), 'DESC');
         }
-       
+
 
         $sities = Sity::where('organization_id', $organ)->orderBy('sort', 'asc')->get();
 
@@ -438,6 +438,11 @@ class HomeController extends Controller
 
         $page = request('page', session('clients_page', 1));
         session(['clients_page' => $page]);
+
+        if (request('paginate_select'))
+            session([
+                'per_page' => request('paginate_select')
+            ]);
 
         return view('clients.v2_clients', [
             'clients' => $clients->paginate(session('per_page', 10), ['*'], 'page', $page),
@@ -563,18 +568,18 @@ class HomeController extends Controller
             $client->fullname = $request->fullname;
             $client->city_id = $request->city_id;
             $client->area_id = $request->area_id;
-            $client->street = $request->ulitsa ?? ' ';
+            $client->street = $request->street ?? ' ';
             $client->home_number = $request->home_number ?? ' ';
-            $client->entrance = $request->podezd ?? ' ';
-            $client->floor = $request->etaj ?? ' ';
-            $client->apartment_number = $request->kv_number ?? ' ';
+            $client->entrance = $request->apartment_number ?? ' ';
+            $client->floor = $request->entrance ?? ' ';
+            $client->apartment_number = $request->floor ?? ' ';
             $client->address = $request->address ?? '';
             $client->bonus = $request->bonus ?? '0';
             $client->balance = "0";
             $client->container = 0;
             $client->login = $request->login;
             $client->password = $request->password;
-            $client->location = $request->location ?? '';
+            $client->location = $request->location ?? '0';
             $client->activated_at = now();
             $client->phone = $request->phone1;
             $client->phone2 = $request->phone2 ?? '';
@@ -627,7 +632,9 @@ class HomeController extends Controller
 
             $organ = auth()->user()->organization_id;
 
-            Client::find($request->id)->delete();
+            Client::find($request->id)->update([
+                'status' => false
+            ]);
 
             $count = Organization::find($organ);
             $count->clients_count = $count->clients_count - 1;
@@ -700,7 +707,7 @@ class HomeController extends Controller
 
     }
 
-    public function add_order($id,Request $request)
+    public function add_order($id, Request $request)
     {
 
         try {
