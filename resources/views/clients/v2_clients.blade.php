@@ -381,16 +381,39 @@
     <script>
         $('#search').keyup(function(e) {
             if (e.keyCode == 13) {
-                myFilter();
+                let filtr = $('#filtr').val();
+                let search = $('#search').val();
+                let page = 1;
+                let paginate_select = $('#paginate_select').val() ?? 10;
+
+                let url = '{{ route('clients') }}';
+                window.location.href =
+                    `${url}?search=${search}&page=${page}&filtr=${filtr}&paginate_select=${paginate_select}`;
             }
         });
 
         $('#city_id').change(function(e) {
-            myFilter();
+            let filtr = $('#filtr').val();
+            let city_id = $('#city_id').val();
+            let area_id = $('#area_id').val() ?? null;
+            let page = 1;
+            let paginate_select = $('#paginate_select').val() ?? 10;
+
+            let url = '{{ route('clients') }}';
+            window.location.href =
+                `${url}?&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}&paginate_select=${paginate_select}`;
         });
 
         $('#area_id').change(function(e) {
-            myFilter();
+            let filtr = $('#filtr').val();
+            let city_id = $('#city_id').val();
+            let area_id = $('#area_id').val() ?? null;
+            let page = 1;
+            let paginate_select = $('#paginate_select').val() ?? 10;
+
+            let url = '{{ route('clients') }}';
+            window.location.href =
+                `${url}?&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}&paginate_select=${paginate_select}`;
         });
 
         $('#paginate_select').change(function(e) {

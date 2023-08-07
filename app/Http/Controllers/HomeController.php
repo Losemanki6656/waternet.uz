@@ -2032,7 +2032,9 @@ class HomeController extends Controller
         try {
 
             Sity::find(request('id'))->delete();
-            Area::where('city_id', request('id'))->delete();
+            Area::where('city_id', request('id'))->update([
+                'status' => false
+            ]);
 
             return response()->json([
                 'message' => 'success'
@@ -2067,7 +2069,9 @@ class HomeController extends Controller
     {
         try {
 
-            Area::find(request('id'))->delete();
+            Area::find(request('id'))->update([
+                'status' => false
+            ]);
 
             return response()->json([
                 'message' => 'success'

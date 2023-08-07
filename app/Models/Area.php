@@ -13,9 +13,18 @@ class Area extends Model
     protected $guarded = ['id'];
     protected $appends = ['check'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('status', function ($builder) {
+            $builder->where('status', true);
+        });
+    }
+
     public function region()
     {
-        return $this->belongsTo(Sity::class,'city_id');
+        return $this->belongsTo(Sity::class, 'city_id');
     }
 
     public function clients()
@@ -28,9 +37,9 @@ class Area extends Model
 
         if (auth()->check()) {
             $user = auth()->user();
-            
+
             if ($region_user = $user->regionUser) {
-                
+
                 $areas = explode(',', $region_user->areas);
                 if (in_array($this->id, $areas)) {
                     return true;
@@ -38,7 +47,7 @@ class Area extends Model
 
                 return false;
             }
-            
+
             return true;
         }
 
