@@ -185,7 +185,7 @@
                             <div class="col">
                                 <label>{{ __('messages.amount') }}:</label>
                                 <input class="form-control" type="text" id="sena_product_order_all" name="sena"
-                                    disabled @if ($products->count()) value="{{ $products[0]->price }}" @endif
+                                    readonly @if ($products->count()) value="{{ $products[0]->price }}" @endif
                                     required>
                             </div>
                             <div class="col">

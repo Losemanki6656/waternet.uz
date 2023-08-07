@@ -84,15 +84,17 @@
                                     <table class="table table-sm align-middle table-bordered table-nowrap">
                                         <thead class="table-light">
                                             <tr>
+                                                <th class="text-center fw-bold"></th>
                                                 <th class="text-center" width="60">#</th>
                                                 <th class="text-center">{{ __('messages.name') }}</th>
                                                 <th class="text-center">{{ __('messages.clients_count') }}</th>
                                                 <th class="text-center" width="100">{{ __('messages.action') }}</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="regionTable">
                                             @foreach ($regions as $region)
-                                                <tr>
+                                                <tr class="row1" data-id="{{ $region->id }}">
+                                                    <td class="text-center"><i class="fas fa-stream" style="color: blue; cursor: pointer"></i> </td>
                                                     <td class="text-center">{{ $loop->index + 1 }}</td>
                                                     <td class="text-center">
                                                         <h6>{{ $region->name }}</h6>
@@ -219,6 +221,7 @@
                                 <table class="table table-sm align-middle table-bordered table-nowrap">
                                     <thead class="table-light">
                                         <tr>
+                                            <th class="text-center"></th>
                                             <th class="text-center">#</th>
                                             <th class="text-center">{{ __('messages.region_name') }}</th>
                                             <th class="text-center">{{ __('messages.name') }}</th>
@@ -226,9 +229,10 @@
                                             <th class="text-center">{{ __('messages.action') }}</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="cityTable">
                                         @foreach ($areas as $area)
-                                            <tr>
+                                            <tr class="row2" data-id="{{ $area->id }}">
+                                                <td class="text-center"><i class="fas fa-stream" style="color: blue; cursor: pointer"></i> </td>
                                                 <td class="text-center">{{ $loop->index + 1 }}</td>
                                                 <td class="text-center">
                                                     {{ $area->region->name }}
@@ -311,6 +315,62 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+        $("#regionTable").sortable({
+            update: function(event, ui) {
+                var order = [];
+                $('tr.row1').each(function(index, element) {
+                    order.push({
+                        id: $(this).attr('data-id'),
+                        position: index + 1
+                    });
+                });
+                if(order.length) {
+                    $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ url('regions/sortable') }}",
+                    data: {
+                        order: order,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alertify.success(response.message);
+                    }
+                });
+                }
+                
+            }
+        });
+
+        $("#cityTable").sortable({
+            update: function(event, ui) {
+                var order = [];
+                $('tr.row2').each(function(index, element) {
+                    order.push({
+                        id: $(this).attr('data-id'),
+                        position: index + 1
+                    });
+                });
+                if(order.length) {
+                    $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ url('city/sortable') }}",
+                    data: {
+                        order: order,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alertify.success(response.message);
+                    }
+                });
+                }
+                
+            }
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let activeTab = localStorage.getItem('activaRegionTab') ?? 'cityTab';

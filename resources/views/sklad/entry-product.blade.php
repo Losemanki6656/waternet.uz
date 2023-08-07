@@ -245,7 +245,7 @@
                         </div>
                         <div class="tab-pane" id="take_products" role="tabpanel">
                             <button type="button" class="btn btn-primary btn-lg waves-effect waves-light"
-                                data-toggle="modal" data-target="#takprod">
+                                data-bs-toggle="modal" data-bs-target="#takprod">
                                 <i class="fa fa-plus-circle me-2"></i> {{ __('messages.take_product') }}
                             </button>
 

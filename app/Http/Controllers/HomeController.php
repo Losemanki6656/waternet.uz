@@ -389,6 +389,9 @@ class HomeController extends Controller
 
         $organ = auth()->user()->organization_id;
 
+        if(request('search')) {
+
+        }
         $clients = Client::query()
             ->where('organization_id', $organ)
             ->when(request('search'), function ($query, $search) {
@@ -411,14 +414,17 @@ class HomeController extends Controller
             ])
             ->orderBy(request('filtr', 'activated_at'), 'DESC');
 
-        $sities = Sity::where('organization_id', $organ)->get();
+        $sities = Sity::where('organization_id', $organ)->orderBy('sort', 'asc')->get();
 
-        $areas = Area::where('city_id', request('city_id', 0))->get();
+        $areas = Area::where('city_id', request('city_id', 0))->orderBy('sort', 'asc')->get();
 
         $products = Product::where('organization_id', $organ)->get();
 
+        $page = request('page', session('clients_page', 1));
+        session(['clients_page' => $page]);
+
         return view('clients.v2_clients', [
-            'clients' => $clients->paginate(session('per_page', 10)),
+            'clients' => $clients->paginate(session('per_page', 10), ['*'], 'page', $page),
             'sities' => $sities,
             'areas' => $areas,
             'products' => $products
@@ -678,17 +684,17 @@ class HomeController extends Controller
 
     }
 
-    public function add_order(Request $request)
+    public function add_order($id,Request $request)
     {
 
         try {
 
-            $order = Order::where('client_id', $request->client_id)
+            $order = Order::where('client_id', $id)
                 ->where('product_id', $request->product_id)
                 ->where('status', 0)
                 ->get();
 
-            $client = Client::find($request->client_id);
+            $client = Client::find($id);
 
             if ($order->count() > 0) {
 
@@ -703,7 +709,7 @@ class HomeController extends Controller
             $zakaz->organization_id = auth()->user()->organization_id;
             $zakaz->city_id = $client->city_id;
             $zakaz->area_id = $client->area_id;
-            $zakaz->client_id = $request->client_id;
+            $zakaz->client_id = $id;
             $zakaz->product_id = $request->product_id;
             $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
             $zakaz->product_count = $request->count;
@@ -713,16 +719,10 @@ class HomeController extends Controller
             $zakaz->user_id = auth()->user()->id;
             $zakaz->save();
 
-            return response()->json([
-                'status' => true,
-                'message' => __('messages.order_received_successfully')
-            ]);
+            return redirect()->back()->with('success', __('messages.order_received_successfully'));
 
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
@@ -855,6 +855,46 @@ class HomeController extends Controller
     {
 
         $tasks = Order::where('organization_id', auth()->user()->organization_id)->get();
+
+        foreach ($tasks as $task) {
+            $task->timestamps = false;
+            $id = $task->id;
+
+            foreach ($request->order as $order) {
+                if ($order['id'] == $id) {
+                    $task->update(['sort' => $order['position']]);
+                }
+            }
+        }
+        return response()->json([
+            'message' => __('messages.order_sortabled_successfully')
+        ], 200);
+    }
+
+    public function region_sortable(Request $request)
+    {
+
+        $tasks = Sity::where('organization_id', auth()->user()->organization_id)->get();
+
+        foreach ($tasks as $task) {
+            $task->timestamps = false;
+            $id = $task->id;
+
+            foreach ($request->order as $order) {
+                if ($order['id'] == $id) {
+                    $task->update(['sort' => $order['position']]);
+                }
+            }
+        }
+        return response()->json([
+            'message' => __('messages.order_sortabled_successfully')
+        ], 200);
+    }
+
+    public function city_sortable(Request $request)
+    {
+
+        $tasks = Area::where('organization_id', auth()->user()->organization_id)->get();
 
         foreach ($tasks as $task) {
             $task->timestamps = false;
@@ -1898,7 +1938,7 @@ class HomeController extends Controller
 
     public function regions()
     {
-        $regions = Sity::where('organization_id', auth()->user()->organization_id)->get();
+        $regions = Sity::where('organization_id', auth()->user()->organization_id)->orderBy('sort', 'asc')->get();
 
         if (request('filter')) {
 
@@ -1911,7 +1951,7 @@ class HomeController extends Controller
         } else
             $areas = Area::where('organization_id', auth()->user()->organization_id)
                 ->with('region')
-                ->orderBy('city_id', 'asc')
+                ->orderBy('sort', 'asc')
                 ->get();
 
         return view('regions', [

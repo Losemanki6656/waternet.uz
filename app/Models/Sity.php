@@ -9,6 +9,7 @@ class Sity extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     public function clients()
     {
         return $this->hasMany(Client::class,'city_id');

@@ -116,7 +116,7 @@
                                         class="fa fa-shopping-cart"></i></a>
                             @else
                                 <button type="button" class="btn btn-soft-success waves-effect waves-light"
-                                    id="orderButton{{ $client->id }}" onclick="showModal({{ $client->id }})"><i
+                                    data-bs-target="#newOrder{{ $client->id }}" data-bs-toggle="modal"><i
                                         class="fa fa-shopping-cart"></i></button>
                             @endif
 
@@ -371,58 +371,63 @@
                             </form>
                         </div>
                     </div>
-                @endforeach
 
+                    <div id="newOrder{{ $client->id }}" class="modal fade" tabindex="-1"
+                        aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                        <div class="modal-dialog modal-dialog-centered modal-rounded">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="myModalLabel">{{ __('messages.take_order') }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <form action="{{route('add_order',['id' => $client->id])}}" method="post">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label>{{ __('messages.product_name') }}:</label>
+                                            <select class="form-select" id="prod_sel_new_order" name="product_id" onchange="onsel()"
+                                                required>
+                                                @foreach ($products as $product)
+                                                    <option data-amount="{{ $product->price }}"
+                                                        value={{ $product->id }}>
+                                                        {{ $product->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label>{{ __('messages.amount') }}:</label>
+                                                <input class="form-control" type="text" name="sena"
+                                                    @if ($products->count()) value="{{ $products[0]->price }}" @endif
+                                                    required>
+                                            </div>
+                                            <div class="col">
+                                                <label>{{ __('messages.count') }}:</label>
+                                                <input class="form-control" type="number" value="0" name="count"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>{{ __('messages.comment') }}:</label>
+                                            <textarea class="form-control" name="izoh" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                            data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                            {{ __('messages.cancel') }}</button>
+                                        <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"> <i class="fa fa-save me-2"></i>
+                                            {{ __('messages.save') }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </tbody>
         </table>
-    </div>
-
-    <div id="Neworder" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-        data-bs-scroll="true">
-        <div class="modal-dialog modal-dialog-centered modal-rounded">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">{{ __('messages.take_order') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label>{{ __('messages.product_name') }}:</label>
-                        <select class="form-select" id="prod_sel_new_order" onchange="onsel()" required>
-                            @foreach ($products as $product)
-                                <option data-amount="{{ $product->price }}" value={{ $product->id }}>
-                                    {{ $product->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label>{{ __('messages.amount') }}:</label>
-                            <input class="form-control" type="text" id="sena_product_order"
-                                @if ($products->count()) value="{{ $products[0]->price }}" @endif required>
-                        </div>
-                        <div class="col">
-                            <label>{{ __('messages.count') }}:</label>
-                            <input class="form-control" type="number" id="orderCount" value="0"
-                                name="count" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label>{{ __('messages.comment') }}:</label>
-                        <textarea class="form-control" name="izoh" id="orderComment" rows="2"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
-                        data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
-                        {{ __('messages.cancel') }}</button>
-                    <button class="btn btn-success btn-lg waves-effect waves-light" type="button"
-                        onclick="TakeOrder()"> <i class="fa fa-save me-2"></i>
-                        {{ __('messages.save') }}</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewLocation" aria-labelledby="offcanvasBottomLabel"
@@ -447,7 +452,7 @@
 @endif
 
 @push('scripts')
-    <script>
+    {{-- <script>
         $("#orderCount").keyup(function(event) {
             if (event.keyCode === 13) {
                 TakeOrder();
@@ -458,7 +463,7 @@
                 TakeOrder();
             }
         });
-    </script>
+    </script> --}}
     <script>
         function addLocation() {
             let location = $('#locationInput').val();
@@ -524,7 +529,7 @@
             $('#Neworder').modal('show');
         }
     </script>
-    <script>
+    {{-- <script>
         function TakeOrder() {
             let product_id = $('#prod_sel_new_order').val();
             let sena = $('#sena_product_order').val();
@@ -554,7 +559,7 @@
                 }
             });
         }
-    </script>
+    </script> --}}
     <script>
         function onsel() {
             const $this = $("#prod_sel_new_order");

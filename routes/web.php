@@ -85,7 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/results-export', [App\Http\Controllers\HomeController::class, 'export_results'])->name('export_results');
 
-    Route::post('/add-order', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
+    Route::post('/add-order/{id}', [App\Http\Controllers\HomeController::class, 'add_order'])->name('add_order');
     Route::post('/add-order-check', [App\Http\Controllers\HomeController::class, 'add_order_check'])->name('add_order_check');
 
     Route::post('/delete-Order', [App\Http\Controllers\HomeController::class, 'delete_Order'])->name('delete_Order');
@@ -114,6 +114,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/regions/regions', [App\Http\Controllers\HomeController::class, 'regions'])->name('regions');
     Route::get('/regions/cities', [App\Http\Controllers\HomeController::class, 'cities'])->name('cities');
+    Route::post('/regions/sortable', [App\Http\Controllers\HomeController::class, 'region_sortable'])->name('region_sortable');
+    Route::post('/city/sortable', [App\Http\Controllers\HomeController::class, 'city_sortable'])->name('city_sortable');
     Route::post('/regions/edit-region/{id}', [App\Http\Controllers\HomeController::class, 'edit_region'])->name('edit_region');
     Route::post('/regions/delete-region', [App\Http\Controllers\HomeController::class, 'delete_region'])->name('delete_region');
     Route::post('/regions/edit-city/{id}', [App\Http\Controllers\HomeController::class, 'edit_city'])->name('edit_city');

@@ -10,6 +10,7 @@ class Area extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     protected $appends = ['check'];
 
     public function region()
