@@ -31,9 +31,7 @@
         document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || n("body").removeClass("fullscreen-enable")
     }
     n("#side-menu").metisMenu(), i(), e = document.body.getAttribute("data-sidebar-size"),
-        n("#vertical-menu-btn").on("click", function (t) {
-            t.preventDefault(), n("body").toggleClass("sidebar-enable"), 992 <= n(window).width() && (null == e ? null == document.body.getAttribute("data-sidebar-size") || "lg" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "lg") : "md" == e ? "md" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "sm") : document.body.setAttribute("data-sidebar-size", "md") : "sm" == document.body.getAttribute("data-sidebar-size") ? document.body.setAttribute("data-sidebar-size", "lg") : document.body.setAttribute("data-sidebar-size", "sm"))
-        }), n("#sidebar-menu a").each(function () {
+        n("#sidebar-menu a").each(function () {
             var t = window.location.href.split(/[?#]/)[0];
             this.href == t && (n(this).addClass("active"), n(this).parent().addClass("mm-active"), n(this).parent().parent().addClass("mm-show"), n(this).parent().parent().prev().addClass("mm-active"), n(this).parent().parent().parent().addClass("mm-active"), n(this).parent().parent().parent().parent().addClass("mm-show"), n(this).parent().parent().parent().parent().parent().addClass("mm-active"))
         }), n(document).ready(function () {

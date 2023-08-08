@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Auth;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,15 +17,18 @@ class OrganizationActivate
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = auth()->user();
 
-        if ($user->organization->date_traffic > now()) {
-            return $next($request);
-        } else {
-            abort(403, 'Wrong Accept Header');
-            // return redirect()->route('coming_son');
+        if (Auth::check()) {
+            $user = auth()->user();
+            if ($user->organization->date_traffic > now()) {
+                return $next($request);
+            } else {
+                Auth::logout();
+                abort(403, 'Wrong Accept Header');
+            }
         }
 
+        return $next($request);
 
     }
 }
