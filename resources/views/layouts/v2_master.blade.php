@@ -583,19 +583,6 @@
     <div class="rightbar-overlay"></div>
 
     <script>
-        if (window.innerWidth <= 767) {
-            document.getElementById("bodyAttr").setAttribute("class", "pace-done");
-            document.getElementById("bodyAttr").setAttribute("data-sidebar-size", 'sm');
-            localStorage.setItem('data_sidebar_size', 'sm');
-            localStorage.setItem('body_class', 'pace-done');
-        } else {
-            let x = localStorage.getItem('data_sidebar_size') ?? 'lg';
-            document.getElementById("bodyAttr").setAttribute("data-sidebar-size", x);
-            let cat = localStorage.getItem('body_class') ?? 'pace-done sidebar-enable';
-            document.getElementById("bodyAttr").setAttribute("class", cat);
-
-        }
-
         let y = localStorage.getItem('data_bs_theme') ?? '';
         if (y == "light") document.getElementById("bodyAttr").setAttribute("data-bs-theme", '');
         else document.getElementById("bodyAttr").setAttribute("data-bs-theme", y);
@@ -608,6 +595,18 @@
 
         let q = localStorage.getItem('topBar') ?? 'dark';
         document.getElementById("bodyAttr").setAttribute("data-topbar", q);
+
+        if (window.innerWidth <= 767) {
+            document.getElementById("bodyAttr").setAttribute("class", "pace-done");
+            document.getElementById("bodyAttr").setAttribute("data-sidebar-size", 'sm');
+            localStorage.setItem('data_sidebar_size', 'sm');
+            localStorage.setItem('body_class', 'pace-done');
+        } else {
+            let x = localStorage.getItem('data_sidebar_size') ?? 'lg';
+            document.getElementById("bodyAttr").setAttribute("data-sidebar-size", x);
+            let cat = localStorage.getItem('body_class') ?? 'pace-done sidebar-enable';
+            document.getElementById("bodyAttr").setAttribute("class", cat);
+        }
     </script>
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
