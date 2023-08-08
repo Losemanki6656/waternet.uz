@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 class RateUserController extends Controller
 {
 
+    public function coming_son()
+    {
+        return view('comins_son');
+    }
+
+
     public function index()
     {
         $rates = RateUser::where('status', false);
@@ -78,8 +84,9 @@ class RateUserController extends Controller
 
         $callback = explode('_', $request->callback);
 
-        $comment = request('comment'); 
-        if($comment == 'No comment') $comment = '';
+        $comment = request('comment');
+        if ($comment == 'No comment')
+            $comment = '';
 
         $rates = RateUser::find($callback[3]);
         $rates->rate = $callback[2];

@@ -31,6 +31,7 @@ Route::get('/search/areas', [App\Http\Controllers\HomeController::class, 'search
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/privace', [App\Http\Controllers\TrafficController::class, 'politica'])->name('politica');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/coming-son', [App\Http\Controllers\RateUserController::class, 'coming_son'])->name('coming_son');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('roles', RoleController::class);

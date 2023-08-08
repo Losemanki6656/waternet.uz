@@ -38,10 +38,10 @@ class Area extends Model
         if (auth()->check()) {
             $user = auth()->user();
 
-            if ($region_user = $user->regionUser) {
+            if ($areas = $user->areas) {
 
-                $areas = explode(',', $region_user->areas);
-                if (in_array($this->id, $areas)) {
+                $areasArr = explode(',', $areas);
+                if (in_array($this->id, $areasArr)) {
                     return true;
                 }
 

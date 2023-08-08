@@ -666,7 +666,8 @@
                 var a = e[i];
                 new Choices(a, {
                     // placeholderValue: "This is a placeholder set in the config",
-                    searchPlaceholderValue: "{{ __('messages.search') }}"
+                    searchPlaceholderValue: "{{ __('messages.search') }}",
+                    shouldSort: false,
                 })
             }
             userData();

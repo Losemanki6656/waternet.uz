@@ -50,6 +50,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
+
     public function dashboard()
     {
         $date1 = now();
@@ -433,6 +434,8 @@ class HomeController extends Controller
         $sities = Sity::where('organization_id', $organ)->orderBy('sort', 'asc')->get();
 
         $areas = Area::where('city_id', request('city_id', 0))->orderBy('sort', 'asc')->get();
+
+        // dd($sities);
 
         $products = Product::where('organization_id', $organ)->get();
 
