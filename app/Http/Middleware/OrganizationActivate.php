@@ -21,8 +21,8 @@ class OrganizationActivate
         if ($user->organization->date_traffic > now()) {
             return $next($request);
         } else {
-
-            return redirect()->route('coming_son');
+            abort(403, 'Wrong Accept Header');
+            // return redirect()->route('coming_son');
         }
 
 
