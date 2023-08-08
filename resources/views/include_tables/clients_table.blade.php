@@ -136,6 +136,7 @@
                                             class="fa fa-download me-2 text-dark"></i>
                                         {{ __('messages.back_container') }}</a>
                                     <a class="dropdown-item" href="#" data-bs-toggle="offcanvas"
+                                        onclick="updateClient({{ $client->id }}, {{ $client->city_id }}, {{ $client->area_id }})"
                                         data-bs-target="#update{{ $client->id }}"
                                         aria-controls="offcanvasBottom"><i class="fa fa-edit me-2"></i>
                                         {{ __('messages.update') }}</a>
@@ -283,6 +284,7 @@
                                         <label class="mb-0">{{ __('messages.select_city') }}:</label>
                                         <select class="form-select" name="area_id"
                                             id="edit_area_id{{ $client->id }}">
+
                                             <option value="{{ $client->area_id }}">{{ $client->area->name }}
                                             </option>
                                         </select>
@@ -381,13 +383,13 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('add_order',['id' => $client->id])}}" method="post">
+                                <form action="{{ route('add_order', ['id' => $client->id]) }}" method="post">
                                     @csrf
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label>{{ __('messages.product_name') }}:</label>
-                                            <select class="form-select" id="prod_sel_new_order" name="product_id" onchange="onsel()"
-                                                required>
+                                            <select class="form-select" id="prod_sel_new_order" name="product_id"
+                                                onchange="onsel()" required>
                                                 @foreach ($products as $product)
                                                     <option data-amount="{{ $product->price }}"
                                                         value={{ $product->id }}>
@@ -405,8 +407,8 @@
                                             </div>
                                             <div class="col">
                                                 <label>{{ __('messages.count') }}:</label>
-                                                <input class="form-control" type="number" value="0" name="count"
-                                                    required>
+                                                <input class="form-control" type="number" value="0"
+                                                    name="count" required>
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -415,10 +417,12 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                        <button type="button"
+                                            class="btn btn-secondary btn-lg waves-effect waves-light"
                                             data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
                                             {{ __('messages.cancel') }}</button>
-                                        <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"> <i class="fa fa-save me-2"></i>
+                                        <button class="btn btn-success btn-lg waves-effect waves-light"
+                                            type="submit"> <i class="fa fa-save me-2"></i>
                                             {{ __('messages.save') }}</button>
                                     </div>
                                 </form>
@@ -565,6 +569,33 @@
             const $this = $("#prod_sel_new_order");
             const dataVal = $this.find(':selected').data('amount');
             $('#sena_product_order').val(dataVal);
+        }
+    </script>
+    <script>
+        function updateClient(id, region, area) {
+            $.ajax({
+                url: "{{ route('search_areas') }}",
+                method: "GET",
+                data: {
+                    region_id: region
+                },
+                success: function(res) {
+                    console.log(res);
+                    var $area = $('#edit_area_id' + id);
+                    $area.empty();
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i].id == area) {
+                            $area.append('<option value=' + res[i]
+                                .id + ' selected>' + res[i].name + '</option>');
+                        } else {
+                            $area.append('<option value=' + res[i]
+                                .id + '>' + res[i].name + '</option>');
+                        }
+
+                    }
+                    $area.change();
+                }
+            });
         }
     </script>
     <script>

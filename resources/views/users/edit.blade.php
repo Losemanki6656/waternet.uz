@@ -106,12 +106,12 @@
                                         <div class="mb-3">
                                             <label class="mb-0"> {{ __('messages.phone') }}: </label>
                                             <input type="text" name="phone" value="{{ $user->phone }}"
-                                                class="form-control" id="phone_user" required>
+                                                class="form-control" id="phone_user">
                                         </div>
                                         <div class="mb-3">
                                             <label class="mb-0"> {{ __('messages.address') }}: </label>
                                             <input type="text" name="address" value="{{ $user->address }}"
-                                                class="form-control" required>
+                                                class="form-control">
                                         </div>
                                         <div class="mt-3">
                                             <div class="row">
