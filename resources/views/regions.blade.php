@@ -94,7 +94,8 @@
                                         <tbody id="regionTable">
                                             @foreach ($regions as $region)
                                                 <tr class="row1" data-id="{{ $region->id }}">
-                                                    <td class="text-center"><i class="fas fa-stream" style="color: blue; cursor: pointer"></i> </td>
+                                                    <td class="text-center"><i class="fas fa-stream"
+                                                            style="color: blue; cursor: pointer"></i> </td>
                                                     <td class="text-center">{{ $loop->index + 1 }}</td>
                                                     <td class="text-center">
                                                         <h6>{{ $region->name }}</h6>
@@ -232,7 +233,8 @@
                                     <tbody id="cityTable">
                                         @foreach ($areas as $area)
                                             <tr class="row2" data-id="{{ $area->id }}">
-                                                <td class="text-center"><i class="fas fa-stream" style="color: blue; cursor: pointer"></i> </td>
+                                                <td class="text-center"><i class="fas fa-stream"
+                                                        style="color: blue; cursor: pointer"></i> </td>
                                                 <td class="text-center">{{ $loop->index + 1 }}</td>
                                                 <td class="text-center">
                                                     {{ $area->region->name }}
@@ -272,10 +274,13 @@
                                                                 <div class="mb-3">
                                                                     <label
                                                                         class="mb-0">{{ __('messages.regions') }}:</label>
-                                                                    <select class="form-control" name="sity_id">
+                                                                    <select class="form-select" name="sity_id">
                                                                         @foreach ($regions as $region)
-                                                                            <option value="{{ $region->id }}">
-                                                                                {{ $region->name }}</option>
+                                                                            <option
+                                                                                value="{{ $region->id }}"@if ($area->city_id == $region->id) selected @endif>
+
+                                                                                {{ $region->name }}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -315,7 +320,7 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script>
         $("#regionTable").sortable({
             update: function(event, ui) {
@@ -326,21 +331,21 @@
                         position: index + 1
                     });
                 });
-                if(order.length) {
+                if (order.length) {
                     $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "{{ url('regions/sortable') }}",
-                    data: {
-                        order: order,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        alertify.success(response.message);
-                    }
-                });
+                        type: "POST",
+                        dataType: "json",
+                        url: "{{ url('regions/sortable') }}",
+                        data: {
+                            order: order,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            alertify.success(response.message);
+                        }
+                    });
                 }
-                
+
             }
         });
 
@@ -353,21 +358,21 @@
                         position: index + 1
                     });
                 });
-                if(order.length) {
+                if (order.length) {
                     $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "{{ url('city/sortable') }}",
-                    data: {
-                        order: order,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        alertify.success(response.message);
-                    }
-                });
+                        type: "POST",
+                        dataType: "json",
+                        url: "{{ url('city/sortable') }}",
+                        data: {
+                            order: order,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            alertify.success(response.message);
+                        }
+                    });
                 }
-                
+
             }
         });
     </script>
