@@ -2060,6 +2060,14 @@ class HomeController extends Controller
             $sity->name = $request->area_name;
             $sity->save();
 
+            Client::where('area_id', $id)->update([
+                'city_id' => $request->sity_id
+            ]);
+
+            Order::where('area_id', $id)->update([
+                'city_id' => $request->sity_id
+            ]);
+
             return redirect()->back()->with('success', __('messages.city_updated_successfully'));
 
         } catch (\Exception $e) {
