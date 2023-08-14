@@ -458,4 +458,15 @@
                 `${url}?search=${search}&city_id=${city_id}&area_id=${area_id}&page=${page}&filtr=${filtr}`;
         }
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var scrollpos = localStorage.getItem("scrollpos");
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
+
+        window.onscroll = function(e) {
+            localStorage.setItem("scrollpos", window.scrollY);
+        };
+    </script>
 @endsection
