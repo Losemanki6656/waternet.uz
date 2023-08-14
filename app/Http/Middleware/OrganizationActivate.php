@@ -20,11 +20,13 @@ class OrganizationActivate
 
         if (Auth::check()) {
             $user = auth()->user();
-            if ($user->organization->date_traffic > now()) {
-                return $next($request);
-            } else {
-                Auth::logout();
-                abort(403, 'Wrong Accept Header');
+            if ($user->id != 1) {
+                if ($user->organization->date_traffic > now()) {
+                    return $next($request);
+                } else {
+                    Auth::logout();
+                    abort(403, 'Wrong Accept Header');
+                }
             }
         }
 
