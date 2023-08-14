@@ -627,7 +627,6 @@
     <!-- apexcharts js -->
     <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/allchart.js') }}"></script>
-    {{-- <script src="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> --}}
     <script src="{{ asset('assets/leaflet/leaflet.js') }}"></script>
 
     <script>
@@ -677,7 +676,6 @@
                 })
             }
             userData();
-
         });
 
         document.getElementById('vertical-menu-btn').onclick = function() {
