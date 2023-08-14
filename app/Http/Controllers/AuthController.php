@@ -134,8 +134,13 @@ class AuthController extends Controller
                     ->when(request('area_id'), function ($query, $area_id) {
                         return $query->where('area_id', $area_id);
                     })
+                    ->when(request('search'), function ($query, $search) {
+                        $query->whereHas('client', function ($q) use ($search) {
+                            $q->where('fullname', 'like', '%' . $search . '%');
+                        });
+                    })
                     ->orderBy('sort', 'asc')
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('created_at', 'asc')
                     ->get()
             );
         else {
@@ -151,8 +156,13 @@ class AuthController extends Controller
                     ->when(request('area_id'), function ($query, $area_id) {
                         return $query->where('area_id', $area_id);
                     })
+                    ->when(request('search'), function ($query, $search) {
+                        $query->whereHas('client', function ($q) use ($search) {
+                            $q->where('fullname', 'like', '%' . $search . '%');
+                        });
+                    })
                     ->orderBy('sort', 'asc')
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('created_at', 'asc')
                     ->get()
             );
         }

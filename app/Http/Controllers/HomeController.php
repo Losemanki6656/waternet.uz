@@ -860,7 +860,7 @@ class HomeController extends Controller
                 return $query->where('area_id', $area_id);
             })
             ->orderBy('sort', 'asc')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'asc');
 
         $sities = Sity::where('organization_id', $organ)->get();
         $areas = Area::where('city_id', request('city_id', 0))->get();
