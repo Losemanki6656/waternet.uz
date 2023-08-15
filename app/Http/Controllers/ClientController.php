@@ -1308,6 +1308,12 @@ class ClientController extends Controller
             ], 422);
         }
 
+        if($request->product_id == 0) {
+            return response()->json([
+                'message' => 'Iltimos buyurtma berilayotgan mahsulotni tanlang!'
+            ], 422);
+        }
+
         $client = Client::find($request->client_id);
         $product = Product::findOrFail($request->product_id);
 

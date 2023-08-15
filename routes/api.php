@@ -58,7 +58,7 @@ Route::post('/client/registration/{client_id}', [ClientController::class, 'regis
 Route::get('/client/client-info', [ClientController::class, 'client_info']);
 Route::get('/client/products', [ClientController::class, 'client_products']);
 
-// Route::get('/client/add-order', [ClientController::class, 'client_add_order']);
+//Route::get('/client/add-order', [ClientController::class, 'client_add_order']);
 Route::post('/client/create/order', [ClientController::class, 'client_add_order']);
 Route::put('/client/order/update', [ClientController::class, 'client_order_edit']);
 Route::delete('/client/order/delete', [ClientController::class, 'client_order_delete']);
@@ -79,6 +79,8 @@ Route::get('/client/carts/cart', [TrafficController::class, 'cart_photo']);
 Route::get('/client-profile', [TrafficController::class, 'client_profile']);
 
 Route::get('/client/order-rates', [RateUserController::class, 'index']);
+
+Route::delete('/client/telegram/delete/{chat_id}', [RateUserController::class, 'delete_client']);
 
 Route::put('/client/order-rates/{client_id}/update', [RateUserController::class, 'update']);
 

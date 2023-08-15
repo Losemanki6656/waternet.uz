@@ -98,4 +98,16 @@ class RateUserController extends Controller
             'message' => 'Бизнинг хизматдан фойдаланганингиз учун рахмат!'
         ]);
     }
+
+    public  function  delete_client($chat_id)
+    {
+        ClientChat::where('chat_id', $chat_id)
+            ->update([
+                'status' => false
+            ]);
+
+        return response()->json([
+            'message' => 'Deleted Successfully!'
+        ]);
+    }
 }
