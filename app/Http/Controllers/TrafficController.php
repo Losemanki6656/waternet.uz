@@ -47,6 +47,7 @@ class TrafficController extends Controller
 
         $sname = 'organizations';
 
+
         return view('administration.organizations', [
             'organizations' => $organizations,
             'traffics' => $traffics,
@@ -57,12 +58,20 @@ class TrafficController extends Controller
 
     public function traffics()
     {
-        $traffics = Traffic::all();
+        if (auth()->user()->id == 1) {
+            $month_traffics = Traffic::where('type_traffic', 'month')->get();
+            $year_traffics = Traffic::where('type_traffic', 'year')->get();
+        } else {
+            $month_traffics = Traffic::where('type_traffic', 'month')->where('del_status', true)->get();
+            $year_traffics = Traffic::where('type_traffic', 'year')->where('del_status', true)->get();
+        }
 
-
+        $traffic = auth()->user()->organization->traffic->id ?? 0;
 
         return view('traffics', [
-            'traffics' => $traffics
+            'year_traffics' => $year_traffics,
+            'month_traffics' => $month_traffics,
+            'traffic' => $traffic
         ]);
 
     }
@@ -78,11 +87,12 @@ class TrafficController extends Controller
         $traffic->products_count = $request->products_count;
         $traffic->users_count = $request->users_count;
         $traffic->status = $request->status;
-        $traffic->style1 = $request->style1 ?? 'pricing body good-grp';
-        $traffic->style2 = $request->style2 ?? 'pricing-plan personal';
+        $traffic->type_traffic = $request->type_traffic;
+        $traffic->style1 = $request->style1 ?? '';
+        $traffic->style2 = $request->style2 ?? '';
         $traffic->save();
 
-        return redirect()->back()->with('msg', 'success');
+        return redirect()->back()->with('success', __('messages.added_successful'));
     }
 
     public function edit_traffic(Request $request, $id)
@@ -96,11 +106,12 @@ class TrafficController extends Controller
         $traffic->products_count = $request->products_count;
         $traffic->users_count = $request->users_count;
         $traffic->status = $request->status;
-        $traffic->style1 = $request->style1 ?? 'pricing body good-grp';
-        $traffic->style2 = $request->style2 ?? 'pricing-plan personal';
+        $traffic->type_traffic = $request->type_traffic;
+        $traffic->style1 = $request->style1 ?? '';
+        $traffic->style2 = $request->style2 ?? '';
         $traffic->save();
 
-        return redirect()->back()->with('msg', 'success');
+        return redirect()->back()->with('success', __('messages.updated_successful'));
     }
 
     public function add_organization(Request $request)
@@ -407,6 +418,22 @@ class TrafficController extends Controller
             return response()->json([
                 'message' => $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function delete_traffic(Request $request)
+    {
+        try {
+
+            $Traffic = Traffic::find($request->id);
+            $Traffic->del_status = false;
+            $Traffic->save();
+
+            return redirect()->back()->with('success', __('messages.traffic_deleted_successfully'));
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('success', $e->getMessage());
         }
     }
 

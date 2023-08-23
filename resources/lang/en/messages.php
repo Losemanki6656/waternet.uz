@@ -301,4 +301,11 @@ return [
     'month' => "Month",
     'traffic_edited_successfully' => "Traffic Edited Successfully!",
     'new_traffic_added_successfully' => "New Traffic Added Successfully!",
+    'year' => "Year",
+    'reklama_for_telegram' => "Promotional post",
+    "bezlimitniy_telegram_posts" => "Unlimited post for telegram",
+    'selected' => "Select Traffic",
+    'annotation' => "Annotation",
+    'reklama_count' => "Promotional post",
+    'category' => "Category",
 ];

@@ -1,853 +1,612 @@
 @extends('layouts.v2_master')
 @section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">{{ __('messages.traffics') }}</h4>
 
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0 font-size-18">{{ __('messages.traffics') }}</h4>
-
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.traffics') }}</li>
-                </ol>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- end page title -->
-
-<div class="row">
-    <div class="col-lg-12">
-
-        <div class="text-center mb-4">
-            <ul class="nav nav-pills card justify-content-center d-inline-block shadow py-1 px-2"
-                id="pills-tab" role="tablist">
-                <li class="nav-item d-inline-block">
-                    <a class="nav-link px-3 rounded active monthly" id="Monthly"
-                        data-bs-toggle="pill" href="#month" role="tab" aria-controls="Month"
-                        aria-selected="true">Monthly</a>
-                </li>
-                <li class="nav-item d-inline-block">
-                    <a class="nav-link px-3 rounded yearly" id="Yearly" data-bs-toggle="pill"
-                        href="#year" role="tab" aria-controls="Year" aria-selected="false">Yearly
-                        <span class="badge bg-success rounded text-white">20% Off </span></a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade active show" id="month" role="tabpanel"
-                aria-labelledby="monthly">
-                <div class="row">
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="card mb-xl-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Starter</h5>
-                                    <h1 class="mt-3">$29 <span
-                                            class="text-muted font-size-16 fw-medium">/ Month</span>
-                                    </h1>
-                                    <p class="text-muted mt-3 font-size-15">For small teams trying
-                                        out Dason for an unlimited
-                                        period of time</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="card mb-xl-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Professional</h5>
-                                    <h1 class="mt-3">$49 <span
-                                            class="text-muted font-size-16 fw-medium">/ Month</span>
-                                    </h1>
-                                    <p class="text-muted mt-3 font-size-15">For larger businesses or
-                                        those with onal administration needs</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="card bg-primary mb-xl-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <div class="pricing-badge">
-                                        <span class="badge">Featured</span>
-                                    </div>
-                                    <h5 class="font-size-16 text-white">Enterprise</h5>
-                                    <h1 class="mt-3 text-white">$79 <span
-                                            class="text-white font-size-16 fw-medium">/ Month</span>
-                                    </h1>
-                                    <p class="text-white-50 mt-3 font-size-15">For extra large
-                                        businesses or those in regulated industries</p>
-                                    <div class="mt-4 pt-2 text-white">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-white font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-light w-100">Choose Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Unlimited</h5>
-                                    <h1 class="mt-3">$99 <span
-                                            class="text-muted font-size-16 fw-medium">/ Month</span>
-                                    </h1>
-                                    <p class="text-muted mt-3 font-size-15">For small teams trying
-                                        out Dason for an unlimited
-                                        period of time</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item active">{{ __('messages.traffics') }}</li>
+                    </ol>
                 </div>
-                <!-- end row -->
-            </div>
-            <!-- end tab pane -->
-            <div class="tab-pane fade" id="year" role="tabpanel" aria-labelledby="yearly">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Starter</h5>
-                                    <h1 class="mt-3">$129 <span
-                                            class="text-muted font-size-16 fw-medium">/
-                                            Yearly</span></h1>
-                                    <p class="text-muted mt-3 font-size-15">For small teams trying
-                                        out Dason for an unlimited
-                                        period of time</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
 
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-lg-3">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Professional</h5>
-                                    <h1 class="mt-3">$149 <span
-                                            class="text-muted font-size-16 fw-medium">/
-                                            Yearly</span></h1>
-                                    <p class="text-muted mt-3 font-size-15">For larger businesses or
-                                        those with onal administration needs</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-lg-3">
-                        <div class="card bg-primary mb-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <div class="pricing-badge">
-                                        <span class="badge">Featured</span>
-                                    </div>
-                                    <h5 class="font-size-16 text-white">Enterprise</h5>
-                                    <h1 class="mt-3 text-white">$179 <span
-                                            class="text-white font-size-16 fw-medium">/
-                                            Yearly</span></h1>
-                                    <p class="text-white-50 mt-3 font-size-15">For extra large
-                                        businesses or those in regulated industries</p>
-                                    <div class="mt-4 pt-2 text-white">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-light font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-light w-100">Choose Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-lg-3">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="p-2">
-                                    <h5 class="font-size-16">Unlimited</h5>
-                                    <h1 class="mt-3">$199 <span
-                                            class="text-muted font-size-16 fw-medium">/
-                                            Yearly</span></h1>
-                                    <p class="text-muted mt-3 font-size-15">For small teams trying
-                                        out Dason for an unlimited
-                                        period of time</p>
-                                    <div class="mt-4 pt-2 text-muted">
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Verifide
-                                            work and
-                                            reviews</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Project
-                                            tracking
-                                        </p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Dedicated
-                                            Ac managers</p>
-                                        <p class="mb-3 font-size-15"><i
-                                                class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>Unlimited
-                                            proposals</p>
-                                    </div>
-
-                                    <div class="mt-4 pt-2">
-                                        <a href="" class="btn btn-outline-primary w-100">Choose
-                                            Plan</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card body -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-                </div>
-            </div>
-            <!-- end tab pane -->
-        </div>
-        <!-- end tab content -->
-    </div>
-    <!-- end col -->
-</div>
-<!-- end row -->
-
-
-
-<div class="row my-5">
-    <div class="col-xl-12">
-        <div class="text-center">
-            <h4 class="card-title font-size-18">Project Plans</h4>
-            <p class="card-title-desc mb-4 pb-2">Call to action pricing table is really crucial to
-                your for your business website.
-                Make your bids stand-out with amazing options.
-            </p>
-        </div>
-        <div class="row">
-            <div class="col-xl-3">
-                <div class="nav flex-column nav-pills pricing-tab-box" id="v-pills-tab"
-                    role="tablist" aria-orientation="vertical">
-                    <a class="nav-link box-shadow mb-3 active" id="v-pills-tab-one"
-                        data-bs-toggle="pill" href="#v-price-one" role="tab"
-                        aria-controls="v-price-one" aria-selected="true">
-                        <div class="d-flex align-items-center">
-                            <i class="bx bx-circle h3 mb-0 me-4"></i>
-                            <div class="flex-1">
-                                <h2 class="fw-medium">$29 <span class="text-muted font-size-15">/
-                                        Month Plans</span></h2>
-                                <p class="fw-normal mb-0 text-muted pt-1">For small teams trying out
-                                    Dason for an unlimited period of time</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a class="nav-link box-shadow mb-3" id="v-pills-tab-two" data-bs-toggle="pill"
-                        href="#v-price-two" role="tab" aria-controls="v-price-two"
-                        aria-selected="false">
-                        <div class="d-flex align-items-center">
-                            <i class="bx bx-circle h3 mb-0 me-4"></i>
-                            <div class="flex-1">
-                                <h2 class="fw-medium">$79 <span class="text-muted font-size-15">/
-                                        Month Plans</span></h2>
-                                <p class="fw-normal mb-0 text-muted pt-1">For larger businesses or
-                                    those with onal administration needs</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a class="nav-link box-shadow" id="v-pills-tab-three" data-bs-toggle="pill"
-                        href="#v-price-three" role="tab" aria-controls="v-price-three"
-                        aria-selected="false">
-                        <div class="d-flex align-items-center">
-                            <i class="bx bx-circle h3 mb-0 me-4"></i>
-                            <div class="flex-1">
-                                <h2 class="fw-medium">$99 <span class="text-muted font-size-15">/
-                                        Month Plans</span></h2>
-                                <p class="fw-normal mb-0 text-muted pt-1">For extra large businesses
-                                    or those in regulated industries</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-xl-9">
-                <div class="tab-content text-muted mt-4 mt-xl-0" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" id="v-price-one" role="tabpanel"
-                        aria-labelledby="v-pills-tab-one">
-                        <div class="table-responsive text-center pricing-table-bg">
-                            <table class="table table-bordered mb-0 table-centered align-middle">
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">3 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">6 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Year</h5>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Users</th>
-                                        <td>1</td>
-                                        <td>3</td>
-                                        <td>5</td>
-                                        <td>7</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Storage</th>
-                                        <td>1 GB</td>
-                                        <td>10 GB</td>
-                                        <td>20 GB</td>
-                                        <td>40 GB</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Domain</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>4</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Hidden Fees</th>
-                                        <td>Yes</td>
-                                        <td>Yes</td>
-                                        <td>No</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Support</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Update</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="v-price-two" role="tabpanel"
-                        aria-labelledby="v-pills-tab-two">
-                        <div class="table-responsive text-center pricing-table-bg">
-                            <table class="table table-bordered mb-0 table-centered align-middle">
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">3 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">6 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Year</h5>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Users</th>
-                                        <td>1</td>
-                                        <td>3</td>
-                                        <td>5</td>
-                                        <td>7</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Storage</th>
-                                        <td>5 GB</td>
-                                        <td>15 GB</td>
-                                        <td>25 GB</td>
-                                        <td>50 GB</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Domain</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>3</td>
-                                        <td>4</td>
-                                        <td>8</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Hidden Fees</th>
-                                        <td>Yes</td>
-                                        <td>No</td>
-                                        <td>No</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Support</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Update</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-close-circle text-danger font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="v-price-three" role="tabpanel"
-                        aria-labelledby="v-pills-tab-three">
-                        <div class="table-responsive text-center pricing-table-bg">
-                            <table class="table table-bordered mb-0 table-centered align-middle">
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">3 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">6 Month</h5>
-                                            </div>
-                                        </td>
-                                        <td style="width: 20%;">
-                                            <div class="py-3">
-                                                <h5 class="font-size-16 mb-0">1 Year</h5>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Users</th>
-                                        <td>1</td>
-                                        <td>3</td>
-                                        <td>5</td>
-                                        <td>7</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Storage</th>
-                                        <td>5 GB</td>
-                                        <td>30 GB</td>
-                                        <td>50 GB</td>
-                                        <td>100 GB</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Domain</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>3</td>
-                                        <td>5</td>
-                                        <td>10</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Hidden Fees</th>
-                                        <td>No</td>
-                                        <td>No</td>
-                                        <td>No</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Support</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Update</th>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <i
-                                                    class="mdi mdi-check-circle text-success font-size-20"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-    <!-- end col -->
-</div>
 
+    @if (auth()->user()->id == 1)
+        <button class="btn btn-primary btn-lg waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#addTraffic"
+            type="button"> <i class="fa fa-plus me-2"></i>
+            {{ __('messages.add_traffic') }}</button>
+
+        <div class="modal fade" id="addTraffic" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="title" id="defaultModalLabel">Tarif yaratish</h4>
+                    </div>
+                    <form action="{{ route('add_traffic') }}" method="post">
+                        @csrf
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <label style="margin-bottom: 0">{{ __('messages.traffic') }}:</label>
+                                <input class="form-control" type="text" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label style="margin-bottom: 0">{{ __('messages.annotation') }}:</label>
+                                <textarea class="form-control" type="text" name="annotation" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label style="margin-bottom: 0">{{ __('messages.price') }}:</label>
+                                <input class="form-control" type="number" name="price" required>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label style="margin-bottom: 0">{{ __('messages.clients_count') }}:</label>
+                                        <input class="form-control" type="number" name="clients_count" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label style="margin-bottom: 0">{{ __('messages.reklama_count') }}:</label>
+                                        <input class="form-control" type="number" name="sms_count" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label style="margin-bottom: 0">{{ __('messages.products_count') }}:</label>
+                                        <input class="form-control" type="number" name="products_count" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label style="margin-bottom: 0">{{ __('messages.users_count') }}:</label>
+                                        <input class="form-control" type="number" name="users_count" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label style="margin-bottom: 0"> {{ __('messages.type') }}:</label>
+                                <select class="form-select" name="status" required>
+                                    <option value="0">Asosiy
+                                    </option>
+                                    <option value="1">Qo'shimcha
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label style="margin-bottom: 0"> {{ __('messages.category') }}:</label>
+                                <select class="form-select" name="type_traffic" required>
+                                    <option value="month">month</option>
+                                    <option value="year">year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                {{ __('messages.cancel') }}</button>
+                            <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"> <i
+                                    class="fa fa-save me-2"></i>
+                                {{ __('messages.save') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="text-center mb-4">
+                <ul class="nav nav-pills card justify-content-center d-inline-block shadow py-1 px-2" id="pills-tab"
+                    role="tablist">
+                    <li class="nav-item d-inline-block">
+                        <a class="nav-link px-3 rounded active monthly" id="Monthly" data-bs-toggle="pill" href="#month"
+                            role="tab" aria-controls="Month" aria-selected="true">
+                            {{ __('messages.month') }}</a>
+                    </li>
+                    <li class="nav-item d-inline-block">
+                        <a class="nav-link px-3 rounded yearly" id="Yearly" data-bs-toggle="pill" href="#year"
+                            role="tab" aria-controls="Year" aria-selected="false"> {{ __('messages.year') }}
+                            <span class="badge bg-success rounded text-white">20% Off </span></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab-content mb-3" id="pills-tabContent">
+                <div class="tab-pane fade active show" id="month" role="tabpanel" aria-labelledby="monthly">
+                    <div class="row">
+                        @foreach ($month_traffics as $item)
+                            @if ($traffic == $item->id)
+                                <div class="col-xl-3 col-sm-6 mb-3">
+                                    <div class="card bg-primary mb-xl-0">
+                                        <div class="card-body">
+                                            <div class="p-2">
+                                                <div class="pricing-badge">
+                                                    <span class="badge">Featured</span>
+                                                </div>
+                                                <h5 class="font-size-16 text-white">{{ $item->name }}</h5>
+                                                <h1 class="mt-3 text-white">{{ $item->price }} <span
+                                                        class="text-white font-size-16 fw-medium">/
+                                                        {{ __('messages.month') }}</span>
+                                                </h1>
+                                                <p class="text-white mt-3 font-size-15">{{ $item->annotation }}</p>
+                                                <div class="mt-4 pt-2 text-white">
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->clients_count }}
+                                                        - {{ __('messages.clients') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->products_count }}
+                                                        - {{ __('messages.products') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->sms_count }}
+                                                        - {{ __('messages.reklama_for_telegram') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->users_count }}
+                                                        - {{ __('messages.users') }}
+                                                    </p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ __('messages.bezlimitniy_telegram_posts') }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="mt-4 pt-2">
+                                                    <button type="button"
+                                                        class="btn btn-light w-100 mb-3">{{ __('messages.selected') }}</button>
+                                                </div>
+                                                @if (auth()->user()->id == 1)
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-dark w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#edit{{ $item->id }}">{{ __('messages.update') }}</button>
+                                                        </div>
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-danger w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- end card body -->
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                            @else
+                                <div class="col-xl-3 col-sm-6 mb-3">
+                                    <div class="card mb-xl-0">
+                                        <div class="card-body">
+                                            <div class="p-2">
+                                                <h5 class="font-size-16">{{ $item->name }}</h5>
+                                                <h1 class="mt-3">{{ $item->price }} <span
+                                                        class="text-muted font-size-16 fw-medium">/
+                                                        {{ __('messages.month') }}</span>
+                                                </h1>
+                                                <p class="text-muted mt-3 font-size-15">{{ $item->annotation }}</p>
+                                                <div class="mt-4 pt-2 text-muted">
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->clients_count }}
+                                                        - {{ __('messages.clients') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->products_count }}
+                                                        - {{ __('messages.products') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->sms_count }}
+                                                        - {{ __('messages.reklama_for_telegram') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->users_count }}
+                                                        - {{ __('messages.users') }}
+                                                    </p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ __('messages.bezlimitniy_telegram_posts') }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="mt-4 pt-2">
+                                                    <a href=""
+                                                        class="btn btn-outline-primary w-100 mb-3">{{ __('messages.selected') }}</a>
+
+                                                </div>
+                                                @if (auth()->user()->id == 1)
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-dark w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#edit{{ $item->id }}">{{ __('messages.update') }}</button>
+                                                        </div>
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-danger w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- end card body -->
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="year" role="tabpanel" aria-labelledby="yearly">
+                    <div class="row">
+                        @foreach ($year_traffics as $item)
+                            @if ($traffic == $item->id)
+                                <div class="col-xl-3 col-sm-6 mb-3">
+                                    <div class="card bg-primary mb-xl-0">
+                                        <div class="card-body">
+                                            <div class="p-2">
+                                                <div class="pricing-badge">
+                                                    <span class="badge">Featured</span>
+                                                </div>
+                                                <h5 class="font-size-16 text-white">{{ $item->name }}</h5>
+                                                <h1 class="mt-3 text-white">{{ $item->price }} <span
+                                                        class="text-white font-size-16 fw-medium">/
+                                                        {{ __('messages.month') }}</span>
+                                                </h1>
+                                                <p class="text-white mt-3 font-size-15">{{ $item->annotation }}</p>
+                                                <div class="mt-4 pt-2 text-white">
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->clients_count }}
+                                                        - {{ __('messages.clients') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->products_count }}
+                                                        - {{ __('messages.products') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->sms_count }}
+                                                        - {{ __('messages.reklama_for_telegram') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ $item->users_count }}
+                                                        - {{ __('messages.users') }}
+                                                    </p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-white font-size-18 me-2"></i>{{ __('messages.bezlimitniy_telegram_posts') }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="mt-4 pt-2">
+                                                    <button type="button"
+                                                        class="btn btn-light w-100 mb-3">{{ __('messages.selected') }}</button>
+                                                </div>
+                                                @if (auth()->user()->id == 1)
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-dark w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#edit{{ $item->id }}">{{ __('messages.update') }}</button>
+                                                        </div>
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-danger w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- end card body -->
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                            @else
+                                <div class="col-xl-3 col-sm-6 mb-3">
+                                    <div class="card mb-xl-0">
+                                        <div class="card-body">
+                                            <div class="p-2">
+                                                <h5 class="font-size-16">{{ $item->name }}</h5>
+                                                <h1 class="mt-3">{{ $item->price }} <span
+                                                        class="text-muted font-size-16 fw-medium">/
+                                                        {{ __('messages.month') }}</span>
+                                                </h1>
+                                                <p class="text-muted mt-3 font-size-15">{{ $item->annotation }}</p>
+                                                <div class="mt-4 pt-2 text-muted">
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->clients_count }}
+                                                        - {{ __('messages.clients') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->products_count }}
+                                                        - {{ __('messages.products') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->sms_count }}
+                                                        - {{ __('messages.reklama_for_telegram') }}</p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ $item->users_count }}
+                                                        - {{ __('messages.users') }}
+                                                    </p>
+                                                    <p class="mb-3 font-size-15"><i
+                                                            class="mdi mdi-check-circle text-secondary font-size-18 me-2"></i>{{ __('messages.bezlimitniy_telegram_posts') }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="mt-4 pt-2">
+                                                    <a href=""
+                                                        class="btn btn-outline-primary w-100 mb-3">{{ __('messages.selected') }}</a>
+
+                                                </div>
+                                                @if (auth()->user()->id == 1)
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-dark w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#edit{{ $item->id }}">{{ __('messages.update') }}</button>
+                                                        </div>
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-danger w-100"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- end card body -->
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                <!-- end tab pane -->
+            </div>
+            <!-- end tab content -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    @if (auth()->user()->id == 1)
+        @foreach ($month_traffics as $item)
+            <div class="modal fade" id="edit{{ $item->id }}" tabindex="888" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title" id="defaultModalLabel">{{ __('messages.update') }}</h4>
+                        </div>
+                        <form action="{{ route('edit_traffic', ['id' => $item->id]) }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.traffic') }}:</label>
+                                    <input class="form-control" type="text" name="name"
+                                        value="{{ $item->name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.annotation') }}:</label>
+                                    <textarea class="form-control" type="text" name="annotation" required>{{ $item->annotation }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.price') }}:</label>
+                                    <input class="form-control" type="number" name="price"
+                                        value="{{ $item->price }}" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.clients_count') }}:</label>
+                                            <input class="form-control" type="number" name="clients_count"
+                                                value="{{ $item->clients_count }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.reklama_count') }}:</label>
+                                            <input class="form-control" type="number" name="sms_count"
+                                                value="{{ $item->sms_count }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.products_count') }}:</label>
+                                            <input class="form-control" type="number" name="products_count"
+                                                value="{{ $item->products_count }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.users_count') }}:</label>
+                                            <input class="form-control" type="number" name="users_count"
+                                                value="{{ $item->users_count }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0"> {{ __('messages.type') }}:</label>
+                                    <select class="form-select" name="status" required>
+                                        <option value="0" @if ($item->status == 0) selected @endif>Asosiy
+                                        </option>
+                                        <option value="1" @if ($item->status == 1) selected @endif>Qo'shimcha
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0"> {{ __('messages.category') }}:</label>
+                                    <select class="form-select" name="type_traffic" required>
+                                        <option value="month" @if ($item->type_traffic == 'month') selected @endif>month
+                                        </option>
+                                        <option value="year" @if ($item->type_traffic == 'year') selected @endif>year
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                    data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                    {{ __('messages.cancel') }}</button>
+                                <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"> <i
+                                        class="fa fa-save me-2"></i>
+                                    {{ __('messages.save') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="delete{{ $item->id }}" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title" id="defaultModalLabel">{{ __('messages.delete') }}</h4>
+                        </div>
+                        <form action="{{ route('delete_traffic', ['id' => $item->id]) }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ $item->name }} {{ __('messages.delete') }}
+                                        ?</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                    data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                    {{ __('messages.cancel') }}</button>
+                                <button class="btn btn-danger btn-lg waves-effect waves-light" type="submit"> <i
+                                        class="fa fa-save me-2"></i>
+                                    {{ __('messages.delete') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        @foreach ($year_traffics as $item)
+            <div class="modal fade" id="edit{{ $item->id }}" tabindex="888" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title" id="defaultModalLabel">{{ __('messages.update') }}</h4>
+                        </div>
+                        <form action="{{ route('edit_traffic', ['id' => $item->id]) }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.traffic') }}:</label>
+                                    <input class="form-control" type="text" name="name"
+                                        value="{{ $item->name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.annotation') }}:</label>
+                                    <textarea class="form-control" type="text" name="annotation" required>{{ $item->annotation }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ __('messages.price') }}:</label>
+                                    <input class="form-control" type="number" name="price"
+                                        value="{{ $item->price }}" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.clients_count') }}:</label>
+                                            <input class="form-control" type="number" name="clients_count"
+                                                value="{{ $item->clients_count }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.reklama_count') }}:</label>
+                                            <input class="form-control" type="number" name="sms_count"
+                                                value="{{ $item->sms_count }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.products_count') }}:</label>
+                                            <input class="form-control" type="number" name="products_count"
+                                                value="{{ $item->products_count }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label style="margin-bottom: 0">{{ __('messages.users_count') }}:</label>
+                                            <input class="form-control" type="number" name="users_count"
+                                                value="{{ $item->users_count }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0"> {{ __('messages.type') }}:</label>
+                                    <select class="form-select" name="status" required>
+                                        <option value="0" @if ($item->status == 0) selected @endif>Asosiy
+                                        </option>
+                                        <option value="1" @if ($item->status == 1) selected @endif>
+                                            Qo'shimcha
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0"> {{ __('messages.category') }}:</label>
+                                    <select class="form-select" name="type_traffic" required>
+                                        <option value="month" @if ($item->type_traffic == 'month') selected @endif>month
+                                        </option>
+                                        <option value="year" @if ($item->type_traffic == 'year') selected @endif>year
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                    data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                    {{ __('messages.cancel') }}</button>
+                                <button class="btn btn-success btn-lg waves-effect waves-light" type="submit"> <i
+                                        class="fa fa-save me-2"></i>
+                                    {{ __('messages.save') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="delete{{ $item->id }}" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title" id="defaultModalLabel">{{ __('messages.delete') }}</h4>
+                        </div>
+                        <form action="{{ route('delete_traffic', ['id' => $item->id]) }}" method="post">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label style="margin-bottom: 0">{{ $item->name }} {{ __('messages.delete') }}
+                                        ?</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-lg waves-effect waves-light"
+                                    data-bs-dismiss="modal"> <i class="fas fa-reply me-2"></i>
+                                    {{ __('messages.cancel') }}</button>
+                                <button class="btn btn-danger btn-lg waves-effect waves-light" type="submit"> <i
+                                        class="fa fa-save me-2"></i>
+                                    {{ __('messages.delete') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
 @endsection
 
 @push('scripts')

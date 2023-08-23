@@ -338,14 +338,14 @@
                             </a>
                         </li>
 
-                        @can('admin')
-                            <li>
-                                <a href="{{ route('traffics') }}">
-                                    <i data-feather="tag"></i>
-                                    <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
-                                </a>
-                            </li>
+                        <li>
+                            <a href="{{ route('traffics') }}">
+                                <i data-feather="tag"></i>
+                                <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
+                            </a>
+                        </li>
 
+                        @can('admin')
                             <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>
 
                             {{-- <li>
@@ -651,11 +651,11 @@
             $('#clients_count').html("{{ __('messages.clients_count') }}: " + userInfo.clientCount);
             $('#clients_count_traffic').html("{{ __('messages.traffic') }}: " + userInfo.clientCountTraffic);
 
-            $('#sms_count').html("{{ __('messages.sms_count') }}: " + userInfo.productsCount);
-            $('#sms_count_traffic').html("{{ __('messages.traffic') }}: " + userInfo.productsCountTraffic);
+            $('#sms_count').html("{{ __('messages.sms_count') }}: " + userInfo.smsCount);
+            $('#sms_count_traffic').html("{{ __('messages.traffic') }}: " + userInfo.smsCountTraffic);
 
-            $('#products_count').html("{{ __('messages.products_count') }}: " + userInfo.smsCount);
-            $('#products_count_taffic').html("{{ __('messages.traffic') }}: " + userInfo.smsCountTraffic);
+            $('#products_count').html("{{ __('messages.products_count') }}: " + userInfo.productsCount);
+            $('#products_count_taffic').html("{{ __('messages.traffic') }}: " + userInfo.productsCountTraffic);
 
             $('#users_count').html("{{ __('messages.users_count') }}: " + userInfo.usersCount);
             $('#users_count_taffic').html("{{ __('messages.traffic') }}: " + userInfo.usersCountTraffic);

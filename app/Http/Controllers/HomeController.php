@@ -137,13 +137,13 @@ class HomeController extends Controller
         $organization = Organization::with('traffic')->find(auth()->user()->organization_id);
 
         $a[] = [
-            'clientCount' => $organization->clients_count,
+            'clientCount' => Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count(),
             'clientCountTraffic' => $organization->traffic->clients_count,
             'smsCount' => $organization->sms_count,
             'smsCountTraffic' => $organization->traffic->sms_count,
-            'productsCount' => $organization->products_count,
+            'productsCount' => Product::where('organization_id', auth()->user()->organization_id)->count(),
             'productsCountTraffic' => $organization->traffic->products_count,
-            'usersCount' => $organization->users_count,
+            'usersCount' => User::where('organization_id', auth()->user()->organization_id)->count(),
             'usersCountTraffic' => $organization->traffic->users_count,
             'balance' => $organization->balance,
             'date_traffic' => $organization->date_traffic,
@@ -559,6 +559,13 @@ class HomeController extends Controller
     {
 
         try {
+
+            $userClients = Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count();
+            $trafficClients = auth()->user()->organization->traffic->client_count;
+
+            if ($userClients >= $trafficClients) {
+                return redirect()->back()->with('warning', __('messages.clients_count_traffic'));
+            }
 
             $request->validate([
                 'login' => 'required|unique:clients|max:255'
@@ -1909,7 +1916,7 @@ class HomeController extends Controller
             $organ = auth()->user()->organization_id;
             $count = Organization::find($organ);
 
-            if ($count->products_count < $count->traffic->products_count) {
+            if (Product::where('organization_id', $organ)->count() < $count->traffic->products_count) {
                 if ($request->photo != null) {
                     $fileName = time() . '.' . $request->photo->extension();
                     $path = $request->photo->storeAs('products', $fileName);
@@ -1930,9 +1937,9 @@ class HomeController extends Controller
 
                 $product->save();
 
-                $count = Organization::find($organ);
-                $count->products_count = $count->products_count + 1;
-                $count->save();
+                // $count = Organization::find($organ);
+                // $count->products_count = $count->products_count + 1;
+                // $count->save();
 
                 return redirect()->back()->with('success', __('messages.product_updated_successfully'));
 
