@@ -561,7 +561,8 @@ class HomeController extends Controller
         try {
 
             $userClients = Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count();
-            $trafficClients = auth()->user()->organization->traffic->client_count;
+            $trafficClients = auth()->user()->organization->traffic->clients_count;
+
 
             if ($userClients >= $trafficClients) {
                 return redirect()->back()->with('warning', __('messages.clients_count_traffic'));
