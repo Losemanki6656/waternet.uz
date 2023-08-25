@@ -799,7 +799,7 @@ class HomeController extends Controller
 
     public function search_areas()
     {
-        $data = Area::where('city_id', request('region_id', 0))->get();
+        $data = Area::where('city_id', request('region_id', 0))->where('status', true)->get();
 
         return response()->json($data);
     }

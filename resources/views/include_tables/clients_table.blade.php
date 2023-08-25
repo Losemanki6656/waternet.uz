@@ -284,9 +284,7 @@
                                         <label class="mb-0">{{ __('messages.select_city') }}:</label>
                                         <select class="form-select" name="area_id"
                                             id="edit_area_id{{ $client->id }}">
-
-                                            <option value="{{ $client->area_id }}">{{ $client->area->name }}
-                                            </option>
+                                            <option value="{{ $client->area_id }}">{{ $client->area->name ?? '' }} </option>
                                         </select>
                                     </div>
 
