@@ -2043,7 +2043,10 @@ class HomeController extends Controller
     {
         try {
 
-            Sity::find(request('id'))->delete();
+            Sity::find(request('id'))->update([
+                'status' => false
+            ]);
+            
             Area::where('city_id', request('id'))->update([
                 'status' => false
             ]);
