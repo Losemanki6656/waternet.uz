@@ -158,11 +158,13 @@
                                                     </p>
                                                 </div>
 
-                                                <div class="mt-4 pt-2">
-                                                    <button type="button"
-                                                        class="btn btn-light w-100 mb-3">{{ __('messages.selected') }}</button>
-                                                </div>
                                                 @if (auth()->user()->id == 1)
+                                                    <div class="mb-3">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" id="checkBox{{$item->id}}" @if($item->active_status) checked @endif onchange="UpdateStatusTraffic({{$item->id}})">
+                                                            <label class="form-check-label" for="checkBox{{$item->id}}">Default switch checkbox input</label>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col">
                                                             <button type="button" class="btn btn-dark w-100"
@@ -174,6 +176,11 @@
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
                                                         </div>
+                                                    </div>
+                                                @else
+                                                    <div class="mt-4 pt-2">
+                                                        <button type="button"
+                                                                class="btn btn-light w-100 mb-3">{{ __('messages.selected') }}</button>
                                                     </div>
                                                 @endif
                                             </div>
@@ -212,12 +219,14 @@
                                                     </p>
                                                 </div>
 
-                                                <div class="mt-4 pt-2">
-                                                    <a href=""
-                                                        class="btn btn-outline-primary w-100 mb-3">{{ __('messages.selected') }}</a>
 
-                                                </div>
                                                 @if (auth()->user()->id == 1)
+                                                    <div class="mb-3">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" id="checkBox{{$item->id}}" @if($item->active_status) checked @endif  onchange="UpdateStatusTraffic({{$item->id}})">
+                                                            <label class="form-check-label" for="checkBox{{$item->id}}">{{__('Active Status')}}</label>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col">
                                                             <button type="button" class="btn btn-dark w-100"
@@ -229,6 +238,10 @@
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#delete{{ $item->id }}">{{ __('messages.delete') }}</button>
                                                         </div>
+                                                    </div>
+                                                @else
+                                                    <div class="mt-4 pt-2">
+                                                        <a href="#" class="btn btn-outline-primary w-100 mb-3">{{ __('messages.selected') }}</a>
                                                     </div>
                                                 @endif
                                             </div>
@@ -610,4 +623,30 @@
 @endsection
 
 @push('scripts')
+    <script>
+
+        function UpdateStatusTraffic(id)
+        {
+
+            $.ajax({
+                url: "/administration/update_status_traffic/" + id,
+                method: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    active_status: $('#checkBox' + id).prop('checked')
+                },
+                success: function(res) {
+                    Swal.fire("{{ __('Activated updated successfully') }}!",
+                        "{{ __('Good') }}",
+                        "success").then((result) => {
+                        location.reload();
+                    });
+
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
+                }
+            });
+        }
+    </script>
 @endpush

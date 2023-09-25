@@ -175,6 +175,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin/delete-organization', [App\Http\Controllers\TrafficController::class, 'delete_organization'])->name('delete_organization');
     Route::post('/administration/edit-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'edit_traffic'])->name('edit_traffic');
     Route::post('/administration/delete-traffic/{id}', [App\Http\Controllers\TrafficController::class, 'delete_traffic'])->name('delete_traffic');
+    Route::post('/administration/update_status_traffic/{id}', [App\Http\Controllers\TrafficController::class, 'update_status_traffic'])->name('update_status_traffic');
 
     Route::post('/order-edit/{id}', [App\Http\Controllers\HomeController::class, 'order_edit'])->name('order_edit');
     Route::get('/client-order-edit/{id}', [App\Http\Controllers\HomeController::class, 'client_order_edit'])->name('client_order_edit');

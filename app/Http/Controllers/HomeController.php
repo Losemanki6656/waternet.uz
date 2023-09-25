@@ -138,7 +138,7 @@ class HomeController extends Controller
 
         $a[] = [
             'clientCount' => Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count(),
-            'clientCountTraffic' => $organization->traffic->clients_count,
+            'clientCountTraffic' => $organization->traffic->clients_count ?? 0,
             'smsCount' => $organization->sms_count,
             'smsCountTraffic' => $organization->traffic->sms_count,
             'productsCount' => Product::where('organization_id', auth()->user()->organization_id)->count(),
@@ -560,7 +560,10 @@ class HomeController extends Controller
 
         try {
 
-            $userClients = Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count();
+            $userClients = Client::where('organization_id', auth()->user()->organization_id)
+                ->where('status', true)
+                ->count();
+
             $trafficClients = auth()->user()->organization->traffic->clients_count;
 
 
@@ -2046,7 +2049,7 @@ class HomeController extends Controller
             Sity::find(request('id'))->update([
                 'status' => false
             ]);
-            
+
             Area::where('city_id', request('id'))->update([
                 'status' => false
             ]);
