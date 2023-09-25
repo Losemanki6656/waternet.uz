@@ -142,7 +142,7 @@
                                         {{ __('messages.update') }}</a>
 
                                     <a class="dropdown-item" href="#" class="text-danger"
-                                        onclick="DeleteClient('{{ $client->fullname }}', {{ $client->id }})"><i
+                                        onclick="DeleteClient(`{{ $client->fullname }}`, {{ $client->id }})"><i
                                             class="fa fa-trash me-2 text-danger"></i>
                                         {{ __('messages.delete') }}</a>
                                 </div>
