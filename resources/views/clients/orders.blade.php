@@ -74,7 +74,7 @@
             })
         </script>
     @endpush
-    
+
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -127,7 +127,7 @@
                                     </span>
 
                                     <button type="button" class="btn btn-soft-danger waves-effect waves-light"
-                                        onclick="DeleteOrder('{{ $order->client->fullname }}', {{ $order->id }})"
+                                        onclick="DeleteOrder(`{{ $order->client->fullname }}`, {{ $order->id }})"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="{{ __('messages.delete') }}">
                                         <i class="fa fa-trash"></i></button>
