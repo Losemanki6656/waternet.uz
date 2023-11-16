@@ -555,7 +555,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function add_client(Request $request)
+    public function add_client(Request $request): \Illuminate\Http\RedirectResponse
     {
 
         try {
@@ -613,9 +613,8 @@ class HomeController extends Controller
 
     }
 
-    public function client_edit(Request $request, $id)
+    public function client_edit(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
-
         $client = Client::find($id);
         $client->fullname = $request->fullname;
         $client->city_id = $request->city_id;
@@ -640,7 +639,7 @@ class HomeController extends Controller
         return redirect()->back()->with('success', __('messages.client_info_updated'));
     }
 
-    public function delete_client(Request $request)
+    public function delete_client(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
 
@@ -668,7 +667,7 @@ class HomeController extends Controller
 
     }
 
-    public function add_location(Request $request)
+    public function add_location(Request $request): \Illuminate\Http\JsonResponse
     {
         $client = Client::find($request->client_id);
         $client->location = $request->lat . "," . $request->lng;
@@ -677,7 +676,7 @@ class HomeController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function add_order_check(Request $request)
+    public function add_order_check(Request $request): \Illuminate\Http\RedirectResponse
     {
         try {
 
@@ -689,7 +688,7 @@ class HomeController extends Controller
 
             foreach ($arr as $key => $value) {
                 $order = Order::where('client_id', $key)->where('product_id', $request->product_id)->where('status', 0)->get();
-                if ($order->count() == 0) {
+                if ($order->count() === 0) {
 
                     $client = Client::find($key);
 
@@ -706,9 +705,6 @@ class HomeController extends Controller
                     $zakaz->status = 0;
                     $zakaz->user_id = $user_id;
                     $zakaz->save();
-
-                    $client->activated_at = now();
-                    $client->save();
                 }
             }
 
@@ -764,7 +760,7 @@ class HomeController extends Controller
 
     }
 
-    public function update_location(Request $request)
+    public function update_location(Request $request): \Illuminate\Http\RedirectResponse
     {
 
         try {
@@ -781,7 +777,7 @@ class HomeController extends Controller
 
     }
 
-    public function delete_Order()
+    public function delete_Order(): \Illuminate\Http\JsonResponse
     {
         try {
 
@@ -800,14 +796,14 @@ class HomeController extends Controller
 
     }
 
-    public function search_areas()
+    public function search_areas(): \Illuminate\Http\JsonResponse
     {
         $data = Area::where('city_id', request('region_id', 0))->where('status', true)->get();
 
         return response()->json($data);
     }
 
-    public function add_region(Request $request)
+    public function add_region(Request $request): \Illuminate\Http\RedirectResponse
     {
         try {
 
@@ -825,9 +821,8 @@ class HomeController extends Controller
 
 
     }
-    public function add_city(Request $request)
+    public function add_city(Request $request): \Illuminate\Http\RedirectResponse
     {
-
         try {
 
             $sity = new Area();
@@ -855,8 +850,7 @@ class HomeController extends Controller
             ->where('status', 0)
             ->where('organization_id', $organ)
             ->has('client')
-            ->with('user')
-            ->with('product')
+            ->with(['product','user','client.city','client.area'])
             ->when(request('search'), function ($query, $search) {
                 $query->whereHas('client', function ($query) use ($search) {
                     $query->where('fullname', 'like', '%' . $search . '%')
@@ -889,7 +883,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function orders_sortable(Request $request)
+    public function orders_sortable(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $tasks = Order::where('organization_id', auth()->user()->organization_id)->get();
@@ -909,7 +903,7 @@ class HomeController extends Controller
         ], 200);
     }
 
-    public function region_sortable(Request $request)
+    public function region_sortable(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $tasks = Sity::where('organization_id', auth()->user()->organization_id)->get();
@@ -929,7 +923,7 @@ class HomeController extends Controller
         ], 200);
     }
 
-    public function city_sortable(Request $request)
+    public function city_sortable(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $tasks = Area::where('organization_id', auth()->user()->organization_id)->get();
@@ -966,7 +960,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function order_edit(Request $request, $id)
+    public function order_edit(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         try {
 
@@ -1007,7 +1001,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function success_order_api(Request $request)
+    public function success_order_api(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $id = $request->order_id;

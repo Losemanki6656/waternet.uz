@@ -90,10 +90,10 @@ class ClientController extends Controller
                 $client->balance = $client->balance - $price + $request->amount;
                 $client->save();
 
-                $succ = SuccessOrders::find($clientprice->success_order_id);
-                $succ->amount = $request->amount;
-                $succ->price_sold = $request->amount - ($succ->count * $succ->price);
-                $succ->save();
+//                $succ = SuccessOrders::find($clientprice->success_order_id);
+//                $succ->amount = $request->amount;
+//                $succ->price_sold = $request->amount - ($succ->count * $succ->price);
+//                $succ->save();
             }
 
             return redirect()->back()->with('success', __('messages.amount_receipts_updated_successfully'));
@@ -177,10 +177,10 @@ class ClientController extends Controller
                 $client->container = $client->container - ($count - $incount) + $request->count - $request->invalid_count;
                 $client->save();
 
-                $succ = SuccessOrders::find($clientprice->success_order_id);
-                $succ->container = $request->count;
-                $succ->invalid_container_count = $request->invalid_count;
-                $succ->save();
+//                $succ = SuccessOrders::find($clientprice->success_order_id);
+//                $succ->container = $request->count;
+//                $succ->invalid_container_count = $request->invalid_count;
+//                $succ->save();
             }
 
             return redirect()->back()->with('success', __('messages.returned_containers_updated_successfully'));

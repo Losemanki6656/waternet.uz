@@ -94,9 +94,9 @@
 
                         </td>
                         <td class="text-center" width="150px">
-                            @if ($client->location != '0')
+                            @if ($client->location !== '0')
                                 <span
-                                    onclick="showLocation('{{ $client->location }}', '{{ $client->fullname }}',{{ $client->id }})">
+                                    onclick="showLocation('{{ $client->location }}', `'{{ $client->fullname }}'`,{{ $client->id }})">
                                     <button type="button" class="btn btn-soft-warning waves-effect waves-light"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="{{ __('messages.view_location') }}">

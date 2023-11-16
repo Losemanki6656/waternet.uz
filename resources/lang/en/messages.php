@@ -308,4 +308,5 @@ return [
     'annotation' => "Annotation",
     'reklama_count' => "Promotional post",
     'category' => "Category",
+    'view_order' => "View order",
 ];
