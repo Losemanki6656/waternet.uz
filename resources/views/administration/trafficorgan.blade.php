@@ -102,7 +102,7 @@
     </div>
     <button type="button" class="btn btn-primary mb-3 waves-effect waves-light" data-bs-toggle="modal"
         data-bs-target="#addprice">
-        <i class="fa fa-plus-circle me-2"></i> {{ __('messages.add_traffic') }}
+        <i class="fa fa-plus-circle me-2"></i> {{ __('messages.add_new_traffic') }}
     </button>
 
     <div class="modal fade" id="addprice" tabindex="-1" role="dialog">
