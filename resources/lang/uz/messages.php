@@ -330,5 +330,7 @@ return [
     'evaluations' => 'Baholar',
     'best_user' => "Eng yaxshi foydalanuvchi",
     'worst_user' => "Eng yomon foydalanuvchi",
-    'most_rated_client' => "Eng ko'p baholagan mijoz"
+    'most_rated_client' => "Eng ko'p baholagan mijoz",
+    "shop_traffics_history" => "Merchant tariflar tarixi",
+    "shop_balance_history" => "Merchant to'lovlar tarixi"
 ];
