@@ -42,7 +42,12 @@
 
         public function organizations()
         {
-            $organizations = Organization::with('traffic')->with('traffic')->get();
+            $organizations = Organization::with([
+                'traffic',
+                'clients',
+                'products',
+                'users'
+            ])->get();
             $traffics = Traffic::all();
 
             $sname = 'organizations';
