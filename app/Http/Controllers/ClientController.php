@@ -793,7 +793,6 @@ class ClientController extends Controller
 
         $smsmanagers = Sms::query()
             ->where('organization_id', $organ)
-
             ->when(request('search'), function ($query, $search) {
                 return $query->whereHas(
                     'client',
@@ -806,8 +805,10 @@ class ClientController extends Controller
                 return $query->whereDate('created_at', $data);
             })
             ->orderBy('created_at', 'DESC')
-            ->with('client')
-            ->with('user');
+            ->with([
+                'client',
+                'user'
+            ]);
 
         return view('smsmanager.successmessage', [
             'smsmanagers' => $smsmanagers->paginate(request('per_page', 10))

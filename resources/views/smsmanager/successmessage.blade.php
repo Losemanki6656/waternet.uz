@@ -19,7 +19,7 @@
     <div class="row mb-2 animate__animated animate__fadeIn">
         <div class="col-sm-3 mb-2">
             <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}"
-                placeholder="{{ __('messages.search') }}">
+                   placeholder="{{ __('messages.search') }}">
         </div>
         <div class="col-sm-3 mb-2">
             <input type="date" name="data" id="data" value="{{ request('data') }}" class="form-control">
@@ -31,19 +31,20 @@
             <div class="table-responsive animate__animated animate__fadeIn">
                 <table class="table table-sm align-middle table-bordered table-nowrap">
                     <thead class="table-light">
-                        <tr>
-                            <th class="align-middle text-center">#</th>
-                            <th class="align-middle text-center">{{ __('messages.to_whom') }}</th>
-                            <th class="align-middle text-center">{{ __('messages.type') }}</th>
-                            <th class="align-middle text-center">{{ __('messages.text') }}</th>
-                            <th class="align-middle text-center">{{ __('messages.file') }}</th>
-                            <th class="align-middle text-center">{{ __('messages.from_whom') }}</th>
-                            <th class="align-middle text-center">{{ __('messages.when') }}</th>
-                        </tr>
+                    <tr>
+                        <th class="align-middle text-center">#</th>
+                        <th class="align-middle text-center">{{ __('messages.to_whom') }}</th>
+                        <th class="align-middle text-center">{{ __('messages.type') }}</th>
+                        <th class="align-middle text-center">{{ __('messages.text') }}</th>
+                        <th class="align-middle text-center">{{ __('messages.file') }}</th>
+                        <th class="align-middle text-center">{{ __('messages.from_whom') }}</th>
+                        <th class="align-middle text-center">{{ __('messages.when') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
 
-                        @foreach ($smsmanagers as $smsmanager)
+                    @foreach ($smsmanagers as $smsmanager)
+                        @if($smsmanager->client)
                             <tr>
                                 <td class="text-center">{{ $smsmanagers->currentPage() * 10 - 10 + $loop->index + 1 }}</td>
                                 <td class="text-center"><a
@@ -60,13 +61,15 @@
                                 <td class="text-center">{{ $smsmanager->sms_text }}</td>
                                 <td class="text-center">
                                     @if ($smsmanager->photo)
-                                        <a href="{{url('/storage/' . $smsmanager->photo)}}" target="_blank"> <i class="far fa-file-image"></i> </a>
+                                        <a href="{{url('/storage/' . $smsmanager->photo)}}" target="_blank"> <i
+                                                class="far fa-file-image"></i> </a>
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $smsmanager->user->name ?? '' }}</td>
                                 <td class="text-center">{{ $smsmanager->created_at}}</td>
                             </tr>
-                        @endforeach
+                        @endif
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -75,7 +78,7 @@
                     <div class="col-md-2">
                         <label>
                             <select class="form-select mx-3" name="paginate_select" id="paginate_select"
-                                style="max-width: 100px">
+                                    style="max-width: 100px">
                                 <option value="10" @if ($smsmanagers->perPage() == 10) selected @endif>10
                                 </option>
                                 <option value="30" @if ($smsmanagers->perPage() == 30) selected @endif>30
@@ -98,17 +101,17 @@
 
 @push('scripts')
     <script>
-        $('#search').keyup(function(e) {
+        $('#search').keyup(function (e) {
             if (e.keyCode == 13) {
                 myFilter();
             }
         });
 
-        $('#data').change(function(e) {
+        $('#data').change(function (e) {
             myFilter();
         });
 
-        $('#paginate_select').change(function(e) {
+        $('#paginate_select').change(function (e) {
             myFilter();
         });
 
