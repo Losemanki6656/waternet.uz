@@ -11,10 +11,8 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
-    public function send(Request $request)
+    public function send(Request $request): \Illuminate\Http\RedirectResponse
     {
-
-
         $url = null;
         if ($request->photo) {
             $fileName = auth()->user()->id . time() . '.' . $request->photo->extension();
@@ -23,7 +21,8 @@ class TelegramController extends Controller
         }
 
         try {
-            $clients = ClientChat::whereIn('id', $request->checkbox)
+            $clients = ClientChat::query()
+                ->whereIn('id', $request->checkbox)
                 ->with('client')
                 ->get();
             $user = auth()->user()->id;
