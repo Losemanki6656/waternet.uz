@@ -1007,186 +1007,189 @@
 
             $y = $client_info->balance;
 
-            if (SuccessOrders::where('created_at', now())->where('client_id', $orderinfo->client_id)->get()->count() > 0)
+            if (SuccessOrders::where('created_at', now())->where('client_id', $orderinfo->client_id)->get()->count() > 0) {
                 return response()->json(['message' => 'error', 429]);
-            else {
-                if ($request->order_status == 1 || $request->order_status == 2) {
+            }
 
-                    $client_info->balance = $client_info->balance - ($request->sold_product_count * $request->sold_product_price) + $request->amount;
+            if ($request->order_status == 1 || $request->order_status == 2) {
 
-                    if (Product::find($orderinfo->product_id)->container_status != 1)
-                        $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
+                $client_info->balance = $client_info->balance - ($request->sold_product_count * $request->sold_product_price) + $request->amount;
 
-                    if($request->sold_product_count) {
-                        $client_info->activated_at = now();
-                    }
-
-                    $client_info->save();
+                if (Product::find($orderinfo->product_id)->container_status != 1) {
+                    $client_info->container = $client_info->container - $request->sold_product_count + $request->container - $request->invalid_container_count;
                 }
 
-                $successorder = new SuccessOrders();
-                $successorder->organization_id = $orderinfo->organization_id;
-                $successorder->client_id = $orderinfo->client_id;
-                $successorder->product_id = $orderinfo->product_id;
-                $successorder->user_id = Auth::user()->id;
-                $successorder->order_user_id = $orderinfo->user_id;
-                $successorder->order_status = $request->order_status;
-                $successorder->fullname = $client_info->fullname;
-                $successorder->phone = $client_info->phone;
-                $successorder->address = $client_info->city->name . ',' . $client_info->area->name;
-                $successorder->order_count = $orderinfo->product_count;
-                $successorder->order_price = $orderinfo->price;
-                $successorder->count = $request->sold_product_count;
-                $successorder->price = $request->sold_product_price;
+                if($request->sold_product_count) {
+                    $client_info->activated_at = now();
+                }
 
-                $successorder->container = $request->container;
-                $successorder->invalid_container_count = $request->invalid_container_count;
+                $client_info->save();
+            }
 
-                $successorder->order_date = $orderinfo->created_at;
+            $successorder = new SuccessOrders();
+            $successorder->organization_id = $orderinfo->organization_id;
+            $successorder->client_id = $orderinfo->client_id;
+            $successorder->product_id = $orderinfo->product_id;
+            $successorder->user_id = Auth::user()->id;
+            $successorder->order_user_id = $orderinfo->user_id;
+            $successorder->order_status = $request->order_status;
+            $successorder->fullname = $client_info->fullname;
+            $successorder->phone = $client_info->phone;
+            $successorder->address = $client_info->city->name . ',' . $client_info->area->name;
+            $successorder->order_count = $orderinfo->product_count;
+            $successorder->order_price = $orderinfo->price;
+            $successorder->count = $request->sold_product_count;
+            $successorder->price = $request->sold_product_price;
+            $successorder->container = $request->container;
+            $successorder->invalid_container_count = $request->invalid_container_count;
+            $successorder->order_date = $orderinfo->created_at;
+            $successorder->payment = $request->payment;
 
-                $successorder->payment = $request->payment;
+            if ($request->payment == 3) {
+                if ($y >= $request->sold_product_count * $request->sold_product_price) {
 
-                if ($request->payment == 3)
-                    if ($y >= $request->sold_product_count * $request->sold_product_price) {
-
-                        $successorder->amount = $request->sold_product_count * $request->sold_product_price;
+                    $successorder->amount = $request->sold_product_count * $request->sold_product_price;
+                    $successorder->client_price = $y;
+                    $successorder->price_sold = $request->sold_product_count * $request->sold_product_price;
+                } else {
+                    if ($y >= 0) {
+                        $successorder->amount = $y;
                         $successorder->client_price = $y;
-                        $successorder->price_sold = $request->sold_product_count * $request->sold_product_price;
+                        $successorder->price_sold = $y - $request->sold_product_count * $request->sold_product_price;
                     } else {
-                        if ($y >= 0) {
-                            $successorder->amount = $y;
-                            $successorder->client_price = $y;
-                            $successorder->price_sold = $y - $request->sold_product_count * $request->sold_product_price;
-                        } else {
-                            $successorder->amount = 0;
-                            $successorder->client_price = $y;
-                            $successorder->price_sold = (-1) * $request->sold_product_count * $request->sold_product_price;
-                        }
-                    } else
-                    $successorder->amount = $request->amount;
-                $successorder->client_price = $y;
-                if ($y >= 0)
-                    $successorder->price_sold = $y + $request->amount - $request->sold_product_count * $request->sold_product_price;
-                else
-                    $successorder->price_sold = $request->amount - $request->sold_product_count * $request->sold_product_price;
-
-                $successorder->comment = $request->comment ?? '';
-
-                $successorder->status = 0;
-
-                $successorder->save();
-
-                $or = Order::find($id);
-                $or->status = 1;
-                $or->save();
-
-                $info_id = auth()->user()->organization_id;
-
-                if ($request->order_status == 1 || $request->order_status == 2) {
-
-                    $clientprice = new ClientPrices();
-                    $clientprice->organization_id = $info_id;
-                    $clientprice->success_order_id = $successorder->id;
-                    $clientprice->client_id = $client_info->id;
-                    $clientprice->user_id = Auth::user()->id;
-                    $clientprice->payment = $request->payment;
-                    $clientprice->amount = $request->amount;
-                    $clientprice->comment = 'Dostavka vaqtida';
-                    $clientprice->status = 0;
-                    $clientprice->save();
-
-                    if (Product::find($orderinfo->product_id)->container_status != 1) {
-                        $clientcontainer = new ClientContainer();
-                        $clientcontainer->organization_id = $info_id;
-                        $clientcontainer->success_order_id = $successorder->id;
-                        $clientcontainer->client_id = $client_info->id;
-                        $clientcontainer->user_id = Auth::user()->id;
-                        $clientcontainer->product_id = $orderinfo->product_id;
-                        $clientcontainer->count = $request->container;
-                        $clientcontainer->invalid_count = $request->invalid_container_count;
-                        $clientcontainer->comment = 'Dostavka vaqtida';
-                        $clientcontainer->status = 0;
-                        $clientcontainer->save();
+                        $successorder->amount = 0;
+                        $successorder->client_price = $y;
+                        $successorder->price_sold = (-1) * $request->sold_product_count * $request->sold_product_price;
                     }
+                }
+            } else {
+                $successorder->amount = $request->amount;
+            }
+            $successorder->client_price = $y;
 
+            if ($y >= 0) {
+                $successorder->price_sold = $y + $request->amount - $request->sold_product_count * $request->sold_product_price;
+            }
+            else {
+                $successorder->price_sold = $request->amount - $request->sold_product_count * $request->sold_product_price;
+            }
+
+            $successorder->comment = $request->comment ?? '';
+
+            $successorder->status = 0;
+
+            $successorder->save();
+
+            $or = Order::find($id);
+            $or->status = 1;
+            $or->save();
+
+            $info_id = auth()->user()->organization_id;
+
+            if ($request->order_status == 1 || $request->order_status == 2) {
+
+                $clientprice = new ClientPrices();
+                $clientprice->organization_id = $info_id;
+                $clientprice->success_order_id = $successorder->id;
+                $clientprice->client_id = $client_info->id;
+                $clientprice->user_id = Auth::user()->id;
+                $clientprice->payment = $request->payment;
+                $clientprice->amount = $request->amount;
+                $clientprice->comment = 'Dostavka vaqtida';
+                $clientprice->status = 0;
+                $clientprice->save();
+
+                if (Product::find($orderinfo->product_id)->container_status != 1) {
+                    $clientcontainer = new ClientContainer();
+                    $clientcontainer->organization_id = $info_id;
+                    $clientcontainer->success_order_id = $successorder->id;
+                    $clientcontainer->client_id = $client_info->id;
+                    $clientcontainer->user_id = Auth::user()->id;
+                    $clientcontainer->product_id = $orderinfo->product_id;
+                    $clientcontainer->count = $request->container;
+                    $clientcontainer->invalid_count = $request->invalid_container_count;
+                    $clientcontainer->comment = 'Dostavka vaqtida';
+                    $clientcontainer->status = 0;
+                    $clientcontainer->save();
                 }
 
-                $bot = ClientChat::where('id', $orderinfo->client_chat_id)->where('status', true)->first();
-                if ($bot) {
-                    $newRate = new RateUser();
-                    $newRate->user_id = auth()->user()->id;
-                    $newRate->client_id = $orderinfo->client_id;
-                    $newRate->success_order_id = $successorder->id;
-                    $newRate->rate = 0;
-                    $newRate->save();
+            }
 
-                    $keyboard = array(
-                        "inline_keyboard" => array(
+            $bot = ClientChat::where('id', $orderinfo->client_chat_id)->where('status', true)->first();
+            if ($bot) {
+                $newRate = new RateUser();
+                $newRate->user_id = auth()->user()->id;
+                $newRate->client_id = $orderinfo->client_id;
+                $newRate->success_order_id = $successorder->id;
+                $newRate->rate = 0;
+                $newRate->save();
+
+                $keyboard = array(
+                    "inline_keyboard" => array(
+                        [
                             [
-                                [
-                                    "text" => "1",
-                                    "callback_data" => "water_rate_1_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "2",
-                                    "callback_data" => "water_rate_2_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "3",
-                                    "callback_data" => "water_rate_3_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "4",
-                                    "callback_data" => "water_rate_4_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "5",
-                                    "callback_data" => "water_rate_5_" . $newRate->id
-                                ]
+                                "text" => "1",
+                                "callback_data" => "water_rate_1_" . $newRate->id
                             ],
                             [
-                                [
-                                    "text" => "6",
-                                    "callback_data" => "water_rate_6_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "7",
-                                    "callback_data" => "water_rate_7_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "8",
-                                    "callback_data" => "water_rate_8_" . $newRate->id
-                                ],
-                                [
-                                    "text" => "9",
-                                    "callback_data" => "water_rate_9_" . $newRate->id
-                                ]
+                                "text" => "2",
+                                "callback_data" => "water_rate_2_" . $newRate->id
+                            ],
+                            [
+                                "text" => "3",
+                                "callback_data" => "water_rate_3_" . $newRate->id
+                            ],
+                            [
+                                "text" => "4",
+                                "callback_data" => "water_rate_4_" . $newRate->id
+                            ],
+                            [
+                                "text" => "5",
+                                "callback_data" => "water_rate_5_" . $newRate->id
                             ]
-                        )
-                    );
-                    $keyboard = json_encode($keyboard);
-                    $text = "🥳 Спасибо за покупки! Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
-                        $successorder->container . ", Предоплата " . $client_info->balance . " 🥳";
+                        ],
+                        [
+                            [
+                                "text" => "6",
+                                "callback_data" => "water_rate_6_" . $newRate->id
+                            ],
+                            [
+                                "text" => "7",
+                                "callback_data" => "water_rate_7_" . $newRate->id
+                            ],
+                            [
+                                "text" => "8",
+                                "callback_data" => "water_rate_8_" . $newRate->id
+                            ],
+                            [
+                                "text" => "9",
+                                "callback_data" => "water_rate_9_" . $newRate->id
+                            ]
+                        ]
+                    )
+                );
+                $keyboard = json_encode($keyboard);
+                $text = "🥳 Спасибо за покупки! Получено - " . $successorder->amount . ", Доставлено - " . $successorder->count . ", Возврат тар - " .
+                    $successorder->container . ", Предоплата " . $client_info->balance . " 🥳";
 
-                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-                        'chat_id' => $bot->chat_id,
-                        'text' => $text,
-                        "parse_mode" => "HTML"
-                    ]);
+                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                    'chat_id' => $bot->chat_id,
+                    'text' => $text,
+                    "parse_mode" => "HTML"
+                ]);
 
-                    $rate_text = "⭐️ Доставшик хизматини бахоланг ... ⭐️";
-                    Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
-                        'chat_id' => $bot->chat_id,
-                        'text' => $rate_text,
-                        "parse_mode" => "HTML",
-                        'reply_markup' => $keyboard
-                    ]);
-                }
-
-                $client_info = Client::find($orderinfo->client_id);
-
-                return response()->json(['message' => 'success', 'balance' => $client_info->balance, 'container' => $client_info->container]);
+                $rate_text = "⭐️ Доставшик хизматини бахоланг ... ⭐️";
+                Http::post('https://api.telegram.org/bot6325632109:AAFqHouzLr-OB_ODDvPiDeLN8RJmiNJAP0w/sendMessage', [
+                    'chat_id' => $bot->chat_id,
+                    'text' => $rate_text,
+                    "parse_mode" => "HTML",
+                    'reply_markup' => $keyboard
+                ]);
             }
+
+            $client_info = Client::find($orderinfo->client_id);
+
+            return response()->json(['message' => 'success', 'balance' => $client_info->balance, 'container' => $client_info->container]);
         }
 
 
