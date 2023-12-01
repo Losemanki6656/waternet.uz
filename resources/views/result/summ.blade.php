@@ -104,10 +104,12 @@
                         <tr>
                             <td colspan="4" class="text-center fw-bold">{{ __('messages.total') }}</td>
                             <td class="text-center fw-bold">{{ $order_count_total }}</td>
-                            <td class="text-center fw-bold">{{ $order_price_total }}</td>
+{{--                            <td class="text-center fw-bold">{{ $order_price_total }}</td>--}}
+                            <td class="text-center fw-bold"></td>
                             <td class="text-center"></td>
                             <td class="text-center fw-bold">{{ $count_total }}</td>
-                            <td class="text-center fw-bold">{{ $price_total }}</td>
+{{--                            <td class="text-center fw-bold">{{ $price_total }}</td>--}}
+                            <td class="text-center fw-bold"></td>
                             <td class="text-center fw-bold">{{ $container_total }}</td>
                             <td class="text-center fw-bold"></td>
                             <td class="text-center fw-bold">{{ $amount_total }}</td>
