@@ -81,18 +81,15 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $organ = auth()->user()->organization_id;
-        $count = Organization::find($organ);
 
-        if ($count->users_count < $count->traffic->users_count) {
+        $users_count = User::query()->where('organization_id', $organ)->count();
+        $count = Organization::query()->with('traffic')->find($organ);
+
+        if ($users_count < $count->traffic->users_count) {
             $this->validate($request, [
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
