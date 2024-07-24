@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         $organ = auth()->user()->organization_id;
 
-        $users_count = User::query()->where('organization_id', $organ)->count();
+        $users_count = User::query()->where('status', true)->where('organization_id', $organ)->count();
         $count = Organization::query()->with('traffic')->find($organ);
 
         if ($users_count < $count->traffic->users_count) {
@@ -157,7 +157,7 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit($id)
     {
@@ -182,7 +182,7 @@ class UserController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         $this->validate($request, [
             'name' => 'required',

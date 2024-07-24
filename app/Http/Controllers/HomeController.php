@@ -134,7 +134,8 @@ class HomeController extends Controller
             'smsCountTraffic' => $organization->traffic->sms_count,
             'productsCount' => Product::where('organization_id', auth()->user()->organization_id)->count(),
             'productsCountTraffic' => $organization->traffic->products_count,
-            'usersCount' => User::where('organization_id', auth()->user()->organization_id)->count(),
+            'usersCount' => User::query()->where('status', true)
+                ->where('organization_id', auth()->user()->organization_id)->count(),
             'usersCountTraffic' => $organization->traffic->users_count,
             'balance' => $organization->balance,
             'date_traffic' => $organization->date_traffic,
