@@ -249,7 +249,7 @@ class UserController extends Controller
         $user = User::find(request('id'));
 
         $count = Organization::find($user->organization_id);
-        $count->users_count = $count->users_count + 1;
+        $count->users_count = $count->users_count - 1;
         $count->save();
 
         $user->status = false;
