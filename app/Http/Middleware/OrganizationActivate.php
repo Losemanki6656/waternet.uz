@@ -14,7 +14,12 @@ class OrganizationActivate
         if (Auth::check()) {
             $user = auth()->user();
             if ($user->id !== 1) {
-                if ($user->organization->date_traffic > now() && $user->status) {
+
+                if (!$user->status) {
+                    abort(401, 'Unauthorized');
+                }
+
+                if ($user->organization->date_traffic > now()) {
                     return $next($request);
                 }
 

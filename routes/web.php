@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -17,7 +18,6 @@ use App\Http\Controllers\UserController;
 
 Auth::routes(['register' => false]);
 
-
 Route::get('/setting1', [App\Http\Controllers\SettingController::class, 'setting1'])->name('setting1');
 Route::get('/setting2', [App\Http\Controllers\SettingController::class, 'setting2'])->name('setting2');
 Route::get('/setting3', [App\Http\Controllers\SettingController::class, 'setting3'])->name('setting3');
@@ -33,7 +33,7 @@ Route::get('/privace', [App\Http\Controllers\TrafficController::class, 'politica
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/coming-son', [App\Http\Controllers\RateUserController::class, 'coming_son'])->name('coming_son');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth']], static function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
