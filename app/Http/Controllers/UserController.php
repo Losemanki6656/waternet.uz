@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::where('organization_id', auth()->user()->organization_id)->get();
+        $users = User::query()->where('status', true)->where('organization_id', auth()->user()->organization_id)->get();
 
         $roles = array(1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
 
@@ -53,7 +53,7 @@ class UserController extends Controller
         // }
 
         $shops = Organization::get();
-        $users = User::query()
+        $users = User::query()->where('status', true)
             ->when(request('search'), function ($query, $search) {
                 $query->where('name', 'like', '%' . $search . '%');
             })
@@ -205,7 +205,7 @@ class UserController extends Controller
 
         DB::table('model_has_permissions')->where('model_id', $id)->delete();
 
-        if ($request->bosh == 'on')
+        if ($request->bosh === 'on')
             $user->givePermissionTo('bosh-menu');
         if ($request->client == 'on')
             $user->givePermissionTo('clients');
@@ -252,7 +252,8 @@ class UserController extends Controller
         $count->users_count = $count->users_count + 1;
         $count->save();
 
-        $user->delete();
+        $user->status = false;
+        $user->save();
 
         return redirect()->route('users')
             ->with('success', __('messages.User_deleted_successfully'));

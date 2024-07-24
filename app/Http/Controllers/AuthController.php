@@ -212,6 +212,10 @@ class AuthController extends Controller
      */
     protected function createNewToken($token)
     {
+        if (!auth('api')->user()->status) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

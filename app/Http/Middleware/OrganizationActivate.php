@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationActivate
 {
@@ -13,13 +13,13 @@ class OrganizationActivate
 
         if (Auth::check()) {
             $user = auth()->user();
-            if ($user->id != 1) {
-                if ($user->organization->date_traffic > now()) {
+            if ($user->id !== 1) {
+                if ($user->organization->date_traffic > now() && $user->status) {
                     return $next($request);
-                } else {
-                    Auth::logout();
-                    abort(403, 'Wrong Accept Header');
                 }
+
+                Auth::logout();
+                abort(403, 'Wrong Accept Header');
             }
         }
 
