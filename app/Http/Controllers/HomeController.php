@@ -1207,7 +1207,7 @@ class HomeController extends Controller
 
         $info_id = auth()->user()->organization_id;
 
-        $data = User::where('organization_id', auth()->user()->organization_id)->get();
+        $data = User::query()->where('status', true)->where('organization_id', auth()->user()->organization_id)->get();
 
         $arrayColors = [
             'success',
