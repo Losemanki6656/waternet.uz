@@ -27,6 +27,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -1227,13 +1228,8 @@ class HomeController extends Controller
             'secondary'
         ];
 
-        $x = 0;
         foreach ($data as $item) {
-            if ($x > 6) {
-                $x = 0;
-            }
-            $x++;
-            $color[$item->id] = $arrayColors[$x];
+            $color[$item->id] =  Arr::random($arrayColors);
         }
 
         $order = [];
