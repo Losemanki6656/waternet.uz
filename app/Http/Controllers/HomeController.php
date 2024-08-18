@@ -21,6 +21,11 @@ use App\Models\TakeProduct;
 use App\Models\User;
 use App\Models\UserOrganization;
 use Auth;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
@@ -38,7 +43,7 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
 
 
@@ -329,7 +334,7 @@ class HomeController extends Controller
             $dolg = Client::where('organization_id', $info_id)->where('balance', '<', '0')->sum('balance');
             $pered = Client::where('organization_id', $info_id)->where('balance', '>', '0')->sum('balance');
             $clients = Client::where('organization_id', $info_id)->get()->count();
-            $lastclients = Client::where('organization_id', $info_id)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get()->count();
+            $lastclients = Client::where('organization_id', $info_id)->whereMonth('created_at', Carbon::now()->month)->get()->count();
             $products = Product::where('organization_id', $info_id)->get();
 
             return view('statistics', [
@@ -548,7 +553,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function add_client(Request $request): \Illuminate\Http\RedirectResponse
+    public function add_client(Request $request): RedirectResponse
     {
 
         try {
@@ -598,7 +603,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.new_customer_created_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -606,7 +611,7 @@ class HomeController extends Controller
 
     }
 
-    public function client_edit(Request $request, $id): \Illuminate\Http\RedirectResponse
+    public function client_edit(Request $request, $id): RedirectResponse
     {
         $client = Client::find($id);
         $client->fullname = $request->fullname;
@@ -632,7 +637,7 @@ class HomeController extends Controller
         return redirect()->back()->with('success', __('messages.client_info_updated'));
     }
 
-    public function delete_client(Request $request): \Illuminate\Http\JsonResponse
+    public function delete_client(Request $request): JsonResponse
     {
         try {
 
@@ -650,7 +655,7 @@ class HomeController extends Controller
                 'message' => 'success'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json([
                 'message' => $e->getMessage()
@@ -660,7 +665,7 @@ class HomeController extends Controller
 
     }
 
-    public function add_location(Request $request): \Illuminate\Http\JsonResponse
+    public function add_location(Request $request): JsonResponse
     {
         $client = Client::find($request->client_id);
         $client->location = $request->lat . "," . $request->lng;
@@ -669,7 +674,7 @@ class HomeController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function add_order_check(Request $request): \Illuminate\Http\RedirectResponse
+    public function add_order_check(Request $request): RedirectResponse
     {
         try {
 
@@ -703,7 +708,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.order_received_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
 
@@ -747,13 +752,13 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.order_received_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
 
-    public function update_location(Request $request): \Illuminate\Http\RedirectResponse
+    public function update_location(Request $request): RedirectResponse
     {
 
         try {
@@ -764,13 +769,13 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.location_updated_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
 
-    public function delete_Order(): \Illuminate\Http\JsonResponse
+    public function delete_Order(): JsonResponse
     {
         try {
 
@@ -780,7 +785,7 @@ class HomeController extends Controller
                 'message' => 'success'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json([
                 'message' => $e->getMessage()
@@ -789,14 +794,14 @@ class HomeController extends Controller
 
     }
 
-    public function search_areas(): \Illuminate\Http\JsonResponse
+    public function search_areas(): JsonResponse
     {
         $data = Area::where('city_id', request('region_id', 0))->where('status', true)->get();
 
         return response()->json($data);
     }
 
-    public function add_region(Request $request): \Illuminate\Http\RedirectResponse
+    public function add_region(Request $request): RedirectResponse
     {
         try {
 
@@ -807,7 +812,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.region_added_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -815,7 +820,7 @@ class HomeController extends Controller
 
     }
 
-    public function add_city(Request $request): \Illuminate\Http\RedirectResponse
+    public function add_city(Request $request): RedirectResponse
     {
         try {
 
@@ -827,7 +832,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.city_added_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -877,7 +882,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function orders_sortable(Request $request): \Illuminate\Http\JsonResponse
+    public function orders_sortable(Request $request): JsonResponse
     {
 
         $tasks = Order::where('organization_id', auth()->user()->organization_id)->get();
@@ -897,7 +902,7 @@ class HomeController extends Controller
         ], 200);
     }
 
-    public function region_sortable(Request $request): \Illuminate\Http\JsonResponse
+    public function region_sortable(Request $request): JsonResponse
     {
 
         $tasks = Sity::where('organization_id', auth()->user()->organization_id)->get();
@@ -917,7 +922,7 @@ class HomeController extends Controller
         ], 200);
     }
 
-    public function city_sortable(Request $request): \Illuminate\Http\JsonResponse
+    public function city_sortable(Request $request): JsonResponse
     {
 
         $tasks = Area::where('organization_id', auth()->user()->organization_id)->get();
@@ -954,7 +959,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function order_edit(Request $request, $id): \Illuminate\Http\RedirectResponse
+    public function order_edit(Request $request, $id): RedirectResponse
     {
         try {
 
@@ -968,7 +973,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.order_updated_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -995,7 +1000,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function success_order_api(Request $request): \Illuminate\Http\JsonResponse
+    public function success_order_api(Request $request): JsonResponse
     {
 
         $id = $request->order_id;
@@ -1221,6 +1226,9 @@ class HomeController extends Controller
 
         $x = 0;
         foreach ($data as $item) {
+            if ($x > 7) {
+                $x = 0;
+            }
             $x++;
             $color[$item->id] = $arrayColors[$x];
         }
@@ -1876,7 +1884,7 @@ class HomeController extends Controller
                 'id' => $successorder->id
             ])->with('success', __('messages.order_delivery_confirmated_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -1947,7 +1955,7 @@ class HomeController extends Controller
             } else
                 return redirect()->back()->with('error', __('messages.it_is_not_possible_to_do_this'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -2031,7 +2039,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.region_updated_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -2054,7 +2062,7 @@ class HomeController extends Controller
                 'message' => 'success'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json([
                 'message' => $e->getMessage()
@@ -2081,7 +2089,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', __('messages.city_updated_successfully'));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -2099,7 +2107,7 @@ class HomeController extends Controller
                 'message' => 'success'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json([
                 'message' => $e->getMessage()
