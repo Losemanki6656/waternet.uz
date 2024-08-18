@@ -1212,7 +1212,10 @@ class HomeController extends Controller
 
         $info_id = auth()->user()->organization_id;
 
-        $data = User::query()->where('status', true)->where('organization_id', auth()->user()->organization_id)->get();
+        $data = User::query()
+            ->where('status', true)
+            ->where('organization_id', auth()->user()->organization_id)
+            ->get();
 
         $arrayColors = [
             'success',
@@ -1226,7 +1229,7 @@ class HomeController extends Controller
 
         $x = 0;
         foreach ($data as $item) {
-            if ($x > 7) {
+            if ($x > 6) {
                 $x = 0;
             }
             $x++;
