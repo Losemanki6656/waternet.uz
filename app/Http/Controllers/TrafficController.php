@@ -164,6 +164,8 @@
             $phone = substr(str_replace($char, $replace, $request->phone), 5, 4);
 
             $user = new User();
+            $user->organization_id = $organizations->id;
+            $user->role = 4;
             $user->name = $request->director_name;
             $user->email = 'director' . $phone . '@gmail.com';
             $user->password = bcrypt($phone1);
