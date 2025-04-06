@@ -19,7 +19,7 @@ class OrganizationActivate
                     abort(401, 'Unauthorized');
                 }
 
-                if ($user->organization->date_traffic > now()) {
+                if ($user->organization?->date_traffic > now()) {
                     return $next($request);
                 }
 
