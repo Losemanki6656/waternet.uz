@@ -441,19 +441,26 @@
             }
         }
 
-        public function delete_traffic(Request $request)
+        public function delete_traffic(Request $request, $id = null)
         {
             try {
-
-                $Traffic = Traffic::find($request->id);
+                // ID can come from route param OR from POST body (AJAX)
+                $trafficId = $id ?? $request->id;
+                $Traffic = Traffic::findOrFail($trafficId);
                 $Traffic->del_status = false;
                 $Traffic->save();
+
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json(['message' => __('messages.traffic_deleted_successfully')]);
+                }
 
                 return redirect()->back()->with('success', __('messages.traffic_deleted_successfully'));
 
             } catch (\Exception $e) {
-
-                return redirect()->back()->with('success', $e->getMessage());
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json(['message' => $e->getMessage()], 500);
+                }
+                return redirect()->back()->with('error', $e->getMessage());
             }
         }
 

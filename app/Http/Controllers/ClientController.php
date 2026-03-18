@@ -24,10 +24,15 @@ use App\Models\Sity;
 use App\Models\Area;
 use App\Models\Sms;
 use App\Models\SmsText;
+use App\Services\PaymentService;
 use Auth;
 
 class ClientController extends Controller
 {
+    public function __construct(
+        private readonly PaymentService $paymentService,
+    ) {}
+
     public function view_location($id)
     {
         $client = Client::find($id);
@@ -46,60 +51,33 @@ class ClientController extends Controller
 
     public function client_price(Request $request, $id)
     {
-        $clientprice = new ClientPrices();
-        $clientprice->organization_id = auth()->user()->organization_id;
-        $clientprice->success_order_id = 0;
-        $clientprice->client_id = $id;
-        $clientprice->user_id = Auth::user()->id;
-        $clientprice->payment = $request->payment;
-        $clientprice->amount = $request->amount;
-        $clientprice->comment = $request->comment ?? '';
-        $clientprice->status = 1;
-        $clientprice->save();
+        try {
+            $this->paymentService->addPayment(
+                $id,
+                auth()->user()->organization_id,
+                auth()->id(),
+                $request->only(['payment', 'amount', 'comment']),
+            );
 
-        $client = Client::find($id);
-        $client->balance = $client->balance + $request->amount;
-        $client->save();
-
-        return redirect()->back()->with('success', __('messages.price_added_successfully'));
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.price_added_successfully')]);
+            }
+            return redirect()->back()->with('success', __('messages.price_added_successfully'));
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function client_price_edit(Request $request, $id)
     {
         try {
-
-            $clientprice = ClientPrices::find($id);
-            if ($clientprice->status == 1) {
-                $price = $clientprice->amount;
-                $clientprice->payment = $request->payment;
-                $clientprice->amount = $request->amount;
-                $clientprice->comment = $request->comment ?? '';
-                $clientprice->save();
-
-                $client = Client::find($clientprice->client_id);
-                $client->balance = $client->balance - $price + $request->amount;
-                $client->save();
-            } else {
-                $price = $clientprice->amount;
-                $clientprice->payment = $request->payment;
-                $clientprice->amount = $request->amount;
-                $clientprice->comment = $request->comment ?? '';
-                $clientprice->save();
-
-                $client = Client::find($clientprice->client_id);
-                $client->balance = $client->balance - $price + $request->amount;
-                $client->save();
-
-                $succ = SuccessOrders::find($clientprice->success_order_id);
-                $succ->amount = $request->amount;
-                $succ->price_sold = $request->amount - ($succ->count * $succ->price);
-                $succ->save();
-            }
+            $this->paymentService->updatePayment($id, $request->only(['payment', 'amount', 'comment']));
 
             return redirect()->back()->with('success', __('messages.amount_receipts_updated_successfully'));
-
         } catch (\Exception $e) {
-
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -107,111 +85,56 @@ class ClientController extends Controller
     public function client_price_delete($id)
     {
         try {
-
-            $clientprice = ClientPrices::find($id);
-            $price = $clientprice->amount;
-
-            $client = Client::find($clientprice->client_id);
-            $client->balance = $client->balance - $price;
-            $client->save();
-            $clientprice->delete();
+            $this->paymentService->deletePayment($id);
 
             return redirect()->back()->with('success', __('messages.amount_receipts_deleted_successfully'));
-
         } catch (\Exception $e) {
-
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function client_container(Request $request, $id)
     {
-        $clientprice = new ClientContainer();
-        $clientprice->organization_id = auth()->user()->organization_id;
-        $clientprice->success_order_id = 0;
-        $clientprice->client_id = $id;
-        $clientprice->user_id = Auth::user()->id;
-        $clientprice->product_id = $request->product_id;
-        $clientprice->count = $request->count;
-        $clientprice->invalid_count = $request->invalid_count;
-        $clientprice->comment = $request->comment ?? '';
-        $clientprice->status = 1;
-        $clientprice->save();
+        try {
+            $this->paymentService->addContainerReturn(
+                $id,
+                auth()->user()->organization_id,
+                auth()->id(),
+                $request->only(['product_id', 'count', 'invalid_count', 'comment']),
+            );
 
-        $client = Client::find($id);
-        $client->container = $client->container + $request->count - $request->invalid_count;
-        $client->save();
-
-        return redirect()->back()->with('success', __('messages.container_returned_successfully'));
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.container_returned_successfully')]);
+            }
+            return redirect()->back()->with('success', __('messages.container_returned_successfully'));
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function client_container_edit(Request $request, $id)
     {
         try {
-
-            $clientprice = ClientContainer::find($id);
-            if ($clientprice->status == 1) {
-                $count = $clientprice->count;
-                $incount = $clientprice->invalid_count;
-
-                $clientprice->product_id = $request->product_id;
-                $clientprice->count = $request->count;
-                $clientprice->invalid_count = $request->invalid_count;
-                $clientprice->comment = $request->comment ?? '';
-                $clientprice->save();
-
-                $client = Client::find($clientprice->client_id);
-                $client->container = $client->container - ($count - $incount) + $request->count - $request->invalid_count;
-                $client->save();
-            } else {
-                $count = $clientprice->count;
-                $incount = $clientprice->invalid_count;
-
-                $clientprice->product_id = $request->product_id;
-                $clientprice->count = $request->count;
-                $clientprice->invalid_count = $request->invalid_count;
-                $clientprice->comment = $request->comment ?? '';
-                $clientprice->save();
-
-                $client = Client::find($clientprice->client_id);
-                $client->container = $client->container - ($count - $incount) + $request->count - $request->invalid_count;
-                $client->save();
-
-                $succ = SuccessOrders::find($clientprice->success_order_id);
-                $succ->container = $request->count;
-                $succ->invalid_container_count = $request->invalid_count;
-                $succ->save();
-            }
+            $this->paymentService->updateContainerReturn($id, $request->only(['product_id', 'count', 'invalid_count', 'comment']));
 
             return redirect()->back()->with('success', __('messages.returned_containers_updated_successfully'));
-
         } catch (\Exception $e) {
-
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
+
     public function client_container_delete($id)
     {
         try {
-
-            $clientprice = ClientContainer::find($id);
-            $count = $clientprice->count;
-            $incount = $clientprice->invalid_count;
-
-            $client = Client::find($clientprice->client_id);
-            $client->container = $client->container - ($count - $incount);
-            $client->save();
-
-            $clientprice->delete();
+            $this->paymentService->deleteContainerReturn($id);
 
             return redirect()->back()->with('success', __('messages.returned_containers_deleted_successfully'));
-
         } catch (\Exception $e) {
-
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
     public function success_order_view($id)
@@ -889,15 +812,21 @@ class ClientController extends Controller
             $arr = $request->checkbox;
             $x = 0;
 
+            $clientPhones = Client::whereIn('id', array_keys($arr))
+                ->pluck('phone', 'id');
+
+            $count->load('traffic');
+
             foreach ($arr as $key => $value) {
-
-                $phone_number = Client::find($key)->phone;
-                if ($this->send_client_message($request->text, $phone_number, $key) == 1)
+                $phone_number = $clientPhones->get($key);
+                if ($phone_number && $this->send_client_message($request->text, $phone_number, $key) == 1) {
                     $x++;
+                }
 
-                $count = Organization::find($organ);
-                if ($count->sms_count >= $count->traffic->sms_count)
+                $count->refresh();
+                if ($count->sms_count >= $count->traffic->sms_count) {
                     break;
+                }
             }
 
             return redirect()->back()->with('msg', $x);

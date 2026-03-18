@@ -70,7 +70,7 @@
                                 @endif
                             </span>
                         </td>
-                        <td class="text-center">{{ $client->balance }}</td>
+                        <td class="text-center font-bold">{{ number_format($client->balance, 0,' ',',') }}</td>
                         <td class="text-center">{{ $client->container }}</td>
                         <td class="text-center" width="100px">
                             @if ($client->activated_at->diffInDays() > 14)
@@ -432,23 +432,7 @@
         </table>
     </div>
 
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewLocation" aria-labelledby="offcanvasBottomLabel"
-        style="height: 400px">
-        <div class="offcanvas-body">
-            <div class="row row-cols-auto mb-2">
-                <label for="horizontal-firstname-input" id="locationLabel" class="col col-form-label"></label>
-                <div class="col-4">
-                    <input type="text" class="form-control" id="locationInput" readonly>
-                </div>
-                <div class="col">
-                    <button class="btn btn-warning waves-effect waves-light" onclick="addLocation()" type="button">
-                        {{ __('messages.update_location') }}</button>
-                </div>
-            </div>
-            <div id="map" style="width: 100%; height: 85%;">
-            </div>
-        </div>
-    </div>
+{{-- viewLocation offcanvas moved to v2_clients.blade.php (outside AJAX-replaced region) --}}
 @else
     <h6 for="" class="text-center align-middle mt-3"> NO INFO </h6>
 @endif
@@ -466,63 +450,7 @@
             }
         });
     </script> --}}
-    <script>
-        function addLocation() {
-            let location = $('#locationInput').val();
-            let id = localStorage.getItem('client');
-
-            let url = '{{ route('update_location') }}';
-            window.location.href =
-                `${url}?client_id=${id}&location=${location}`;
-        }
-    </script>
-    <script>
-        function showLocation(location, fullname, id) {
-            localStorage.setItem('client', id);
-            var myOffcanvas = document.getElementById('viewLocation');
-            var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
-            bsOffcanvas.show();
-
-            if (location.length > 3) {
-                const myArray = location.split(",");
-
-                var map = window.map;
-                map.removeLayer(marker);
-                marker = L.marker([myArray[0], myArray[1]]).addTo(map)
-                    .bindPopup(fullname)
-                    .openPopup();
-
-                map.setView(new L.LatLng(myArray[0], myArray[1]), 15);
-
-                $('#locationLabel').html(fullname);
-
-                map.on('click', function(ev) {
-                    marker.setLatLng(ev.latlng);
-                    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-                    $('#locationInput').val(latlng.lat + ', ' + latlng.lng);
-                });
-
-            } else {
-
-                var map = window.map;
-                map.removeLayer(marker);
-                marker = L.marker([39.7706790971256, 64.4232798737373]).addTo(map)
-                    .bindPopup(fullname)
-                    .openPopup();
-
-                map.setView(new L.LatLng(39.7706790971256, 64.4232798737373), 15);
-
-                $('#locationLabel').html(fullname);
-
-                map.on('click', function(ev) {
-                    marker.setLatLng(ev.latlng);
-                    var latlng = map.mouseEventToLatLng(ev.originalEvent);
-                    $('#locationInput').val(latlng.lat + ', ' + latlng.lng);
-                });
-            }
-
-        }
-    </script>
+    {{-- showLocation() and addLocation() defined in v2_clients.blade.php --}}
     <script>
         function showModal(id) {
             localStorage.setItem('client', id);
@@ -642,9 +570,8 @@
                             e.value && Swal.fire("{{ __('messages.deleted') }}!",
                                 "{{ __('messages.success_removed') }}",
                                 "success").then((result) => {
-                                location.reload();
+                                loadClients({ page: parseInt($('#page').val()) || 1 });
                             });
-
                         },
                         error: function(error) {
                             alertify.error(error.responseJSON.message);

@@ -332,5 +332,28 @@ return [
     'worst_user' => "Eng yomon foydalanuvchi",
     'most_rated_client' => "Eng ko'p baholagan mijoz",
     "shop_traffics_history" => "Merchant tariflar tarixi",
-    "shop_balance_history" => "Merchant to'lovlar tarixi"
+    "shop_balance_history" => "Merchant to'lovlar tarixi",
+
+    // Profil sahifasi
+    'contact_admin_to_change'   => 'o\'zgartirish uchun adminiga murojaat qiling',
+    'change_password'           => 'Parolni o\'zgartirish',
+    'optional'                  => 'ixtiyoriy',
+    'current_password'          => 'Joriy parol',
+    'new_password'              => 'Yangi parol',
+    'account_info'              => 'Hisob ma\'lumotlari',
+    'no_permissions'            => 'Ruxsatlar yo\'q',
+    'very_weak'                 => 'Juda zaif',
+    'weak'                      => 'Zaif',
+    'medium'                    => 'O\'rtacha',
+    'strong'                    => 'Kuchli',
+    'very_strong'               => 'Juda kuchli',
+    'wrong_current_password'    => 'Joriy parol noto\'g\'ri',
+    'profile_updated_successfully' => 'Profil muvaffaqiyatli yangilandi!',
+
+    // 403 / Ruxsat xatolari
+    'forbidden'        => 'Ruxsat yo\'q',
+    'access_denied'    => 'Kirish taqiqlangan',
+    'forbidden_desc'   => 'Siz ushbu sahifaga kirish uchun ruxsatga ega emassiz. Agar bu xato deb hisoblasangiz, tizim administratoriga murojaat qiling.',
+    'go_home'          => 'Bosh sahifaga',
+    'go_back'          => 'Orqaga qaytish',
 ];

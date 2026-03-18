@@ -46,7 +46,8 @@ class Client extends Model
 
 
     protected $casts = [
-        'balance' => 'double'
+        'balance' => 'double',
+        'activated_at' => 'date'
     ];
 
     protected $dates = ['activated_at'];

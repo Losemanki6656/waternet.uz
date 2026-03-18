@@ -17,19 +17,40 @@ use Illuminate\Support\Arr;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * All permissions with metadata (name => [label, icon, color]).
+     * Single source of truth — used in index, create, edit blades + store/update.
      */
+    public const PERMISSIONS = [
+        'bosh-menu'    => ['label' => 'Bosh menu',       'icon' => 'fas fa-home',         'color' => 'primary'],
+        'clients'      => ['label' => 'Klientlar',        'icon' => 'fas fa-users',         'color' => 'info'],
+        'orders'       => ['label' => 'Zakazlar',         'icon' => 'fas fa-shopping-cart', 'color' => 'warning'],
+        'products'     => ['label' => 'Tovarlar',         'icon' => 'fas fa-box',           'color' => 'success'],
+        'sklad'        => ['label' => 'Sklad',            'icon' => 'fas fa-warehouse',     'color' => 'secondary'],
+        'users'        => ['label' => 'Xodimlar',         'icon' => 'fas fa-user-cog',      'color' => 'dark'],
+        'regions'      => ['label' => 'Regionlar',        'icon' => 'fas fa-map-marker-alt','color' => 'danger'],
+        'smsmanager'   => ['label' => 'SMS',              'icon' => 'fas fa-sms',           'color' => 'primary'],
+        'results'      => ['label' => 'Hisobotlar',       'icon' => 'fas fa-chart-bar',     'color' => 'success'],
+        'DriverMobile' => ['label' => 'Driver Mobile',    'icon' => 'fas fa-mobile-alt',    'color' => 'info'],
+        'ClientExport' => ['label' => 'Client Export',    'icon' => 'fas fa-file-export',   'color' => 'warning'],
+    ];
+
+    public static function roles(): array
+    {
+        return [1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director'];
+    }
+
     public function index(Request $request)
     {
-        $users = User::query()->where('status', true)->where('organization_id', auth()->user()->organization_id)->get();
-
-        $roles = array(1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
+        $users = User::query()
+            ->where('status', true)
+            ->where('organization_id', auth()->user()->organization_id)
+            ->with('permissions')
+            ->get();
 
         return view('users.index', [
-            'users' => $users,
-            'roles' => $roles
+            'users'       => $users,
+            'roles'       => self::roles(),
+            'permissions' => self::PERMISSIONS,
         ]);
     }
 
@@ -71,74 +92,56 @@ class UserController extends Controller
 
     public function create()
     {
-        $info_id = auth()->user()->organization_id;
-        $info_org = Organization::find($info_id);
-        $roles = array(1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
-
         return view('users.create', [
-            'info_org' => $info_org,
-            'roles' => $roles
+            'info_org'    => Organization::find(auth()->user()->organization_id),
+            'roles'       => self::roles(),
+            'permissions' => self::PERMISSIONS,
         ]);
     }
-
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $organ = auth()->user()->organization_id;
 
-        $users_count = User::query()->where('status', true)->where('organization_id', $organ)->count();
-        $count = Organization::query()->with('traffic')->find($organ);
+        $usersCount = User::where('status', true)->where('organization_id', $organ)->count();
+        $org        = Organization::with('traffic')->findOrFail($organ);
 
-        if ($users_count < $count->traffic->users_count) {
-            $this->validate($request, [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|same:confirm-password'
-            ]);
+        if ($usersCount >= $org->traffic->users_count) {
+            return redirect()->route('users')->with('error', __('messages.forbidden_traffic'));
+        }
 
-            $input = $request->all();
-            $input['password'] = Hash::make($input['password']);
+        $this->validate($request, [
+            'name'     => 'required',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|same:confirm-password',
+        ]);
 
-            $user = User::create($input);
+        $user = User::create([
+            'name'            => $request->name,
+            'email'           => $request->email,
+            'phone'           => $request->phone,
+            'address'         => $request->address,
+            'password'        => Hash::make($request->password),
+            'organization_id' => $organ,
+            'role'            => $request->role,
+        ]);
 
-            if ($request->bosh == 'on')
-                $user->givePermissionTo('bosh-menu');
-            if ($request->client == 'on')
-                $user->givePermissionTo('clients');
-            if ($request->order == 'on')
-                $user->givePermissionTo('orders');
-            if ($request->results == 'on')
-                $user->givePermissionTo('results');
-            if ($request->sms == 'on')
-                $user->givePermissionTo('smsmanager');
-            if ($request->regions == 'on')
-                $user->givePermissionTo('regions');
-            if ($request->product == 'on')
-                $user->givePermissionTo('products');
-            if ($request->sklad == 'on')
-                $user->givePermissionTo('sklad');
-            if ($request->users == 'on')
-                $user->givePermissionTo('users');
+        // Sync permissions — only allow known permission names
+        $allowed = collect(self::PERMISSIONS)->keys()->toArray();
+        $granted = collect($request->input('permissions', []))
+            ->filter(fn($p) => in_array($p, $allowed))
+            ->values()->toArray();
+        $user->syncPermissions($granted);
 
-            $x = new UserOrganization();
-            $x->organization_id = auth()->user()->organization_id;
-            $x->user_id = User::where('email', $request->email)->value('id');
-            $x->role = $request->role;
-            $x->save();
+        UserOrganization::create([
+            'organization_id' => $organ,
+            'user_id'         => $user->id,
+            'role'            => $request->role,
+        ]);
 
-            $count = Organization::find($organ);
-            $count->users_count = $count->users_count + 1;
-            $count->save();
+        $org->increment('users_count');
 
-            $user->organization_id = auth()->user()->organization_id;
-            $user->role = $request->role;
-            $user->save();
-
-            return redirect()->route('users')
-                ->with('success', __('messages.User_created_successfully'));
-        } else
-            return redirect()->route('users')
-                ->with('error', __('messages.forbidden_traffic'));
+        return redirect()->route('users')->with('success', __('messages.User_created_successfully'));
     }
 
     /**
@@ -161,88 +164,104 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
-        $p = [];
+        $user = User::with('permissions')->findOrFail($id);
 
-        for ($i = 1; $i <= 10; $i++) {
-            $p[$i] = '0';
-        }
+        // Name-based set — blade uses hasPermissionTo() or in_array()
+        $userPermissions = $user->permissions->pluck('name')->toArray();
 
-        foreach ($user->permissions as $per) {
-            $p[$per->id] = $per->name;
-        }
+        $teammates = User::where('id', '!=', $user->id)
+            ->where('organization_id', $user->organization_id)
+            ->where('status', true)
+            ->get();
 
-        $users = User::where('id', '!=', $user->id)->where('organization_id', $user->organization_id)->get();
-
-        $info_org = Organization::find($user->organization_id);
-
-        $roles = array(1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director');
-
-        return view('users.edit', compact('user', 'p', 'roles', 'users'));
+        return view('users.edit', [
+            'user'            => $user,
+            'userPermissions' => $userPermissions,
+            'roles'           => self::roles(),
+            'permissions'     => self::PERMISSIONS,
+            'users'           => $teammates,
+        ]);
     }
-
 
     public function update(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'same:confirm-password',
+            'name'     => 'required',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|same:confirm-password',
         ]);
 
-        $input = $request->all();
+        $user = User::findOrFail($id);
+        $user->name    = $request->name;
+        $user->email   = $request->email;
+        $user->phone   = $request->phone;
+        $user->address = $request->address;
 
-        // dd($input);
-
-        if (!empty($input['password'])) {
-            $input['password'] = Hash::make($input['password']);
-        } else {
-            $input = Arr::except($input, array('password'));
+        if (!empty($request->password)) {
+            $user->password = Hash::make($request->password);
         }
-
-        $user = User::find($id);
-        $user->update($input);
-
-        DB::table('model_has_permissions')->where('model_id', $id)->delete();
-
-        if ($request->bosh === 'on')
-            $user->givePermissionTo('bosh-menu');
-        if ($request->client == 'on')
-            $user->givePermissionTo('clients');
-        if ($request->order == 'on')
-            $user->givePermissionTo('orders');
-        if ($request->results == 'on')
-            $user->givePermissionTo('results');
-        if ($request->sms == 'on')
-            $user->givePermissionTo('smsmanager');
-        if ($request->regions == 'on')
-            $user->givePermissionTo('regions');
-        if ($request->product == 'on')
-            $user->givePermissionTo('products');
-        if ($request->sklad == 'on')
-            $user->givePermissionTo('sklad');
-        if ($request->users == 'on')
-            $user->givePermissionTo('users');
-
-        $us = UserOrganization::where('user_id', $id)
-            ->value('id');
-
-        $x = UserOrganization::find($us);
-        $x->role = $request->role;
-        $x->save();
 
         $user->role = $request->role;
         $user->save();
 
-        if (auth()->user()->id == 1) {
-            return redirect()->route('users_admin')
-                ->with('success', __('messages.User_updated_successfully'));
-        }
+        // Sync permissions safely — only allowed permission names accepted
+        $allowed = collect(self::PERMISSIONS)->keys()->toArray();
+        $granted = collect($request->input('permissions', []))
+            ->filter(fn($p) => in_array($p, $allowed))
+            ->values()->toArray();
+        $user->syncPermissions($granted);
 
-        return redirect()->route('users')
-            ->with('success', __('messages.User_updated_successfully'));
+        // Update UserOrganization role
+        UserOrganization::where('user_id', $id)->update(['role' => $request->role]);
+
+        $redirect = ($request->input('from') === 'admin_users' || auth()->user()->id == 1)
+            ? 'users_admin'
+            : 'users';
+        return redirect()->route($redirect)->with('success', __('messages.User_updated_successfully'));
     }
 
+
+    // ── Own profile (read/update for the authenticated user) ─────────────
+    public function profile()
+    {
+        $user            = auth()->user()->load('permissions');
+        $userPermissions = $user->permissions->pluck('name')->toArray();
+
+        return view('users.profile', [
+            'user'            => $user,
+            'userPermissions' => $userPermissions,
+            'permissions'     => self::PERMISSIONS,
+        ]);
+    }
+
+    public function update_profile(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $user = auth()->user();
+
+        $this->validate($request, [
+            'name'             => 'required|string|max:100',
+            'phone'            => 'nullable|string|max:20',
+            'address'          => 'nullable|string|max:255',
+            'current_password' => 'nullable|string',
+            'password'         => 'nullable|min:6|same:confirm-password',
+        ]);
+
+        $user->name    = $request->name;
+        $user->phone   = $request->phone;
+        $user->address = $request->address;
+
+        // Password change — verify current password first
+        if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => __('messages.wrong_current_password') ?? 'Joriy parol noto\'g\'ri'])->withInput();
+            }
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return back()->with('success', __('messages.profile_updated_successfully') ?? 'Profil yangilandi');
+    }
 
     public function destroy()
     {

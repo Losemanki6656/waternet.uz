@@ -40,10 +40,13 @@ class AuthController extends Controller
         if (!$token = auth('api')->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 422);
         }
-        // $user_id = User::where('email',$request->email)->value('id');
 
-        //if(UserOrganization::where('user_id',$user_id)->value('role') != 3)  return response()->json(['error' => 'Unauthorized'], 422);
-        //else
+        // Check DriverMobile permission — only users with this permission can use the mobile app
+        if (!auth('api')->user()->hasPermissionTo('DriverMobile')) {
+            auth('api')->logout();
+            return response()->json(['error' => 'Access denied. DriverMobile permission required.'], 403);
+        }
+
         return $this->createNewToken($token);
     }
 

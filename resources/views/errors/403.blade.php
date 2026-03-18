@@ -1,137 +1,145 @@
-<!doctype html>
-<html lang="en">
-
-
-<!-- Mirrored from themesbrand.com/dason/layouts/pages-comingsoon.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 08 Jun 2023 10:03:00 GMT -->
-
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-
-    <meta charset="utf-8" />
-    <title>Waternet</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
-    <!-- App favicon -->
+    <title>403 – {{ __('messages.forbidden') ?? 'Ruxsat yo\'q' }} | Waternet</title>
+
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
 
-    <!-- swiper css -->
-    <link rel="stylesheet" href="assets/libs/swiper/swiper-bundle.min.css">
-
-    <!-- preloader css -->
-    <link rel="stylesheet" href="assets/css/preloader.min.css" type="text/css" />
-
-    <!-- Bootstrap Css -->
-    <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
-    <!-- Icons Css -->
-    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <!-- App Css-->
-    <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-
+    <style>
+        body {
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+        .error-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(85,110,230,.12);
+            padding: 56px 48px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+        .error-icon-wrap {
+            width: 96px; height: 96px;
+            border-radius: 50%;
+            background: rgba(244,106,106,.1);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 28px;
+        }
+        .error-icon-wrap i {
+            font-size: 42px;
+            color: #f46a6a;
+        }
+        .error-code {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, #f46a6a, #f1b44c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .error-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 12px;
+        }
+        .error-desc {
+            color: #74788d;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .btn-home {
+            background: linear-gradient(135deg, #556ee6, #6f42c1);
+            border: none;
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity .2s, transform .15s;
+        }
+        .btn-home:hover {
+            color: #fff;
+            opacity: .9;
+            transform: translateY(-1px);
+        }
+        .btn-back {
+            color: #74788d;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            transition: color .2s;
+        }
+        .btn-back:hover { color: #343a40; }
+        .logo-wrap {
+            margin-bottom: 36px;
+        }
+        .logo-wrap img { height: 28px; }
+        .logo-wrap span {
+            font-size: 18px;
+            font-weight: 700;
+            color: #343a40;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+    </style>
 </head>
+<body>
+    <div class="error-card">
 
-<body data-topbar="dark">
-
-    <!-- <body data-layout="horizontal"> -->
-    <div class="preview-img">
-        <div class="swiper-container preview-thumb">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="slide-bg" style="background-image: url(assets/images/bg-1.jpg);"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-bg" style="background-image: url(assets/images/bg-2.jpg);"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-bg" style="background-image: url(assets/images/bg-3.jpg);"></div>
-                </div>
-            </div>
+        <div class="logo-wrap">
+            <img src="{{ asset('assets/images/favicon.png') }}" alt="Waternet">
+            <span>Waternet</span>
         </div>
-        <!-- preview-thumb -->
-        <div class="swiper-container preview-thumbsnav">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div>
-                        <img src="assets/images/bg-1.jpg" alt="" class="avatar-sm nav-img rounded-circle">
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div>
-                        <img src="assets/images/bg-2.jpg" alt="" class="avatar-sm nav-img rounded-circle">
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div>
-                        <img src="assets/images/bg-3.jpg" alt="" class="avatar-sm nav-img rounded-circle">
-                    </div>
-                </div>
-            </div>
+
+        <div class="error-icon-wrap">
+            <i class="fas fa-shield-alt"></i>
         </div>
-        <!-- preview-thumb -->
-    </div>
-    <!-- preview bg -->
 
-    <div class="coming-content min-vh-100 py-4 px-3 py-sm-5">
-        <div class="bg-overlay bg-primary"></div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="text-center py-4 py-sm-5">
+        <div class="error-code">403</div>
+        <div class="error-title">{{ __('messages.access_denied') ?? 'Kirish taqiqlangan' }}</div>
+        <p class="error-desc">
+            {{ __('messages.forbidden_desc') ?? 'Siz ushbu sahifaga kirish uchun ruxsatga ega emassiz. Agar bu xato deb hisoblasangiz, tizim administratoriga murojaat qiling.' }}
+        </p>
 
-                        <div class="mb-5">
-                            <a href="index.html">
-                                <img src="{{ asset('assets/images/favicon.png') }}" alt="" height="30"
-                                    class="me-1"><span class="logo-txt text-white font-size-22">Waternet</span>
-                            </a>
-                        </div>
-                        <h3 class="text-white mt-5">Срок действия вашего тарифа истек!</h3>
-                        <p class="text-white-50 font-size-15">Просим вас связаться с персоналом, отвечающим за продление
-                            вашего тарифного периода!</p>
-
-                        <div data-countdown="2022/12/31" class="counter-number mt-5"></div>
-
-                        <form class="app-search mt-5 mx-auto mb-4">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Введите ваш логин">
-                                <button class="btn btn-primary" type="button"><i
-                                        class="bx bx-paper-plane align-middle"></i></button>
-                            </div>
-                        </form>
-
-                        <a type="button" class="btn btn-light btn-lg waves-effect waves-light"
-                            href="{{ route('login') }}">Выход из
-                            аккаунта</a>
-                        {{--
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form> --}}
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
+        <div>
+            <a href="{{ url('/') }}" class="btn-home">
+                <i class="fas fa-home"></i>
+                {{ __('messages.go_home') ?? 'Bosh sahifaga' }}
+            </a>
         </div>
-        <!-- end container -->
+
+        <div>
+            <a href="javascript:history.back()" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                {{ __('messages.go_back') ?? 'Orqaga qaytish' }}
+            </a>
+        </div>
+
     </div>
 
-    <div class="rightbar-overlay"></div>
-    <!-- JAVASCRIPT -->
-    <script src="assets/libs/jquery/jquery.min.js"></script>
-    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/libs/metismenu/metisMenu.min.js"></script>
-    <script src="assets/libs/simplebar/simplebar.min.js"></script>
-    <script src="assets/libs/node-waves/waves.min.js"></script>
-    <script src="assets/libs/feather-icons/feather.min.js"></script>
-    <!-- pace js -->
-    <script src="assets/libs/pace-js/pace.min.js"></script>
-    <!-- swiper js -->
-    <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
-    <!-- Plugins js-->
-    <script src="assets/libs/jquery-countdown/jquery.countdown.min.js"></script>
-
-    <!-- Countdown js -->
-    <script src="assets/js/pages/coming-soon.init.js"></script>
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    {{-- FontAwesome is bundled in icons.min.css --}}
 </body>
-
-<!-- Mirrored from themesbrand.com/dason/layouts/pages-comingsoon.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 08 Jun 2023 10:03:11 GMT -->
-
 </html>

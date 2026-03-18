@@ -20,6 +20,9 @@ use App\Models\SuccessOrders;
 use App\Models\TakeProduct;
 use App\Models\User;
 use App\Models\UserOrganization;
+use App\Services\ClientService;
+use App\Services\DashboardService;
+use App\Services\OrderService;
 use Auth;
 use Carbon\Carbon;
 use Exception;
@@ -33,12 +36,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     * @return void
-     */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ClientService   $clientService,
+        private readonly OrderService    $orderService,
+        private readonly DashboardService $dashboardService,
+    ) {
         $this->middleware('auth');
     }
 
@@ -48,85 +50,23 @@ class HomeController extends Controller
      */
 
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $date1 = now();
-        $date2 = now();
-        $text = 'Today';
+        $orgId = auth()->user()->organization_id;
 
-        $info_id = auth()->user()->organization_id;
+        // Parse ?date=YYYY-MM-DD, default to today
+        $date = $request->filled('date')
+            ? Carbon::createFromFormat('Y-m-d', $request->input('date'))->startOfDay()
+            : today();
 
-        $amount = ClientPrices::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->sum('amount');
-        $amount_cash = ClientPrices::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->where('payment', 1)
-            ->sum('amount');
-        $amount_card = ClientPrices::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->where('payment', 2)
-            ->sum('amount');
-        $amount_transfer = ClientPrices::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->where('payment', 3)
-            ->sum('amount');
-        $amount_cash = ClientPrices::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->where('payment', 1)
-            ->sum('amount');
+        $stats     = $this->dashboardService->getStats($orgId, $date);
+        $tableUser = $this->dashboardService->getUserTable($orgId, $date);
 
-        $debt = SuccessOrders::where('organization_id', $info_id)
-            ->whereDate('created_at', '>=', $date1)
-            ->whereDate('created_at', '<=', $date2)
-            ->whereIn('order_status', [1, 2])
-            ->where('price_sold', '<', 0)
-            ->sum('price_sold');
-
-        $users = User::where('organization_id', auth()->user()->organization_id)->get();
-
-        $tableUser = [];
-        foreach ($users as $auser) {
-
-            $p1 = TakeProduct::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('received_id', $auser->id)
-                ->sum('product_count');
-
-            $p2 = SuccessOrders::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $auser->id)
-                ->whereIn('order_status', [1, 2])->sum('count');
-
-            $p3 = EntryContainer::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $auser->id)
-                ->sum('product_count');
-
-            $tableUser[] = [
-                'name' => $auser->name,
-                'takeProd' => $p1,
-                'suc_order' => $p2,
-                'ectryCon' => $p3,
-                'role' => $auser->roleName()
-            ];
-
-        }
-
-        return view('dashboard', [
-            'amount' => $amount,
-            'amount_cash' => $amount_cash,
-            'amount_card' => $amount_card,
-            'amount_transfer' => $amount_transfer,
-            'debt' => $debt,
-            'tableUser' => $tableUser
-
-        ]);
+        return view('dashboard', array_merge($stats, [
+            'tableUser'    => $tableUser,
+            'selectedDate' => $date,
+            'isToday'      => $date->isToday(),
+        ]));
     }
 
     public function user_info()
@@ -385,71 +325,64 @@ class HomeController extends Controller
 
     public function clients(Request $request)
     {
-
         $organ = auth()->user()->organization_id;
 
-        if (!request('search')) {
-            $clients = Client::query()
-                ->where('organization_id', $organ)
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(function ($query) use ($search) {
-                        $query->orWhere('fullname', 'like', '%' . $search . '%')
-                            ->orWhere('phone', 'like', '%' . $search . '%')
-                            ->orWhere('address', 'like', '%' . $search . '%');
-                    });
-                })
-                ->when(request('city_id'), function ($query, $city_id) {
-                    $query->where('city_id', $city_id);
-                })
-                ->when(request('area_id'), function ($query, $area_id) {
-                    $query->where('area_id', $area_id);
-                })
-                ->with([
-                    'city',
-                    'area',
-                    'orders'
-                ])
-                ->orderBy(request('filtr', 'activated_at'), 'DESC');
-        } else {
-            $clients = Client::query()
-                ->where('organization_id', $organ)
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(function ($query) use ($search) {
-                        $query->orWhere('fullname', 'like', '%' . $search . '%')
-                            ->orWhere('phone', 'like', '%' . $search . '%')
-                            ->orWhere('address', 'like', '%' . $search . '%');
-                    });
-                })
-                ->with([
-                    'city',
-                    'area',
-                    'orders'
-                ])
-                ->orderBy(request('filtr', 'activated_at'), 'DESC');
-        }
+        // Single unified query (fixes original bug where city/area filters were skipped during search)
+        $query = Client::query()
+            ->where('organization_id', $organ)
+            ->when($request->input('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('fullname', 'like', '%' . $search . '%')
+                      ->orWhere('phone',    'like', '%' . $search . '%')
+                      ->orWhere('address',  'like', '%' . $search . '%');
+                });
+            })
+            ->when($request->input('city_id'), fn($q, $v) => $q->where('city_id', $v))
+            ->when($request->input('area_id'), fn($q, $v) => $q->where('area_id', $v))
+            ->with(['city', 'area', 'orders'])
+            ->orderBy($request->input('filtr', 'activated_at'), 'DESC');
 
-
-        $sities = Sity::where('organization_id', $organ)->orderBy('sort', 'asc')->get();
-
-        $areas = Area::where('city_id', request('city_id', 0))->orderBy('sort', 'asc')->get();
-
-        // dd($sities);
-
+        $sities   = Sity::where('organization_id', $organ)->orderBy('sort')->get();
+        $areas    = Area::where('city_id', $request->input('city_id', 0))->orderBy('sort')->get();
         $products = Product::where('organization_id', $organ)->get();
 
-        $page = request('page', session('clients_page', 1));
+        if ($request->ajax()) {
+            $perPage = (int) $request->input('paginate_select', session('per_page', 10));
+            session(['per_page' => $perPage]);
+            $page    = (int) $request->input('page', 1);
+            $clients = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $tableHtml = view('include_tables.clients_table', [
+                'clients'  => $clients,
+                'products' => $products,
+                'sities'   => $sities,
+            ])->render();
+
+            $paginationHtml = $clients->total() > 10
+                ? $clients->onEachSide(1)->withQueryString()->links()->toHtml()
+                : '';
+
+            return response()->json([
+                'table'      => $tableHtml,
+                'pagination' => $paginationHtml,
+                'total'      => $clients->total(),
+                'perPage'    => $clients->perPage(),
+            ]);
+        }
+
+        // Non-AJAX: original SSR behavior
+        $page = $request->input('page', session('clients_page', 1));
         session(['clients_page' => $page]);
 
-        if (request('paginate_select'))
-            session([
-                'per_page' => request('paginate_select')
-            ]);
+        if ($request->input('paginate_select')) {
+            session(['per_page' => $request->input('paginate_select')]);
+        }
 
         return view('clients.v2_clients', [
-            'clients' => $clients->paginate(session('per_page', 10), ['*'], 'page', $page),
-            'sities' => $sities,
-            'areas' => $areas,
-            'products' => $products
+            'clients'  => $query->paginate(session('per_page', 10), ['*'], 'page', $page),
+            'sities'   => $sities,
+            'areas'    => $areas,
+            'products' => $products,
         ]);
     }
 
@@ -464,6 +397,10 @@ class HomeController extends Controller
 
     public function export_clients(Request $request)
     {
+        if (!auth()->user()->hasPermissionTo('ClientExport')) {
+            abort(403, __('messages.forbidden') ?? 'Ruxsat yo\'q');
+        }
+
         $organ = auth()->user()->organization_id;
 
         $clients = Client::query()
@@ -556,111 +493,56 @@ class HomeController extends Controller
 
     public function add_client(Request $request): RedirectResponse
     {
-
         try {
-
-            $userClients = Client::where('organization_id', auth()->user()->organization_id)
-                ->where('status', true)
-                ->count();
-
+            $userClients    = Client::where('organization_id', auth()->user()->organization_id)->where('status', true)->count();
             $trafficClients = auth()->user()->organization->traffic->clients_count;
-
 
             if ($userClients >= $trafficClients) {
                 return redirect()->back()->with('warning', __('messages.clients_count_traffic'));
             }
 
-            $request->validate([
-                'login' => 'required|unique:clients|max:255'
-            ]);
+            $request->validate(['login' => 'required|unique:clients|max:255']);
 
-            $organ = auth()->user()->organization_id;
-            $client = new Client();
-            $client->organization_id = $organ;
-            $client->user_id = Auth::user()->id;
-            $client->fullname = $request->fullname;
-            $client->city_id = $request->city_id;
-            $client->area_id = $request->area_id;
-            $client->street = $request->street ?? ' ';
-            $client->home_number = $request->home_number ?? ' ';
-            $client->entrance = $request->apartment_number ?? ' ';
-            $client->floor = $request->entrance ?? ' ';
-            $client->apartment_number = $request->floor ?? ' ';
-            $client->address = $request->address ?? '';
-            $client->bonus = $request->bonus ?? '0';
-            $client->balance = "0";
-            $client->container = 0;
-            $client->login = $request->login;
-            $client->password = $request->password;
-            $client->location = $request->location ?? '0';
-            $client->activated_at = now();
-            $client->phone = $request->phone1;
-            $client->phone2 = $request->phone2 ?? '';
-            $client->save();
-
-            $count = Organization::find($organ);
-            $count->clients_count = $count->clients_count + 1;
-            $count->save();
+            $this->clientService->create(
+                $request->all(),
+                auth()->user()->organization_id,
+                auth()->id(),
+            );
 
             return redirect()->back()->with('success', __('messages.new_customer_created_successfully'));
-
         } catch (Exception $e) {
-
             return redirect()->back()->with('error', $e->getMessage());
         }
-
-
     }
 
-    public function client_edit(Request $request, $id): RedirectResponse
+    public function client_edit(Request $request, $id)
     {
-        $client = Client::find($id);
-        $client->fullname = $request->fullname;
-        $client->city_id = $request->city_id;
-        $client->area_id = $request->area_id;
-        $client->street = $request->street ?? ' ';
-        $client->home_number = $request->home_number ?? ' ';
-        $client->entrance = $request->entrance ?? ' ';
-        $client->floor = $request->floor ?? ' ';
-        $client->apartment_number = $request->apartment_number ?? ' ';
-        $client->address = $request->address ?? '';
-        $client->login = $request->login;
-        $client->password = $request->password;
+        try {
+            $this->clientService->update(Client::findOrFail($id), $request->all());
 
-        if ($request->location)
-            $client->location = $request->location;
-
-        $client->phone = $request->phone;
-        $client->phone2 = $request->phone2 ?? '';
-
-        $client->save();
-
-        return redirect()->back()->with('success', __('messages.client_info_updated'));
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.client_info_updated')]);
+            }
+            return redirect()->back()->with('success', __('messages.client_info_updated'));
+        } catch (Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function delete_client(Request $request): JsonResponse
     {
         try {
 
-            $organ = auth()->user()->organization_id;
+            $this->clientService->deactivate($request->id, auth()->user()->organization_id);
 
-            Client::find($request->id)->update([
-                'status' => false
-            ]);
-
-            $count = Organization::find($organ);
-            $count->clients_count = $count->clients_count - 1;
-            $count->save();
-
-            return response()->json([
-                'message' => 'success'
-            ]);
+            return response()->json(['message' => 'success']);
 
         } catch (Exception $e) {
 
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
 
 
@@ -675,105 +557,73 @@ class HomeController extends Controller
         return response()->json(['message' => 'success']);
     }
 
-    public function add_order_check(Request $request): RedirectResponse
+    public function add_order_check(Request $request)
     {
         try {
+            $this->orderService->createBulkOrders(
+                array_keys($request->checkbox),
+                auth()->user()->organization_id,
+                auth()->id(),
+                $request->only(['product_id', 'count', 'sena', 'izoh']),
+            );
 
-            $user_id = auth()->user()->id;
-            $org_id = auth()->user()->organization_id;
-            $pr_status = Product::findOrFail($request->product_id)->container_status;
-
-            $arr = $request->checkbox;
-
-            foreach ($arr as $key => $value) {
-                $order = Order::where('client_id', $key)->where('product_id', $request->product_id)->where('status', 0)->get();
-                if ($order->count() === 0) {
-
-                    $client = Client::find($key);
-
-                    $zakaz = new Order();
-                    $zakaz->organization_id = $org_id;
-                    $zakaz->city_id = $client->city_id;
-                    $zakaz->area_id = $client->area_id;
-                    $zakaz->client_id = $key;
-                    $zakaz->product_id = $request->product_id;
-                    $zakaz->container_status = $pr_status;
-                    $zakaz->product_count = $request->count;
-                    $zakaz->price = $request->sena;
-                    $zakaz->comment = $request->izoh ?? '';
-                    $zakaz->status = 0;
-                    $zakaz->user_id = $user_id;
-                    $zakaz->save();
-                }
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.order_received_successfully')]);
             }
-
             return redirect()->back()->with('success', __('messages.order_received_successfully'));
-
         } catch (Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', $e->getMessage());
         }
-
-
     }
 
     public function add_order($id, Request $request)
     {
-
         try {
+            $order = $this->orderService->createOrder(
+                $id,
+                auth()->user()->organization_id,
+                auth()->id(),
+                $request->only(['product_id', 'count', 'sena', 'izoh']),
+            );
 
-            $order = Order::where('client_id', $id)
-                ->where('product_id', $request->product_id)
-                ->where('status', 0)
-                ->get();
-
-            $client = Client::find($id);
-
-            if ($order->count() > 0) {
-
-                return response()->json([
-                    'status' => false,
-                    'message' => __('messages.this_customer_has_an_order')
-                ]);
-
+            if ($order === null) {
+                return response()->json(['success' => false, 'message' => __('messages.this_customer_has_an_order')]);
             }
 
-            $zakaz = new Order();
-            $zakaz->organization_id = auth()->user()->organization_id;
-            $zakaz->city_id = $client->city_id;
-            $zakaz->area_id = $client->area_id;
-            $zakaz->client_id = $id;
-            $zakaz->product_id = $request->product_id;
-            $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
-            $zakaz->product_count = $request->count;
-            $zakaz->price = $request->sena;
-            $zakaz->comment = $request->izoh ?? '';
-            $zakaz->status = 0;
-            $zakaz->user_id = auth()->user()->id;
-            $zakaz->save();
-
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.order_received_successfully')]);
+            }
             return redirect()->back()->with('success', __('messages.order_received_successfully'));
-
         } catch (Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
-    public function update_location(Request $request): RedirectResponse
+    public function update_location(Request $request)
     {
-
         try {
-
-            $client = Client::find($request->client_id);
+            $client = Client::findOrFail($request->client_id);
             $client->location = $request->location ?? '';
             $client->save();
 
-            return redirect()->back()->with('success', __('messages.location_updated_successfully'));
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.location_updated_successfully')]);
+            }
 
+            return redirect()->back()->with('success', __('messages.location_updated_successfully'));
         } catch (Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            }
+
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
     public function delete_Order(): JsonResponse
@@ -839,47 +689,66 @@ class HomeController extends Controller
         }
     }
 
-    public function orders()
+    public function orders(Request $request)
     {
         $organ = auth()->user()->organization_id;
 
-        $orders = Order::query()
-            ->when(request('client_id'), function ($query, $client_id) {
-                return $query->where('client_id', $client_id);
-            })
+        $query = Order::query()
+            ->when($request->input('client_id'), fn($q, $v) => $q->where('client_id', $v))
             ->where('status', 0)
             ->where('organization_id', $organ)
             ->has('client')
             ->with(['product', 'user', 'client.city', 'client.area'])
-            ->when(request('search'), function ($query, $search) {
-                $query->whereHas('client', function ($query) use ($search) {
-                    $query->where('fullname', 'like', '%' . $search . '%')
-                        ->Orwhere('phone', 'like', '%' . $search . '%')
-                        ->Orwhere('address', 'like', '%' . $search . '%');
+            ->when($request->input('search'), function ($q, $search) {
+                $q->whereHas('client', function ($q) use ($search) {
+                    $q->where('fullname', 'like', '%' . $search . '%')
+                      ->orWhere('phone',    'like', '%' . $search . '%')
+                      ->orWhere('address',  'like', '%' . $search . '%');
                 });
             })
-            ->when(request('city_id'), function ($query, $city_id) {
-                return $query->where('city_id', $city_id);
-            })
-            ->when(request('area_id'), function ($query, $area_id) {
-                return $query->where('area_id', $area_id);
-            })
+            ->when($request->input('city_id'), fn($q, $v) => $q->where('city_id', $v))
+            ->when($request->input('area_id'), fn($q, $v) => $q->where('area_id', $v))
             ->orderBy('sort', 'asc')
             ->orderBy('created_at', 'asc');
 
-        $sities = Sity::where('organization_id', $organ)->get();
-        $areas = Area::where('city_id', request('city_id', 0))->get();
-
+        $sities   = Sity::where('organization_id', $organ)->get();
+        $areas    = Area::where('city_id', $request->input('city_id', 0))->get();
         $products = Product::where('organization_id', $organ)->get();
 
-        $summ_order = $orders->sum('product_count');
+        if ($request->ajax()) {
+            $perPage   = (int) $request->input('paginate_select', session('orders_per_page', 10));
+            session(['orders_per_page' => $perPage]);
+            $page      = (int) $request->input('page', 1);
+            $summOrder = $query->sum('product_count');
+            $orders    = $query->paginate($perPage, ['*'], 'page', $page);
+
+            $tableHtml = view('include_tables.orders_table', [
+                'orders'   => $orders,
+                'products' => $products,
+            ])->render();
+
+            $paginationHtml = $orders->total() > $perPage
+                ? $orders->onEachSide(1)->withQueryString()->links()->toHtml()
+                : '';
+
+            return response()->json([
+                'table'      => $tableHtml,
+                'pagination' => $paginationHtml,
+                'total'      => $orders->total(),
+                'perPage'    => $orders->perPage(),
+                'summOrder'  => $summOrder,
+            ]);
+        }
+
+        $summOrder = $query->sum('product_count');
+        $orders    = $query->paginate(session('orders_per_page', 10));
 
         return view('clients.orders', [
-            'orders' => $orders->paginate(10),
-            'sities' => $sities,
-            'areas' => $areas,
-            'products' => $products,
-            'summ_order' => $summ_order
+            'orders'     => $orders,
+            'sities'     => $sities,
+            'areas'      => $areas,
+            'products'   => $products,
+            'summ_order' => $summOrder,
         ]);
     }
 
@@ -960,44 +829,66 @@ class HomeController extends Controller
         ]);
     }
 
-    public function order_edit(Request $request, $id): RedirectResponse
+    public function order_edit(Request $request, $id)
     {
         try {
-
             $zakaz = Order::find($id);
-            $zakaz->product_id = $request->product_id;
+            $zakaz->product_id       = $request->product_id;
             $zakaz->container_status = Product::findOrFail($request->product_id)->container_status;
-            $zakaz->product_count = $request->count;
-            $zakaz->price = $request->sena;
-            $zakaz->comment = $request->izoh ?? '';
+            $zakaz->product_count    = $request->count;
+            $zakaz->price            = $request->sena;
+            $zakaz->comment          = $request->izoh ?? '';
             $zakaz->save();
 
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('messages.order_updated_successfully')]);
+            }
             return redirect()->back()->with('success', __('messages.order_updated_successfully'));
-
         } catch (Exception $e) {
-
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
 
     public function soldproducts($id)
     {
-        $client = Client::find($id);
-        $soldproducts = SuccessOrders::where('client_id', $id);
-        $clientprices = ClientPrices::where('client_id', $id)->get();
-        $clientcontainer = ClientContainer::where('client_id', $id)->get();
-        $products = Product::where('organization_id', auth()->user()->organization_id)->get();
-        $summ = $soldproducts->sum('amount');
+        $orgId = auth()->user()->organization_id;
+
+        // Eager load all relationships in ONE query per table → eliminates N+1
+        $client = Client::with(['city', 'area'])->findOrFail($id);
+
+        $soldproducts = SuccessOrders::where('client_id', $id)
+            ->whereIn('order_status', [1, 2])   // filter in DB, not in blade
+            ->with(['product'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $summ = $soldproducts->sum('amount');   // PHP collection sum – no extra query
+
+        $clientprices = ClientPrices::where('client_id', $id)
+            ->with(['user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $clientcontainer = ClientContainer::where('client_id', $id)
+            ->with(['product', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $products = Product::where('organization_id', $orgId)->get();
 
         return view('clients.soldproducts', [
-            'client' => $client,
-            'soldproducts' => $soldproducts->get(),
-            'summ' => $summ,
-            'clientprices' => $clientprices,
+            'client'          => $client,
+            'soldproducts'    => $soldproducts,
+            'summ'            => $summ,
+            'clientprices'    => $clientprices,
+            'lastPrice'       => $clientprices->first(),   // most recent (desc order)
             'clientcontainer' => $clientcontainer,
-            'products' => $products
+            'lastContainer'   => $clientcontainer->first(),
+            'products'        => $products,
         ]);
     }
 
@@ -1201,184 +1092,144 @@ class HomeController extends Controller
 
     public function results(Request $request)
     {
+        [$date1, $date2] = $request->filled('date1')
+            ? [Carbon::parse($request->date1)->toDateString(), Carbon::parse($request->date2)->toDateString()]
+            : [now()->toDateString(), now()->toDateString()];
 
-        if ($request->date1 == null) {
-            $date1 = now();
-            $date2 = now();
-        } else {
+        $orgId   = auth()->user()->organization_id;
+        $allUsers = User::where('organization_id', $orgId)->where('status', true)->get();
 
-            $date1 = date('Y-m-d', strtotime($request->date1));
-            $date2 = date('Y-m-d', strtotime($request->date2));
+        // Filter to selected user if radio chosen, otherwise use all
+        $users   = $request->filled('formRadios')
+            ? $allUsers->where('id', (int) $request->formRadios)
+            : $allUsers;
+
+        $userIds = $users->pluck('id')->all();
+
+        // --- 5 aggregated queries instead of 6×N ---
+
+        // 1. Orders placed
+        $orderTotals = Order::whereIn('user_id', $userIds)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->groupBy('user_id')
+            ->selectRaw('user_id, SUM(product_count) as total')
+            ->pluck('total', 'user_id');
+
+        // 2. Products taken (received)
+        $takeTotals = TakeProduct::whereIn('received_id', $userIds)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->groupBy('received_id')
+            ->selectRaw('received_id, SUM(product_count) as total')
+            ->pluck('total', 'received_id');
+
+        // 3. SuccessOrders — sold count, revenue, debt, container returned
+        $soldTotals = SuccessOrders::whereIn('user_id', $userIds)
+            ->where('organization_id', $orgId)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->whereIn('order_status', [1, 2])
+            ->groupBy('user_id')
+            ->selectRaw("user_id,
+                SUM(`count`) as sold_count,
+                SUM(CASE WHEN `count` * price >= amount THEN `count` * price ELSE amount END) as sold_summ,
+                SUM(CASE WHEN price_sold < 0 THEN ABS(price_sold) ELSE 0 END) as dolg_summ,
+                SUM(container) as container_sum")
+            ->get()
+            ->keyBy('user_id');
+
+        // 4. ClientPrices — cash/card/transfer payments + direct sales
+        $priceTotals = ClientPrices::whereIn('user_id', $userIds)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->groupBy('user_id')
+            ->selectRaw("user_id,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as sold_summ,
+                SUM(CASE WHEN payment = 1 THEN amount ELSE 0 END) as payment1,
+                SUM(CASE WHEN payment = 2 THEN amount ELSE 0 END) as payment2,
+                SUM(CASE WHEN payment = 3 THEN amount ELSE 0 END) as payment3")
+            ->get()
+            ->keyBy('user_id');
+
+        // 5. EntryContainer — containers collected
+        $entryTotals = EntryContainer::whereIn('user_id', $userIds)
+            ->where('organization_id', $orgId)
+            ->whereDate('created_at', '>=', $date1)
+            ->whereDate('created_at', '<=', $date2)
+            ->groupBy('user_id')
+            ->selectRaw('user_id, SUM(product_count) as total')
+            ->pluck('total', 'user_id');
+
+        // --- Colour palette for sidebar legend ---
+        $arrayColors = ['success', 'info', 'primary', 'danger', 'dark', 'warning', 'secondary'];
+        $color = [];
+        foreach ($allUsers as $item) {
+            $color[$item->id] = Arr::random($arrayColors);
         }
 
-        $info_id = auth()->user()->organization_id;
-
-        $data = User::query()
-            ->where('status', true)
-            ->where('organization_id', auth()->user()->organization_id)
-            ->get();
-
-        $arrayColors = [
-            'success',
-            'info',
-            'primary',
-            'danger',
-            'dark',
-            'warning',
-            'secondary'
-        ];
-
-        foreach ($data as $item) {
-            $color[$item->id] =  Arr::random($arrayColors);
-        }
-
-        $order = [];
-        $takeproduct = [];
-        $soldproducts = [];
-        $soldsumm = [];
-        $entrycon = [];
-        $payment1 = [];
-        $payment2 = [];
-        $payment3 = [];
-        $amount = [];
-        $roles = [];
-
-        $users = User::where('organization_id', auth()->user()->organization_id)
-            ->when(request('formRadios'), function ($query, $formRadios) {
-                $query->where('id', $formRadios);
-            })->get();
-
+        // --- Build per-user arrays from aggregated results ---
+        $order = $takeproduct = $soldproducts = $soldsumm = [];
+        $entrycon = $takecon = $payment1 = $payment2 = $payment3 = $amount = $roles = [];
         $dataUser = [];
 
         foreach ($users as $user) {
-            $order[$user->id] = Order::
-            where('user_id', $user->id)
-                ->whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->sum('product_count');
-            $takeproduct[$user->id] = TakeProduct::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('received_id', $user->id)
-                ->sum('product_count');
+            $uid = $user->id;
+            $s   = $soldTotals->get($uid);
+            $p   = $priceTotals->get($uid);
 
-            $solds = SuccessOrders::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $user->id)
-                ->whereIn('order_status', [1, 2])
-                ->get();
-
-            $solds2 = ClientPrices::whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $user->id)
-                ->get();
-
-            $soldproducts[$user->id] = $solds->sum('count');
-            $roles[$user->id] = $user->roleName();
-            $soldsumm[$user->id] = 0;
-            $amount[$user->id] = 0;
-            $payment1[$user->id] = 0;
-            $payment2[$user->id] = 0;
-            $payment3[$user->id] = 0;
-
-            foreach ($solds as $sold) {
-
-                if ($sold->count * $sold->price >= $sold->amount)
-                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->count * $sold->price;
-                else
-                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
-
-                if ($sold->price_sold < 0)
-                    $amount[$user->id] = $amount[$user->id] + $sold->price_sold;
-
-            }
-
-            foreach ($solds2 as $sold) {
-                if ($sold->status == 1)
-                    $soldsumm[$user->id] = $soldsumm[$user->id] + $sold->amount;
-
-                if ($sold->payment == 1)
-                    $payment1[$user->id] = $payment1[$user->id] + $sold->amount;
-                if ($sold->payment == 2)
-                    $payment2[$user->id] = $payment2[$user->id] + $sold->amount;
-                if ($sold->payment == 3)
-                    $payment3[$user->id] = $payment3[$user->id] + $sold->amount;
-            }
-            $summorder = array_sum($order);
-            $summtakeproduct = array_sum($takeproduct);
-            $summsoldproducts = array_sum($soldproducts);
-            $summsoldsumm = array_sum($soldsumm);
-
-            $summpayment1 = array_sum($payment1);
-            $summpayment2 = array_sum($payment2);
-            $summpayment3 = array_sum($payment3);
-
-
-            $entrycon[$user->id] = SuccessOrders::
-            where('organization_id', $info_id)
-                ->whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $user->id)
-                ->sum('container');
-
-            $takecon[$user->id] = EntryContainer::
-            where('organization_id', $info_id)
-                ->whereDate('created_at', '>=', $date1)
-                ->whereDate('created_at', '<=', $date2)
-                ->where('user_id', $user->id)
-                ->sum('product_count');
-
-            $summentrycon = array_sum($entrycon);
-            $amount[$user->id] = (-1) * $amount[$user->id];
-            $dolgsumm = array_sum($amount);
-            $takesumm = array_sum($takecon);
-
-            $dataU = [];
-
-            $dataU[] = (int)$order[$user->id];
-            $dataU[] = (int)$takeproduct[$user->id];
-            $dataU[] = (int)$soldproducts[$user->id];
-            $dataU[] = (int)$entrycon[$user->id];
-            $dataU[] = (int)$takecon[$user->id];
+            $order[$uid]        = (int) ($orderTotals[$uid] ?? 0);
+            $takeproduct[$uid]  = (int) ($takeTotals[$uid] ?? 0);
+            $soldproducts[$uid] = (int) ($s->sold_count ?? 0);
+            $entrycon[$uid]     = (int) ($s->container_sum ?? 0);
+            $takecon[$uid]      = (int) ($entryTotals[$uid] ?? 0);
+            $soldsumm[$uid]     = (float) ($s->sold_summ ?? 0) + (float) ($p->sold_summ ?? 0);
+            $amount[$uid]       = (float) ($s->dolg_summ ?? 0);
+            $payment1[$uid]     = (float) ($p->payment1 ?? 0);
+            $payment2[$uid]     = (float) ($p->payment2 ?? 0);
+            $payment3[$uid]     = (float) ($p->payment3 ?? 0);
+            $roles[$uid]        = $user->roleName();
 
             $dataUser[] = [
                 'name' => $user->name,
-                'data' => $dataU
+                'data' => [$order[$uid], $takeproduct[$uid], $soldproducts[$uid], $entrycon[$uid], $takecon[$uid]],
             ];
         }
 
-        $categories[] = __('messages.given_order');
-        $categories[] = __('messages.given_product');
-        $categories[] = __('messages.sold_product');
-        $categories[] = __('messages.given_container');
-        $categories[] = __('messages.returned_container');
-
         return view('results', [
-            'roles' => $roles,
-            'data' => $data,
-            'users' => $users,
-            'order' => $order,
-            'takeproduct' => $takeproduct,
-            'soldproducts' => $soldproducts,
-            'soldsumm' => $soldsumm,
-            'dolgsumm' => $dolgsumm,
-            'entrycon' => $entrycon,
-            'takecon' => $takecon,
-            'amount' => $amount,
-            'payment1' => $payment1,
-            'payment2' => $payment2,
-            'payment3' => $payment3,
-            'summorder' => $summorder,
-            'summtakeproduct' => $summtakeproduct,
-            'summsoldproducts' => $summsoldproducts,
-            'summsoldsumm' => $summsoldsumm,
-            'summentrycon' => $summentrycon,
-            'summpayment1' => $summpayment1,
-            'summpayment2' => $summpayment2,
-            'summpayment3' => $summpayment3,
-            'takesumm' => $takesumm,
-            'color' => $color,
-            'dataUser' => json_encode($dataUser),
-            'categories' => json_encode($categories)
+            'roles'            => $roles,
+            'data'             => $allUsers,
+            'users'            => $users,
+            'order'            => $order,
+            'takeproduct'      => $takeproduct,
+            'soldproducts'     => $soldproducts,
+            'soldsumm'         => $soldsumm,
+            'dolgsumm'         => array_sum($amount),
+            'entrycon'         => $entrycon,
+            'takecon'          => $takecon,
+            'amount'           => $amount,
+            'payment1'         => $payment1,
+            'payment2'         => $payment2,
+            'payment3'         => $payment3,
+            'summorder'        => array_sum($order),
+            'summtakeproduct'  => array_sum($takeproduct),
+            'summsoldproducts' => array_sum($soldproducts),
+            'summsoldsumm'     => array_sum($soldsumm),
+            'summentrycon'     => array_sum($entrycon),
+            'summpayment1'     => array_sum($payment1),
+            'summpayment2'     => array_sum($payment2),
+            'summpayment3'     => array_sum($payment3),
+            'takesumm'         => array_sum($takecon),
+            'otherSumm'        => 0,
+            'color'            => $color,
+            'dataUser'         => json_encode($dataUser),
+            'categories'       => json_encode([
+                __('messages.given_order'),
+                __('messages.given_product'),
+                __('messages.sold_product'),
+                __('messages.given_container'),
+                __('messages.returned_container'),
+            ]),
         ]);
     }
 
@@ -1982,18 +1833,16 @@ class HomeController extends Controller
         $regions = Sity::where('organization_id', auth()->user()->organization_id)->orderBy('sort', 'asc')->get();
 
         if (request('filter')) {
-
             $areas = Area::where('organization_id', auth()->user()->organization_id)
-                ->with('clients')
-                ->get()
-                ->sortBy(function ($areas) {
-                    return $areas->clients->count();
-                });
-        } else
+                ->withCount('clients')
+                ->orderBy('clients_count', 'asc')
+                ->get();
+        } else {
             $areas = Area::where('organization_id', auth()->user()->organization_id)
                 ->with('region')
                 ->orderBy('sort', 'asc')
                 ->get();
+        }
 
         return view('regions', [
             'regions' => $regions,
@@ -2005,18 +1854,16 @@ class HomeController extends Controller
     {
         $regions = Sity::where('organization_id', auth()->user()->organization_id)->get();
         if ($request->filter) {
-
-
             $areas = Area::where('organization_id', auth()->user()->organization_id)
-                ->with('clients')
-                ->get()->sortBy(function ($areas) {
-                    return $areas->clients->count();
-                });
-        } else
+                ->withCount('clients')
+                ->orderBy('clients_count', 'asc')
+                ->get();
+        } else {
             $areas = Area::where('organization_id', auth()->user()->organization_id)
                 ->with('region')
                 ->orderBy('city_id', 'asc')
                 ->get();
+        }
 
         $info_id = auth()->user()->organization_id;
         $info_org = Organization::find($info_id);

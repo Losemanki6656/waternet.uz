@@ -1,550 +1,344 @@
 @extends('layouts.v2_master')
 @section('content')
+
+    {{-- Page Title --}}
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">{{ __('messages.results') }}</h4>
-
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ __('messages.home') }}</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('messages.home') }}</a></li>
                         <li class="breadcrumb-item active">{{ __('messages.results') }}</li>
                     </ol>
                 </div>
-
             </div>
         </div>
     </div>
-    <div class="row mb-3 animate__animated animate__fadeInUp">
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item rounded-3">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse"
-                        id="accorButton" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                        {{ __('messages.old_version_result') }}
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-bordered table-nowrap" id="table">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="text-center fw-bold">{{ __('messages.fullname') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.role') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.given_order') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.given_product') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.sold_product') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.amount') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.given_container') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.returned_container') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.cash') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.card') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.transfer') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.debt') }}</th>
-                                        <th class="text-center fw-bold">{{ __('messages.deposit') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($users as $user)
-                                        <tr>
-                                            <td class="text-center fw-bold">
-                                                {{ $user->name }}
-                                            </td>
-                                            <td class="text-center fw-bold">
-                                                {{ $user->roleName() }}
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('result_orders', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
-                                                    {{ $order[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('result_take', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $takeproduct[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('resultsold', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $soldproducts[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('summresult', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $soldsumm[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('resultentrycontainer', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $entrycon[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                {{ $takecon[$user->id] }}
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('payment1', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $payment1[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('payment2', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $payment2[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('payment3', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $payment3[$user->id] }}</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="{{ route('dolgresult', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">{{ $amount[$user->id] }}</a>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    @endforeach
-                                    <td colspan="2" class="text-center fw-bold"> {{ __('messages.total') }}:</td>
-                                    <td class="text-center fw-bold">{{ $summorder }}</td>
-                                    <td class="text-center fw-bold">{{ $summtakeproduct }}</td>
-                                    <td class="text-center fw-bold">{{ $summsoldproducts }}</td>
-                                    <td class="text-center fw-bold">{{ $summsoldsumm }}</td>
-                                    <td class="text-center fw-bold">{{ $summentrycon }}</td>
-                                    <td class="text-center fw-bold">{{ $takesumm }}</td>
-                                    <td class="text-center fw-bold">{{ $summpayment1 }}</td>
-                                    <td class="text-center fw-bold">{{ $summpayment2 }}</td>
-                                    <td class="text-center fw-bold">{{ $summpayment3 }}</td>
-                                    <td class="text-center fw-bold">{{ $dolgsumm }}</td>
-                                </tbody>
-                            </table>
-                        </div>
+
+    {{-- Summary Stat Cards --}}
+    <div class="row g-3 mb-3 animate__animated animate__fadeInUp">
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.cash') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-success-subtle text-success fs-4">
+                            <i class="mdi mdi-cash"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($summpayment1, 0, '.', ' ') }}</h5>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.card') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-danger-subtle text-danger fs-4">
+                            <i class="mdi mdi-credit-card-outline"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($summpayment2, 0, '.', ' ') }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.transfer') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-info-subtle text-info fs-4">
+                            <i class="mdi mdi-bank-transfer"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($summpayment3, 0, '.', ' ') }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.debt') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-warning-subtle text-warning fs-4">
+                            <i class="mdi mdi-alert-circle-outline"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($dolgsumm, 0, '.', ' ') }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.deposit') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-primary-subtle text-primary fs-4">
+                            <i class="mdi mdi-wallet-outline"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($otherSumm, 0, '.', ' ') }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="card rounded-3 h-100 mb-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">{{ __('messages.total') }}</h6>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="avatar-sm rounded-3 d-flex align-items-center justify-content-center bg-dark-subtle text-dark fs-4">
+                            <i class="mdi mdi-sigma"></i>
+                        </span>
+                        <h5 class="mb-0 fw-bold">{{ number_format($summsoldsumm, 0, '.', ' ') }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="row  animate__animated animate__fadeInUp">
-        <div class="col-xxl-2 col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.cash') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-success-subtle text-success font-size-20 rounded-3"
-                                    href="#"><i class="mdi mdi-arrow-top-right"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $summpayment1 }}</h5>
+    {{-- Filter + Chart --}}
+    <div class="row animate__animated animate__fadeInUp">
 
-                        </div>
-
-                    </div>
-
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
-        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.card') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-danger-subtle text-danger font-size-20 rounded-3"
-                                    href="#"><i class="mdi mdi-arrow-bottom-left"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $summpayment2 }}</h5>
-                        </div>
-                    </div>
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
-        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.transfer') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-info-subtle text-info font-size-20 rounded-3" href="#"><i
-                                        class="mdi mdi-currency-usd"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $summpayment3 }}</h5>
-                        </div>
-                    </div>
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
-        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.debt') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-primary-subtle text-primary font-size-20 rounded-3"
-                                    href="#"><i class="mdi mdi-email-outline"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $dolgsumm }}</h5>
-                            {{-- <p class="fw-bold mb-0">{{ $summsoldsumm }}</p> --}}
-                        </div>
-                    </div>
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.debt') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-warning-subtle text-warning font-size-20 rounded-3"
-                                    href="#"><i class="mdi mdi-arrow-top-right"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $otherSumm ?? 0 }}</h5>
-                            {{-- <p class="fw-bold mb-0">{{ $summsoldsumm }}</p> --}}
-                        </div>
-                    </div>
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <div class="col-xxl-2 ms-md-auto col-md-4 col-sm-4 col-lg-4">
-            <div class="card rounded-3">
-                <div class="card-body">
-                    <div>
-                        <h5 class="mb-3">{{ __('messages.total') }}</h5>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="avatar-md">
-                                <a class="avatar-title bg-danger-subtle text-danger font-size-20 rounded-3"
-                                    href="#"><i class="mdi mdi-arrow-top-left"></i></a>
-                            </div>
-                            <h5 class="mb-0">{{ $summsoldsumm }}</h5>
-                            {{-- <p class="fw-bold mb-0">{{ $summsoldsumm }}</p> --}}
-                        </div>
-                    </div>
-                </div>
-                <!--end card body-->
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
-
-    </div>
-
-    <div class="row  animate__animated animate__fadeInUp">
+        {{-- Left: Filter panel --}}
         <div class="col-xl-3 col-lg-4">
             <div class="card rounded-3">
                 <form action="{{ route('results') }}" method="get">
-                    @csrf
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-xxl-6 col-xl-12 col-lg-12 col-sm-12 col-md-12">
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small text-muted">{{ __('messages.date_from') ?? 'Dan' }}</label>
                                 <input type="date" value="{{ request('date1', now()->format('Y-m-d')) }}"
-                                    id="date1" name="date1" class="form-control">
+                                       id="date1" name="date1" class="form-control form-control-sm">
                             </div>
-                            <div class="col-xxl-6 col-xl-12 col-lg-12 col-sm-12 col-md-12">
+                            <div class="col-6">
+                                <label class="form-label small text-muted">{{ __('messages.date_to') ?? 'Gacha' }}</label>
                                 <input type="date" value="{{ request('date2', now()->format('Y-m-d')) }}"
-                                    id="date2" name="date2" class="form-control">
+                                       id="date2" name="date2" class="form-control form-control-sm">
                             </div>
                         </div>
-                        <div class="d-grid">
-                            <button class="btn font-16 btn-primary" type="submit" id="btn-new-event"><i
-                                    class="mdi mdi-plus-circle-outline"></i> {{ __('messages.filtr') }}
+                        <div class="d-grid mb-3">
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <i class="mdi mdi-filter-outline me-1"></i>{{ __('messages.filtr') }}
                             </button>
                         </div>
 
-                        <div id="external-events" class="">
-                            <br>
+                        <p class="text-muted small mb-2">{{ __('messages.employee') ?? 'Xodim' }}</p>
+                        <div id="external-events">
                             @foreach ($data as $user)
-                                <div class="external-event mb-2 text-{{ $color[$user->id] }} bg-{{ $color[$user->id] }}-subtle rounded-3"
-                                    data-class="bg-{{ $color[$user->id] }}">
-                                    <i class="mdi mdi-checkbox-blank-circle font-size-11 me-2"></i>
-                                    <input class="form-check-input me-2" type="radio" name="formRadios"
-                                        @if (request('formRadios') == $user->id) checked @endif value="{{ $user->id }}"
-                                        id="formRadios{{ $user->id }}">
-                                    <label class="form-check-label" for="formRadios{{ $user->id }}">
-                                        {{ $user->name }}
+                                <div class="d-flex align-items-center mb-2 p-2 rounded-3 bg-{{ $color[$user->id] }}-subtle">
+                                    <input class="form-check-input me-2 flex-shrink-0" type="radio"
+                                           name="formRadios"
+                                           @if (request('formRadios') == $user->id) checked @endif
+                                           value="{{ $user->id }}"
+                                           id="formRadios{{ $user->id }}">
+                                    <label class="form-check-label text-{{ $color[$user->id] }} fw-medium small"
+                                           for="formRadios{{ $user->id }}">
+                                        <i class="mdi mdi-circle-small me-1"></i>{{ $user->name }}
                                     </label>
-
                                 </div>
                             @endforeach
-                            <div class="external-event mb-2 text-success bg-success-subtle rounded-3"
-                                data-class="bg-success">
-                                <i class="mdi mdi-checkbox-blank-circle font-size-11 me-2"></i>
-                                <input class="form-check-input me-2" type="radio" name="formRadios" id="formRadios"
-                                    @if (!request('formRadios')) checked @endif value="">
-                                <label class="form-check-label" for="formRadios">
-                                    {{ __('messages.all') }}
+                            <div class="d-flex align-items-center mb-2 p-2 rounded-3 bg-success-subtle">
+                                <input class="form-check-input me-2 flex-shrink-0" type="radio"
+                                       name="formRadios" id="formRadiosAll"
+                                       @if (!request('formRadios')) checked @endif value="">
+                                <label class="form-check-label text-success fw-medium small" for="formRadiosAll">
+                                    <i class="mdi mdi-circle-small me-1"></i>{{ __('messages.all') }}
                                 </label>
-
                             </div>
                         </div>
 
-                        <div class="row justify-content-center mt-2">
-                            <div class="col-lg-12 col-sm-6">
-                                <img src="{{ asset('assets/images/undraw-calendar.svg') }}" alt=""
-                                    class="img-fluid d-block">
-                            </div>
+                        <div class="text-center mt-3">
+                            <img src="{{ asset('assets/images/undraw-calendar.svg') }}" alt=""
+                                 class="img-fluid" style="max-height:120px">
                         </div>
-
                     </div>
-
                 </form>
             </div>
         </div>
 
-        <div class="col-xl-9 col-lg-4">
-            <!--end row-->
-
-            {{-- <div class="row">
-                <div class="col-xl-4 col-md-4">
-                    <div class="card rounded-3">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Bar Chart</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="given_or"></div>
-                        </div>
-                    </div>
+        {{-- Right: Chart --}}
+        <div class="col-xl-9 col-lg-8">
+            <div class="card rounded-3 h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title mb-0">{{ __('messages.results') }}</h5>
+                    <span class="badge bg-primary-subtle text-primary">
+                        {{ request('date1', now()->format('d.m.Y')) }} — {{ request('date2', now()->format('d.m.Y')) }}
+                    </span>
                 </div>
-                <div class="col-xl-4 col-md-4">
-                    <div class="card rounded-3">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Bar Chart</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="given_prod"></div>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <div id="chart"></div>
                 </div>
-                <div class="col-xl-4 col-md-4">
-                    <div class="card rounded-3">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Bar Chart</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="given_prod"></div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-            </div> --}}
-
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card rounded-3">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Chart</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="chart"></div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
             </div>
+        </div>
+    </div>
 
-            {{-- <div class="row">
-                <div class="col-xl-12">
-                    <div class="card rounded-3">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Top Transection</h4>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-responsive table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Avalibility</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Domain</td>
-                                        <td>120 in stock</td>
-                                        <td>$29,192</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Market implements</td>
-                                        <td>10 in stock</td>
-                                        <td>$19,100</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Local business</td>
-                                        <td>3 in stock</td>
-                                        <td>$10,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Salary payments</td>
-                                        <td>3 in stock</td>
-                                        <td>$50,000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="text-center">
-                                <a href="#" class="btn btn-soft-secondary btn-sm">See more</a>
+    {{-- Detailed Table (collapsible) --}}
+    <div class="row mt-3 animate__animated animate__fadeInUp">
+        <div class="col-12">
+            <div class="accordion" id="accordionTable">
+                <div class="accordion-item rounded-3">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button fw-medium collapsed" type="button"
+                                data-bs-toggle="collapse" id="accorButton"
+                                data-bs-target="#collapseOne" aria-expanded="false"
+                                aria-controls="collapseOne">
+                            <i class="mdi mdi-table me-2"></i>{{ __('messages.old_version_result') }}
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse"
+                         aria-labelledby="headingOne" data-bs-parent="#accordionTable">
+                        <div class="accordion-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle mb-0" id="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-center">{{ __('messages.fullname') }}</th>
+                                            <th class="text-center">{{ __('messages.role') }}</th>
+                                            <th class="text-center">{{ __('messages.given_order') }}</th>
+                                            <th class="text-center">{{ __('messages.given_product') }}</th>
+                                            <th class="text-center">{{ __('messages.sold_product') }}</th>
+                                            <th class="text-center">{{ __('messages.amount') }}</th>
+                                            <th class="text-center">{{ __('messages.given_container') }}</th>
+                                            <th class="text-center">{{ __('messages.returned_container') }}</th>
+                                            <th class="text-center">{{ __('messages.cash') }}</th>
+                                            <th class="text-center">{{ __('messages.card') }}</th>
+                                            <th class="text-center">{{ __('messages.transfer') }}</th>
+                                            <th class="text-center">{{ __('messages.debt') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($users as $user)
+                                            <tr>
+                                                <td class="fw-semibold">{{ $user->name }}</td>
+                                                <td class="text-center">
+                                                    <span class="badge bg-secondary-subtle text-secondary">{{ $roles[$user->id] }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('result_orders', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ $order[$user->id] }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('result_take', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ $takeproduct[$user->id] }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('resultsold', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ $soldproducts[$user->id] }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('summresult', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ number_format($soldsumm[$user->id], 0, '.', ' ') }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('resultentrycontainer', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ $entrycon[$user->id] }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">{{ $takecon[$user->id] }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('payment1', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ number_format($payment1[$user->id], 0, '.', ' ') }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('payment2', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ number_format($payment2[$user->id], 0, '.', ' ') }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('payment3', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}">
+                                                        {{ number_format($payment3[$user->id], 0, '.', ' ') }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('dolgresult', ['date1' => request('date1'), 'date2' => request('date2'), 'id' => $user->id]) }}"
+                                                       class="{{ $amount[$user->id] > 0 ? 'text-danger fw-semibold' : '' }}">
+                                                        {{ number_format($amount[$user->id], 0, '.', ' ') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <tr class="table-light fw-bold">
+                                            <td colspan="2" class="text-center">{{ __('messages.total') }}</td>
+                                            <td class="text-center">{{ $summorder }}</td>
+                                            <td class="text-center">{{ $summtakeproduct }}</td>
+                                            <td class="text-center">{{ $summsoldproducts }}</td>
+                                            <td class="text-center">{{ number_format($summsoldsumm, 0, '.', ' ') }}</td>
+                                            <td class="text-center">{{ $summentrycon }}</td>
+                                            <td class="text-center">{{ $takesumm }}</td>
+                                            <td class="text-center">{{ number_format($summpayment1, 0, '.', ' ') }}</td>
+                                            <td class="text-center">{{ number_format($summpayment2, 0, '.', ' ') }}</td>
+                                            <td class="text-center">{{ number_format($summpayment3, 0, '.', ' ') }}</td>
+                                            <td class="text-center">{{ number_format($dolgsumm, 0, '.', ' ') }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--end col-->
-            </div> --}}
+            </div>
         </div>
-
     </div>
 
     <style>
-        .highcharts-background {
-            fill: transparent;
+        .highcharts-background { fill: transparent; }
+        .avatar-sm {
+            width: 2.5rem;
+            height: 2.5rem;
+            flex-shrink: 0;
         }
     </style>
 @endsection
 
-
-
 @section('scripts')
-    {{-- <script src="https://code.highcharts.com/highcharts.js"></script> --}}
     <script>
-        $(document).ready(function() {
-            let z = localStorage.getItem('accorButton');
-            if (z == 'show') {
+        // Restore accordion state from localStorage
+        $(document).ready(function () {
+            if (localStorage.getItem('accorButton') === 'show') {
                 $('#accorButton').removeClass('collapsed');
                 $('#collapseOne').addClass('show');
-            } else {
-                $('#accorButton').addClass('collapsed');
-                $('#collapseOne').removeClass('show');
             }
-
-            $('#accorButton').click(function(e) {
-                let x = localStorage.getItem('accorButton');
-                if (x != 'show') {
-                    localStorage.setItem('accorButton', 'show');
-                } else {
-                    localStorage.setItem('accorButton', 'hide');
-                }
-
+            $('#accorButton').on('click', function () {
+                const isOpen = localStorage.getItem('accorButton') === 'show';
+                localStorage.setItem('accorButton', isOpen ? 'hide' : 'show');
             });
         });
     </script>
 
     <script>
         var options = {
-            series: [44, 55, 67, 83],
-            chart: {
-                height: 200,
-                type: 'radialBar',
-            },
-            plotOptions: {
-                radialBar: {
-                    dataLabels: {
-                        name: {
-                            fontSize: '22px',
-                        },
-                        value: {
-                            fontSize: '16px',
-                        },
-                        total: {
-                            show: true,
-                            label: 'Total',
-                            formatter: function(w) {
-                                return 249
-                            }
-                        }
-                    }
-                }
-            },
-            labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#given_or"), options);
-        chart.render();
-    </script>
-
-    <script>
-        var options = {
-            series: [44, 55, 67, 83],
-            chart: {
-                height: 200,
-                type: 'radialBar',
-            },
-            plotOptions: {
-                radialBar: {
-                    dataLabels: {
-                        name: {
-                            fontSize: '22px',
-                        },
-                        value: {
-                            fontSize: '16px',
-                        },
-                        total: {
-                            show: true,
-                            label: 'Total',
-                            formatter: function(w) {
-                                return 249
-                            }
-                        }
-                    }
-                }
-            },
-            labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#given_prod"), options);
-        chart.render();
-    </script>
-
-    <script>
-        var series = @php echo $dataUser; @endphp;
-        var categories = @php echo $categories; @endphp;
-        var options = {
-            series: series,
+            series: @php echo $dataUser; @endphp,
             chart: {
                 type: 'bar',
-                height: 440
+                height: 380,
+                toolbar: { show: false },
+                background: 'transparent'
             },
             plotOptions: {
                 bar: {
                     horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                },
+                    columnWidth: '50%',
+                    borderRadius: 4
+                }
             },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
+            dataLabels: { enabled: false },
+            stroke: { show: true, width: 2, colors: ['transparent'] },
             xaxis: {
-                categories: categories,
+                categories: @php echo $categories; @endphp,
+                labels: { style: { fontSize: '12px' } }
             },
-            yaxis: {
-                title: {
-                    text: ''
-                }
-            },
-            fill: {
-                opacity: 1
-            },
+            yaxis: { title: { text: '' } },
+            fill: { opacity: 1 },
+            legend: { position: 'top' },
             tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return val
-                    }
-                }
+                y: { formatter: function (val) { return val.toLocaleString(); } }
             }
         };
 
