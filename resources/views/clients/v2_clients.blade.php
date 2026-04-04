@@ -275,7 +275,7 @@
          Lives OUTSIDE #filter-table to survive AJAX replacements.
          ══════════════════════════════════════════════════════════════ --}}
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewLocation"
-         style="height:560px; border-radius:20px 20px 0 0; overflow:hidden; border:none">
+         style="height:660px; border-radius:16px 16px 0 0; overflow:hidden; border: black">
 
         {{-- Gradient header --}}
         <div class="d-flex align-items-center justify-content-between px-4"
@@ -350,7 +350,7 @@ ymaps.ready(function () {
 
 // ── Shared coord update helper ────────────────────────────────────────
 function _updateCoords(lat, lng) {
-    var str = parseFloat(lat).toFixed(6) + ', ' + parseFloat(lng).toFixed(6);
+    const str = parseFloat(lat).toFixed(6) + ', ' + parseFloat(lng).toFixed(6);
     document.getElementById('coordText').textContent    = str;
     document.getElementById('coordDisplay').textContent = str;
     window._locationInput = lat + ',' + lng;

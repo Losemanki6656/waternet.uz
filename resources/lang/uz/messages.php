@@ -356,4 +356,16 @@ return [
     'forbidden_desc'   => 'Siz ushbu sahifaga kirish uchun ruxsatga ega emassiz. Agar bu xato deb hisoblasangiz, tizim administratoriga murojaat qiling.',
     'go_home'          => 'Bosh sahifaga',
     'go_back'          => 'Orqaga qaytish',
+
+
+    'no_data' => "Ma'lumot topilmadi",
+    'leave_blank_to_keep' => "O'zgartirishni xoxlamasangiz bo'sh qoldiring",
+    'select_all' => "Barchasini tanlash",
+    'deselect_all' => 'Tanlanganlarni bekor qilish',
+    'permissions' => 'Ruxsatlar',
+    'workers' => 'Xodimlar',
+    'date_from' => 'Qachondan',
+    'date_to' => 'Qachongacha',
+    'employee' => 'Xodimlar',
+    'edit' => "Tahrirish",
 ];
