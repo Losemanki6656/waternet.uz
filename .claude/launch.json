@@ -12,6 +12,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "watch"],
       "port": 8080
+    },
+    {
+      "name": "waternet-driver",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "waternet-driver", "run", "dev"],
+      "port": 5174
     }
   ]
 }

@@ -194,6 +194,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/regions/delete-city',       [App\Http\Controllers\HomeController::class, 'delete_city'])->name('delete_city');
     });
 
+    // ── Drivers live map ──────────────────────────────────────────
+    Route::middleware('permission:drivers-map')->group(function () {
+        Route::get('/drivers/map',       [App\Http\Controllers\DriverLocationController::class, 'map'])->name('drivers.map');
+        Route::get('/drivers/locations', [App\Http\Controllers\DriverLocationController::class, 'locations'])->name('drivers.locations');
+    });
+
     // ── SMS Manager ───────────────────────────────────────────────
     Route::middleware('permission:smsmanager')->group(function () {
         Route::get('/smsmanager/send-message',    [App\Http\Controllers\ClientController::class, 'send_message'])->name('send_message');

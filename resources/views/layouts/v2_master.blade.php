@@ -303,6 +303,14 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('drivers-map')
+                            <li>
+                                <a href="{{ route('drivers.map') }}">
+                                    <i data-feather="map"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.drivers_map') }}</span>
+                                </a>
+                            </li>
+                        @endcan
                         @can('users')
                             <li>
                                 <a href="{{ route('users') }}">

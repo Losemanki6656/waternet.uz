@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\TrafficController;
+use App\Http\Controllers\DriverLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::group([
     Route::post('/driver/areas', [HomeController::class, 'areas']);
     Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);
     Route::get('/driver/monitoring', [HomeController::class, 'monitoring']);
+    Route::post('/driver/locations', [DriverLocationController::class, 'store']);
 
 
 });
