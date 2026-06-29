@@ -73,21 +73,22 @@
                         <td class="text-center font-bold">{{ number_format($client->balance, 0,' ',',') }}</td>
                         <td class="text-center">{{ $client->container }}</td>
                         <td class="text-center" width="100px">
-                            @if ($client->activated_at->diffInDays() > 14)
+                            @php $days = (int) abs($client->activated_at->diffInDays()); @endphp
+                            @if ($days > 14)
                                 <button type="button" class="btn btn-danger waves-effect waves-light btn-sm"
                                     data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                    title="{{ $days }} kun davomida aktiv emas">
                                     {{ $client->activated_at->format('d-m-Y') }}</button>
                             @else
-                                @if ($client->activated_at->diffInDays() >= 7 && $client->activated_at->diffInDays() <= 14)
+                                @if ($days >= 7 && $days <= 14)
                                     <button type="button" class="btn btn-warning waves-effect waves-light btn-sm"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                        title="{{ $days }} kun davomida aktiv emas">
                                         {{ $client->activated_at->format('d-m-Y') }}</button>
                                 @else
                                     <button type="button" class="btn btn-success waves-effect waves-light btn-sm"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                        title="{{ $days }} kun davomida aktiv emas">
                                         {{ $client->activated_at->format('d-m-Y') }}</button>
                                 @endif
                             @endif

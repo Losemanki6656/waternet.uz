@@ -210,21 +210,22 @@
                                     <td class="text-center">{{ $client->container }}</td>
                                     <td class="text-center">{{ $client->user->name }}</td>
                                     <td class="text-center">
-                                        @if ($client->activated_at->diffInDays() > 14)
+                                        @php $days = (int) abs($client->activated_at->diffInDays()); @endphp
+                                        @if ($days > 14)
                                             <div class="p-2 bg-danger text-white" data-toggle="tooltip"
                                                 data-placement="bottom"
-                                                title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                                title="{{ $days }} kun davomida aktiv emas">
                                                 {{ $client->activated_at->format('d-m-Y') }}</div>
                                         @else
-                                            @if ($client->activated_at->diffInDays() >= 7 && $client->activated_at->diffInDays() <= 14)
+                                            @if ($days >= 7 && $days <= 14)
                                                 <div class="p-2 bg-warning text-dark" data-toggle="tooltip"
                                                     data-placement="bottom"
-                                                    title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                                    title="{{ $days }} kun davomida aktiv emas">
                                                     {{ $client->activated_at->format('d-m-Y') }}</div>
                                             @else
                                                 <div class="p-2 bg-success text-white" data-toggle="tooltip"
                                                     data-placement="bottom"
-                                                    title="{{ $client->activated_at->diffInDays() + 1 }} kun davomida aktiv emas">
+                                                    title="{{ $days }} kun davomida aktiv emas">
                                                     {{ $client->activated_at->format('d-m-Y') }}</div>
                                             @endif
                                         @endif

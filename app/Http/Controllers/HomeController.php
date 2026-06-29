@@ -440,11 +440,12 @@ class HomeController extends Controller
                 'active' => $item->activated_at->format('Y-m-d')
             ];
 
-            if ($item->activated_at->diffInDays() > 14)
+            $days = (int) abs($item->activated_at->diffInDays());
+            if ($days > 14)
                 $b[] = 'FFC7CE';
-            if ($item->activated_at->diffInDays() >= 7 && $item->activated_at->diffInDays() <= 7)
+            elseif ($days >= 7)
                 $b[] = 'FFEB9C';
-            if ($item->activated_at->diffInDays() < 7)
+            else
                 $b[] = 'C6EFCE';
         }
         $x += 3;
