@@ -6,6 +6,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   // Relative base so the built assets load over file:// inside the Capacitor WebView.
   base: './',
+  // Expose YANDEX_*-prefixed env vars (e.g. YANDEX_MAPS_KEY) to the client,
+  // in addition to the default VITE_* ones.
+  envPrefix: ['VITE_', 'YANDEX_'],
   plugins: [vue()],
   resolve: {
     alias: {

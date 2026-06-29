@@ -14,8 +14,8 @@ import AppLayout from "@/components/AppLayout";
 import {Geolocation} from "@capacitor/geolocation";
 import {App as CapacitorApp} from '@capacitor/app';
 
-// Yandex Maps JS API key — set this before building.
-const YANDEX_KEY = ''
+// Yandex Maps JS API key — read from waternet-driver/.env (YANDEX_MAPS_KEY).
+const YANDEX_KEY = import.meta.env.YANDEX_MAPS_KEY || ''
 
 let ymapsPromise = null
 

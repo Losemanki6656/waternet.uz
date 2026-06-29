@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\DriverLocation;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -85,6 +86,97 @@ class DriverLocationController extends Controller
     public function map()
     {
         return view('drivers.map');
+    }
+
+    /**
+     * Admin (session) — JSON of every client (with a GPS location) so the
+     * drivers map can also display clients. Super-admin sees all orgs.
+     */
+    public function clients()
+    {
+        $user = auth()->user();
+
+        $query = Client::whereNotNull('location')
+            ->where('location', '!=', '')
+            ->where('location', '!=', '0');
+
+        if ($user->id != 1 && $user->organization_id) {
+            $query->where('organization_id', $user->organization_id);
+        }
+
+        $clients = $query->get(['id', 'fullname', 'phone', 'location', 'balance', 'container']);
+
+        $data = $clients->map(function ($c) {
+            $parts = explode(',', $c->location);
+            if (count($parts) < 2) {
+                return null;
+            }
+
+            $lat = trim($parts[0]);
+            $lng = trim($parts[1]);
+
+            if (!is_numeric($lat) || !is_numeric($lng)) {
+                return null;
+            }
+
+            return [
+                'id' => $c->id,
+                'fullname' => $c->fullname,
+                'phone' => $c->phone,
+                'lat' => (float) $lat,
+                'lng' => (float) $lng,
+                'balance' => $c->balance,
+                'container' => $c->container,
+            ];
+        })->filter()->values();
+
+        return response()->json($data);
+    }
+
+    /**
+     * Admin (session) — a driver's recorded track for a given date
+     * (defaults to today), as an ordered list of points + total km.
+     */
+    public function track($id, Request $request)
+    {
+        $user = auth()->user();
+
+        $driver = User::where('id', $id)->where('role', 3)->first();
+
+        if (!$driver) {
+            return response()->json(['points' => [], 'km' => 0]);
+        }
+
+        if ($user->id != 1 && $driver->organization_id != $user->organization_id) {
+            abort(403);
+        }
+
+        $date = $request->input('date', now()->toDateString());
+
+        $points = DriverLocation::where('user_id', $id)
+            ->whereDate('recorded_at', $date)
+            ->orderBy('recorded_at')
+            ->get(['latitude', 'longitude', 'recorded_at']);
+
+        $km = 0.0;
+        $prev = null;
+        foreach ($points as $p) {
+            if ($prev) {
+                $km += $this->haversine($prev->latitude, $prev->longitude, $p->latitude, $p->longitude);
+            }
+            $prev = $p;
+        }
+
+        return response()->json([
+            'driver' => $driver->name,
+            'date' => $date,
+            'km' => round($km, 1),
+            'points' => $points->map(fn($p) => [
+                'lat' => (float) $p->latitude,
+                'lng' => (float) $p->longitude,
+                'time' => optional($p->recorded_at)->toDateTimeString(),
+            ]),
+        ]);
     }
 
     /**

@@ -198,6 +198,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('permission:drivers-map')->group(function () {
         Route::get('/drivers/map',       [App\Http\Controllers\DriverLocationController::class, 'map'])->name('drivers.map');
         Route::get('/drivers/locations', [App\Http\Controllers\DriverLocationController::class, 'locations'])->name('drivers.locations');
+        Route::get('/drivers/clients',   [App\Http\Controllers\DriverLocationController::class, 'clients'])->name('drivers.clients');
+        Route::get('/drivers/{id}/track', [App\Http\Controllers\DriverLocationController::class, 'track'])->name('drivers.track');
     });
 
     // ── SMS Manager ───────────────────────────────────────────────
