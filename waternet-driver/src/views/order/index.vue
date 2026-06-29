@@ -45,10 +45,10 @@
 							<i class="fa-solid fa-plus"></i>
 							<span>{{ $t('order.addNavigate') }}</span>
 						</button>
-						<a v-else :href="makeMapUrl(order)" target="_blank" class="oa-btn oa-navigate">
+						<button v-else type="button" @click="openNavigation(order)" class="oa-btn oa-navigate">
 							<i class="fa-solid fa-diamond-turn-right"></i>
 							<span>{{ $t('order.navigate') }}</span>
-						</a>
+						</button>
 
 						<a :href="'tel:+998' + order.client.phone" class="oa-btn oa-call">
 							<i class="fa-solid fa-phone"></i>
@@ -68,7 +68,9 @@ import AppLayout from "@/components/AppLayout";
 import AppSkeleton from "@/components/AppSkeleton";
 import { Geolocation } from '@capacitor/geolocation';
 import _ from "lodash";
+import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
+import { AppLauncher } from '@capacitor/app-launcher';
 
 export default {
 	name: 'Order',
@@ -242,6 +244,38 @@ export default {
 
 			this.origin.lat = coordinates.coords.latitude
 			this.origin.lng = coordinates.coords.longitude
+		},
+
+		async openNavigation(order) {
+			let loc = order.client.location
+			if (!loc || loc === '0') return
+
+			let parts = loc.split(',')
+			let lat = (parts[0] || '').trim()
+			let lng = (parts[1] || '').trim()
+
+			let naviUrl = `yandexnavi://build_route_on_map?lat_to=${lat}&lon_to=${lng}`
+
+			// On web just open Yandex Maps in a new tab.
+			if (!Capacitor.isNativePlatform()) {
+				window.open(`https://yandex.ru/maps/?rtext=~${lat},${lng}&rtt=auto`, '_blank')
+				return
+			}
+
+			let storeUrl = Capacitor.getPlatform() === 'ios'
+				? 'https://apps.apple.com/app/id474500851'
+				: 'https://play.google.com/store/apps/details?id=ru.yandex.yandexnavi'
+
+			try {
+				let {value} = await AppLauncher.canOpenUrl({url: 'yandexnavi://'})
+				// open the navigator if installed, otherwise its install page
+				await AppLauncher.openUrl({url: value ? naviUrl : storeUrl})
+			} catch (e) {
+				try {
+					await AppLauncher.openUrl({url: storeUrl})
+				} catch (_) {
+				}
+			}
 		},
 
 		makeMapUrl(order) {

@@ -550,6 +550,14 @@
 	color: #fff !important;
 }
 
+/* Bootstrap rounds the modal-header top corners (border-top-*-radius), which
+   reveals a light strip above the blue header — square it off. */
+#FilterPanelRight .modal-content,
+#FilterPanelRight .modal-header {
+	border-top-left-radius: 0 !important;
+	border-top-right-radius: 0 !important;
+}
+
 /* "Please check your internet" toast: the theme's `transition: .2s all`
    leaves `bottom` stuck at its from-value, so disable the transition and
    lift the shown state ABOVE the floating bottom nav (bottom:14px, ~70px). */

@@ -55,5 +55,11 @@
             <action android:name="android.intent.action.PICK"></action>
             <data android:scheme="geo" android:host="*"/>
         </intent>
+        <!-- Yandex Navigator deep link (so AppLauncher.canOpenUrl can detect it) -->
+        <package android:name="ru.yandex.yandexnavi" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="yandexnavi" />
+        </intent>
     </queries>
 </manifest>
