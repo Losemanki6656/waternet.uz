@@ -1,0 +1,6 @@
+{
+  "appId": "com.waternet.driver",
+  "appName": "Waternet Driver",
+  "webDir": "dist",
+  "loggingBehavior": "production"
+}

@@ -1,0 +1,570 @@
+/* =====================================================================
+   Waternet — professional blue design layer
+   Loaded after style.css so it overrides the legacy theme.
+   ===================================================================== */
+
+:root {
+	/* Water-blue brand palette */
+	--wn-primary: #2563EB;
+	--wn-primary-700: #1D4ED8;
+	--wn-primary-500: #3B82F6;
+	--wn-sky: #0EA5E9;
+	--wn-cyan: #22D3EE;
+	--wn-ink: #0B1F3A;
+
+	--wn-gradient: linear-gradient(135deg, #1D4ED8 0%, #2563EB 45%, #0EA5E9 100%);
+	--wn-gradient-soft: linear-gradient(135deg, #3B82F6 0%, #0EA5E9 100%);
+
+	--wn-radius: 18px;
+	--wn-radius-lg: 26px;
+	--wn-radius-xl: 32px;
+
+	--wn-shadow: 0 14px 34px -12px rgba(37, 99, 235, .45);
+	--wn-shadow-soft: 0 10px 28px -12px rgba(11, 31, 58, .25);
+
+	/* Bootstrap 5 primary -> blue */
+	--bs-primary: #2563EB;
+	--bs-primary-rgb: 37, 99, 235;
+	--bs-link-color: #2563EB;
+	--bs-link-color-rgb: 37, 99, 235;
+	--bs-link-hover-color: #1D4ED8;
+}
+
+/* ----------------------------------------------------------------- *
+ * Buttons & generic primary surfaces
+ * ----------------------------------------------------------------- */
+.btn-primary {
+	--bs-btn-bg: #2563EB;
+	--bs-btn-border-color: #2563EB;
+	--bs-btn-hover-bg: #1D4ED8;
+	--bs-btn-hover-border-color: #1D4ED8;
+	--bs-btn-active-bg: #1D4ED8;
+	--bs-btn-active-border-color: #1D4ED8;
+	--bs-btn-disabled-bg: #2563EB;
+	--bs-btn-disabled-border-color: #2563EB;
+	box-shadow: 0 8px 20px -8px rgba(37, 99, 235, .6);
+}
+
+.btn {
+	border-radius: 14px;
+	font-weight: 600;
+}
+
+.btn-lg {
+	border-radius: 16px;
+	padding-top: .8rem;
+	padding-bottom: .8rem;
+}
+
+.text-primary {
+	color: var(--wn-primary) !important;
+}
+
+.bg-primary {
+	background-color: var(--wn-primary) !important;
+}
+
+.card {
+	border: 0;
+	border-radius: var(--wn-radius);
+	box-shadow: var(--wn-shadow-soft);
+}
+
+/* ----------------------------------------------------------------- *
+ * Header — rounded, gradient, creative
+ * ----------------------------------------------------------------- */
+.appHeader {
+	height: 62px;
+	border: 0 !important;
+}
+
+.appHeader.bg-primary {
+	background: var(--wn-gradient) !important;
+	border-radius: 0 0 var(--wn-radius-xl) var(--wn-radius-xl);
+	box-shadow: var(--wn-shadow);
+	overflow: hidden;
+}
+
+/* subtle water shimmer in the header */
+.appHeader.bg-primary:after {
+	content: "";
+	position: absolute;
+	right: -40px;
+	top: -60px;
+	width: 160px;
+	height: 160px;
+	background: radial-gradient(circle, rgba(255, 255, 255, .25), transparent 60%);
+	pointer-events: none;
+}
+
+.appHeader .pageTitle {
+	font-weight: 700;
+	font-size: 19px;
+	letter-spacing: .4px;
+	text-transform: capitalize;
+}
+
+/* match the theme's own specificity (.appHeader .left/.right .headerButton)
+   so these win — otherwise the theme's height:56px makes a tall pill */
+.appHeader .left .headerButton,
+.appHeader .right .headerButton {
+	width: 44px;
+	min-width: 44px;
+	height: 44px;
+	flex: 0 0 44px;
+	padding: 0;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, .18);
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background .2s ease, transform .15s ease;
+}
+
+.appHeader .left .headerButton:active,
+.appHeader .right .headerButton:active {
+	transform: scale(.92);
+	background: rgba(255, 255, 255, .3);
+	opacity: 1;
+}
+
+.appHeader .left .headerButton i,
+.appHeader .right .headerButton i {
+	font-size: 18px;
+	line-height: 1;
+}
+
+/* ----------------------------------------------------------------- *
+ * Bottom nav — floating rounded pill bar
+ * ----------------------------------------------------------------- */
+#appCapsule {
+	padding-top: 72px;
+	padding-bottom: 96px;
+}
+
+.appBottomMenu {
+	left: 14px;
+	right: 14px;
+	bottom: 14px;
+	width: auto;
+	height: 70px;
+	padding: 9px 8px;
+	display: flex;
+	align-items: stretch;
+	border: 1px solid rgba(37, 99, 235, .12);
+	border-radius: var(--wn-radius-xl);
+	background: rgba(255, 255, 255, .82);
+	backdrop-filter: saturate(180%) blur(16px);
+	-webkit-backdrop-filter: saturate(180%) blur(16px);
+	box-shadow: 0 16px 36px -12px rgba(11, 31, 58, .3);
+}
+
+/* full-height pill items so the active highlight wraps icon + label */
+.appBottomMenu .item {
+	height: auto;
+	margin: 0 3px;
+	border-radius: 16px;
+	color: #8aa0bd;
+	transition: background .2s ease, color .2s ease;
+}
+
+.appBottomMenu .item:before {
+	display: none;
+}
+
+.appBottomMenu .item .col {
+	width: 100%;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.appBottomMenu .item i {
+	font-size: 19px;
+	line-height: 1;
+	margin: 0 0 5px;
+	color: inherit;
+	transition: transform .2s ease;
+}
+
+.appBottomMenu .item strong {
+	font-size: 10px;
+	font-weight: 600;
+	margin: 0;
+	color: inherit;
+}
+
+.appBottomMenu .item.router-link-exact-active {
+	color: var(--wn-primary);
+	background: linear-gradient(135deg, rgba(37, 99, 235, .14), rgba(14, 165, 233, .14));
+}
+
+.appBottomMenu .item.router-link-exact-active i {
+	transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------------- *
+ * Order / list cards
+ * ----------------------------------------------------------------- */
+.wallet-card {
+	border-radius: var(--wn-radius);
+	box-shadow: var(--wn-shadow-soft);
+	border: 1px solid rgba(11, 31, 58, .05);
+}
+
+/* ----------------------------------------------------------------- *
+ * Inputs
+ * ----------------------------------------------------------------- */
+.form-control,
+.form-select {
+	border-radius: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+	border-color: var(--wn-primary-500);
+	box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .15);
+}
+
+/* Boxed selects (Status / Payment type) — give them the same visible
+   border + height as the boxed text inputs */
+.form-group.boxed .form-select {
+	height: 44px;
+	border-radius: 11px;
+	border: 1px solid #dde4ee;
+	padding: 0 36px 0 15px;
+	background-color: #fff;
+	color: #0B1F3A;
+}
+
+.form-group.boxed .form-select:focus {
+	border-color: #3B82F6;
+	box-shadow: 0 0 0 .15rem rgba(37, 99, 235, .15);
+}
+
+/* ----------------------------------------------------------------- *
+ * Skeleton loaders
+ * ----------------------------------------------------------------- */
+.skeleton {
+	background: linear-gradient(90deg, #eef2f7 25%, #e3e9f1 37%, #eef2f7 63%);
+	background-size: 400% 100%;
+	animation: wn-shimmer 1.4s ease infinite;
+	border-radius: 8px;
+}
+
+@keyframes wn-shimmer {
+	0% { background-position: 100% 50%; }
+	100% { background-position: 0 50%; }
+}
+
+.sk-list {
+	padding: 8px 14px 0;
+}
+
+.sk-card {
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 10px 26px -16px rgba(11, 31, 58, .2);
+	border: 1px solid rgba(11, 31, 58, .05);
+	padding: 15px;
+	margin-bottom: 14px;
+}
+
+.sk-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.sk-grow {
+	flex: 1;
+}
+
+.sk-avatar {
+	width: 46px;
+	height: 46px;
+	border-radius: 14px;
+	flex: 0 0 46px;
+}
+
+.sk-qty {
+	width: 48px;
+	height: 38px;
+	border-radius: 12px;
+	flex: 0 0 48px;
+}
+
+.sk-line {
+	height: 11px;
+	border-radius: 6px;
+}
+
+.sk-line.lg {
+	height: 14px;
+}
+
+.sk-btns {
+	display: flex;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+.sk-btn {
+	flex: 1;
+	height: 40px;
+	border-radius: 13px;
+}
+
+.w30 { width: 30%; }
+.w40 { width: 40%; }
+.w50 { width: 50%; }
+.w60 { width: 60%; }
+.w70 { width: 70%; }
+.w90 { width: 90%; }
+
+/* ----------------------------------------------------------------- *
+ * Area / region filter UI (region page + order filter modal)
+ * ----------------------------------------------------------------- */
+.filter-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 4px 2px 14px;
+}
+
+.filter-title {
+	font-size: 17px;
+	font-weight: 700;
+	color: #0B1F3A;
+}
+
+.select-all-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	background: #E8F1FF;
+	color: #1D4ED8;
+	font-size: 13px;
+	font-weight: 600;
+	padding: 8px 13px;
+	border-radius: 12px;
+	border: 0;
+	white-space: nowrap;
+}
+
+.select-all-pill.on {
+	background: var(--wn-gradient);
+	color: #fff;
+}
+
+.select-all-pill i {
+	font-size: 13px;
+}
+
+.region-acc {
+	display: flex;
+	flex-direction: column;
+	gap: 11px;
+}
+
+.region-item {
+	background: #fff;
+	border-radius: 16px;
+	border: 1px solid rgba(11, 31, 58, .06);
+	box-shadow: 0 8px 20px -16px rgba(11, 31, 58, .3);
+	overflow: hidden;
+}
+
+.region-btn {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 13px 15px;
+	border: 0;
+	background: #fff;
+	text-align: left;
+}
+
+.region-ico {
+	width: 38px;
+	height: 38px;
+	flex: 0 0 38px;
+	border-radius: 11px;
+	background: #E8F1FF;
+	color: #2563EB;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+}
+
+.region-name {
+	flex: 1;
+	font-size: 15px;
+	font-weight: 600;
+	color: #0B1F3A;
+}
+
+.region-count {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1D4ED8;
+	background: #E8F1FF;
+	padding: 3px 9px;
+	border-radius: 8px;
+}
+
+.region-chev {
+	color: #8295ad;
+	font-size: 14px;
+	transition: transform .25s ease;
+}
+
+.region-btn:not(.collapsed) .region-chev {
+	transform: rotate(180deg);
+}
+
+.region-btn:not(.collapsed) .region-ico {
+	background: var(--wn-gradient);
+	color: #fff;
+}
+
+.area-list {
+	padding: 4px 10px 12px;
+}
+
+.check-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 11px 13px;
+	border-radius: 13px;
+	margin-bottom: 8px;
+	background: #F5F8FC;
+	cursor: pointer;
+	transition: background .15s ease;
+}
+
+.check-row:last-child {
+	margin-bottom: 0;
+}
+
+.check-row.on {
+	background: #E8F1FF;
+}
+
+.check-name {
+	flex: 1;
+	font-size: 14px;
+	font-weight: 500;
+	color: #0B1F3A;
+}
+
+.check-count {
+	font-size: 12px;
+	font-weight: 600;
+	color: #8295ad;
+	background: #fff;
+	padding: 2px 9px;
+	border-radius: 7px;
+}
+
+.check-row.on .check-count {
+	color: #1D4ED8;
+}
+
+.check-box {
+	width: 24px;
+	height: 24px;
+	flex: 0 0 24px;
+	border-radius: 8px;
+	border: 2px solid #cdd8e6;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	transition: all .15s ease;
+}
+
+.check-box i {
+	font-size: 12px;
+	opacity: 0;
+}
+
+.check-row.on .check-box {
+	background: var(--wn-primary);
+	border-color: var(--wn-primary);
+}
+
+.check-row.on .check-box i {
+	opacity: 1;
+}
+
+.filter-submit {
+	position: sticky;
+	bottom: 14px;
+	margin-top: 16px;
+}
+
+.filter-submit .btn {
+	width: 100%;
+	background: var(--wn-gradient);
+	border: 0;
+	border-radius: 15px;
+	padding: 14px 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: #fff;
+	box-shadow: 0 12px 26px -10px rgba(37, 99, 235, .6);
+}
+
+/* ----------------------------------------------------------------- *
+ * Sidebar fixes
+ * ----------------------------------------------------------------- */
+/* the profile gradient should be seamless — drop the inner flat blue block */
+#sidebarPanel .sidebar-balance {
+	background: transparent !important;
+	padding: 8px 16px 12px;
+}
+
+/* menu icons — clean rounded squares, not cramped circles */
+#sidebarPanel .image-listview > li .item .icon-box {
+	min-width: 40px;
+	max-width: 40px;
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
+	font-size: 16px;
+	margin-right: 14px;
+}
+
+/* Language pills (sidebar) */
+.lang-switch {
+	display: flex;
+	gap: 8px;
+}
+
+.lang-switch button {
+	flex: 1;
+	border: 1px solid rgba(37, 99, 235, .2);
+	background: transparent;
+	color: var(--wn-ink);
+	border-radius: 12px;
+	padding: 8px 0;
+	font-weight: 600;
+	font-size: 13px;
+	transition: all .15s ease;
+}
+
+.lang-switch button.active {
+	background: var(--wn-gradient);
+	border-color: transparent;
+	color: #fff;
+	box-shadow: 0 8px 18px -8px rgba(37, 99, 235, .6);
+}
