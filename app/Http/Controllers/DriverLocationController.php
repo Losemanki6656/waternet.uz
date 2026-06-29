@@ -108,7 +108,9 @@ class DriverLocationController extends Controller
 
         $drivers = $query->get(['id', 'name', 'phone', 'organization_id', 'last_lat', 'last_lng', 'last_location_at']);
 
-        $data = $drivers->map(function ($d) {
+        $kmByUser = $this->kmTravelledToday($drivers->pluck('id'));
+
+        $data = $drivers->map(function ($d) use ($kmByUser) {
             $online = $d->last_location_at && $d->last_location_at->gt(now()->subMinutes(2));
 
             return [
@@ -120,10 +122,58 @@ class DriverLocationController extends Controller
                 'lng' => (float) $d->last_lng,
                 'last_location_at' => optional($d->last_location_at)->toDateTimeString(),
                 'online' => $online,
+                'km_today' => $kmByUser[$d->id] ?? 0,
             ];
         });
 
         return response()->json($data);
+    }
+
+    /**
+     * Sum the distance (km) each driver travelled today from their recorded
+     * track points (haversine between consecutive points).
+     */
+    private function kmTravelledToday($driverIds): array
+    {
+        if ($driverIds->isEmpty()) {
+            return [];
+        }
+
+        $points = DriverLocation::whereIn('user_id', $driverIds)
+            ->whereDate('recorded_at', today())
+            ->orderBy('user_id')
+            ->orderBy('recorded_at')
+            ->get(['user_id', 'latitude', 'longitude']);
+
+        $km = [];
+
+        foreach ($points->groupBy('user_id') as $uid => $pts) {
+            $total = 0.0;
+            $prev = null;
+
+            foreach ($pts as $p) {
+                if ($prev) {
+                    $total += $this->haversine($prev->latitude, $prev->longitude, $p->latitude, $p->longitude);
+                }
+                $prev = $p;
+            }
+
+            $km[$uid] = round($total, 1);
+        }
+
+        return $km;
+    }
+
+    private function haversine($lat1, $lon1, $lat2, $lon2): float
+    {
+        $earth = 6371; // km
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat / 2) ** 2
+            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
+
+        return $earth * 2 * atan2(sqrt($a), sqrt(1 - $a));
     }
 
     private function parseTime($value, $fallback)

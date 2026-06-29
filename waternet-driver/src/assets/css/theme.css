@@ -74,30 +74,17 @@
  * Header — rounded, gradient, creative
  * ----------------------------------------------------------------- */
 .appHeader {
-	/* extend the header up behind the (overlaid) status bar so the gradient
-	   reaches the very top edge; content stays below via padding-top */
-	height: calc(62px + env(safe-area-inset-top));
-	padding-top: env(safe-area-inset-top);
+	height: 62px;
 	border: 0 !important;
 }
 
+/* Solid colour (no gradient) so the header is the same flat blue as the
+   native status bar above it — they read as one continuous bar. */
 .appHeader.bg-primary {
-	background: var(--wn-gradient) !important;
+	background: #1D4ED8 !important;
 	border-radius: 0 0 var(--wn-radius-xl) var(--wn-radius-xl);
 	box-shadow: var(--wn-shadow);
 	overflow: hidden;
-}
-
-/* subtle water shimmer in the header */
-.appHeader.bg-primary:after {
-	content: "";
-	position: absolute;
-	right: -40px;
-	top: -60px;
-	width: 160px;
-	height: 160px;
-	background: radial-gradient(circle, rgba(255, 255, 255, .25), transparent 60%);
-	pointer-events: none;
 }
 
 .appHeader .pageTitle {
@@ -142,7 +129,7 @@
  * Bottom nav — floating rounded pill bar
  * ----------------------------------------------------------------- */
 #appCapsule {
-	padding-top: calc(72px + env(safe-area-inset-top));
+	padding-top: 72px;
 	padding-bottom: 96px;
 }
 

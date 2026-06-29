@@ -115,19 +115,21 @@ export default {
 </script>
 
 <style scoped>
+/* Blue header so it merges with the native status bar above the modal */
 .filter-modal-head {
-	border-bottom: 1px solid #eef2f7;
+	background: #1D4ED8;
+	border: 0;
 	padding: 16px;
 }
 
 .filter-modal-head .modal-title {
 	font-size: 17px;
 	font-weight: 700;
-	color: #0B1F3A;
+	color: #fff;
 }
 
 .filter-modal-head .modal-title i {
-	color: #2563EB;
+	color: #fff;
 	margin-right: 7px;
 }
 
@@ -135,8 +137,8 @@ export default {
 	width: 36px;
 	height: 36px;
 	border-radius: 11px;
-	background: #F2F6FB;
-	color: #46566c;
+	background: rgba(255, 255, 255, .18);
+	color: #fff;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
