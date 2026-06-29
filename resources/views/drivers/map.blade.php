@@ -153,6 +153,14 @@
                     controls: ['zoomControl', 'geolocationControl', 'fullscreenControl']
                 });
 
+                // Disable kinetic drag/pinch inertia — its "Continuous" animation
+                // crashes inside Android WebView and freezes the map.
+                try {
+                    map.behaviors.get('drag').options.set('inertia', false);
+                    map.behaviors.get('multiTouch').options.set('inertia', false);
+                } catch (e) {
+                }
+
                 document.querySelectorAll('.mode-tab').forEach(function (t) {
                     t.addEventListener('click', function () { setMode(t.getAttribute('data-mode')); });
                 });

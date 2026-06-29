@@ -77,6 +77,15 @@ export default {
 				controls: ['zoomControl']
 			})
 
+			// Kinetic drag/pinch inertia crashes inside the Android WebView
+			// ("map.action.Continuous: ticking while inactive") and freezes the
+			// map — disable inertia so gestures stay responsive.
+			try {
+				this.map.behaviors.get('drag').options.set('inertia', false)
+				this.map.behaviors.get('multiTouch').options.set('inertia', false)
+			} catch (e) {
+			}
+
 			this.loadClients(ymaps)
 			this.trackDriver(ymaps)
 		},
@@ -108,16 +117,20 @@ export default {
 
 		trackDriver(ymaps) {
 			const update = (coords) => {
+				if (!this.map) return
 				const pos = [coords.latitude, coords.longitude]
-				if (this.driverMark) {
-					this.driverMark.geometry.setCoordinates(pos)
-				} else {
-					this.driverMark = new ymaps.Placemark(pos, {hintContent: 'Siz'}, {
-						preset: 'islands#geolocationIcon',
-						iconColor: '#16B981'
-					})
-					this.map.geoObjects.add(this.driverMark)
-					this.map.setCenter(pos, 14)
+				try {
+					if (this.driverMark) {
+						this.driverMark.geometry.setCoordinates(pos)
+					} else {
+						this.driverMark = new ymaps.Placemark(pos, {hintContent: 'Siz'}, {
+							preset: 'islands#geolocationIcon',
+							iconColor: '#16B981'
+						})
+						this.map.geoObjects.add(this.driverMark)
+						this.map.setCenter(pos, 14)
+					}
+				} catch (e) {
 				}
 			}
 
