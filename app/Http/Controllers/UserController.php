@@ -9,6 +9,8 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Models\UserOrganization;
 use App\Models\Organization;
+use App\Models\Sity;
+use App\Models\Area;
 use DB;
 use Hash;
 use Auth;
@@ -38,6 +40,30 @@ class UserController extends Controller
     public static function roles(): array
     {
         return [1 => 'Operator', 2 => 'Warehouse manager', 3 => 'Driver', 4 => 'Director'];
+    }
+
+    /**
+     * Validate the submitted area ids against the organization and return a
+     * clean CSV string for users.areas (the driver's Sity→Area coverage).
+     */
+    private function resolveAssignedAreas(Request $request, $organizationId): string
+    {
+        $ids = collect($request->input('areas', []))
+            ->map(fn($a) => (int) $a)
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return '';
+        }
+
+        $valid = Area::where('organization_id', $organizationId)
+            ->whereIn('id', $ids->all())
+            ->pluck('id')
+            ->all();
+
+        return implode(',', $valid);
     }
 
     public function index(Request $request)
@@ -93,10 +119,14 @@ class UserController extends Controller
 
     public function create()
     {
+        $orgId = auth()->user()->organization_id;
+
         return view('users.create', [
-            'info_org'    => Organization::find(auth()->user()->organization_id),
-            'roles'       => self::roles(),
-            'permissions' => self::PERMISSIONS,
+            'info_org'      => Organization::find($orgId),
+            'roles'         => self::roles(),
+            'permissions'   => self::PERMISSIONS,
+            'sities'        => Sity::where('organization_id', $orgId)->with('areas')->orderBy('sort')->get(),
+            'assignedAreas' => [],
         ]);
     }
 
@@ -133,6 +163,11 @@ class UserController extends Controller
             ->filter(fn($p) => in_array($p, $allowed))
             ->values()->toArray();
         $user->syncPermissions($granted);
+
+        // Assign the driver's geographic coverage (Sity → Area). Only area ids
+        // that actually belong to this organization are accepted.
+        $user->areas = $this->resolveAssignedAreas($request, $organ);
+        $user->save();
 
         UserOrganization::create([
             'organization_id' => $organ,
@@ -181,6 +216,8 @@ class UserController extends Controller
             'roles'           => self::roles(),
             'permissions'     => self::PERMISSIONS,
             'users'           => $teammates,
+            'sities'          => Sity::where('organization_id', $user->organization_id)->with('areas')->orderBy('sort')->get(),
+            'assignedAreas'   => $user->areas ? array_map('intval', array_filter(explode(',', $user->areas), 'strlen')) : [],
         ]);
     }
 
@@ -211,6 +248,10 @@ class UserController extends Controller
             ->filter(fn($p) => in_array($p, $allowed))
             ->values()->toArray();
         $user->syncPermissions($granted);
+
+        // Update the driver's geographic coverage (Sity → Area).
+        $user->areas = $this->resolveAssignedAreas($request, $user->organization_id);
+        $user->save();
 
         // Update UserOrganization role
         UserOrganization::where('user_id', $id)->update(['role' => $request->role]);

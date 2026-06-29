@@ -131,6 +131,11 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- Driver geographic coverage (Region → Area) --}}
+                        <div class="mb-3">
+                            @include('users.partials.areas', ['sities' => $sities, 'assignedAreas' => $assignedAreas])
+                        </div>
+
                         <div class="header text-right">
                             <div class="mb-3">
                                 <a href="{{ route('users') }}" class="btn btn-dark" type="button"><i

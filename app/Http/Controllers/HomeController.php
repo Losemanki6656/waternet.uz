@@ -1963,16 +1963,45 @@ class HomeController extends Controller
 
     public function driver_regions()
     {
+        $user = auth()->user();
 
-        return response()->json(
-            Sity::where('organization_id', auth()->user()->organization_id)->with('areas')->get()
-        );
+        // Admin assigns the driver's coverage via users.areas (CSV of area ids).
+        // Show ONLY the sities that contain assigned areas, each with ONLY the
+        // assigned areas — not the whole organization.
+        if (!$user->areas) {
+            return response()->json([]);
+        }
+
+        $assigned = array_map('intval', array_filter(explode(',', $user->areas), 'strlen'));
+
+        $sities = Sity::where('organization_id', $user->organization_id)
+            ->with(['areas' => function ($q) use ($assigned) {
+                $q->whereIn('id', $assigned);
+            }])
+            ->get()
+            ->filter(fn($sity) => $sity->areas->isNotEmpty())
+            ->values();
+
+        return response()->json($sities);
     }
 
     public function areas(Request $request)
     {
-        return response()->json(Area::where('organization_id', auth()->user()->organization_id)
-            ->where('city_id', $request->region_id)->with(['region'])->get());
+        $user = auth()->user();
+
+        $query = Area::where('organization_id', $user->organization_id)
+            ->where('city_id', $request->region_id)
+            ->with(['region']);
+
+        // Restrict to the driver's assigned areas only.
+        if ($user->areas) {
+            $assigned = array_map('intval', array_filter(explode(',', $user->areas), 'strlen'));
+            $query->whereIn('id', $assigned);
+        } else {
+            $query->whereRaw('1 = 0');
+        }
+
+        return response()->json($query->get());
     }
 
     public function monitoring()

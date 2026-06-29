@@ -215,6 +215,9 @@
             </div>
         </div>
 
+        {{-- Driver geographic coverage (Region → Area) --}}
+        @include('users.partials.areas', ['sities' => $sities, 'assignedAreas' => $assignedAreas])
+
     </div>
 
     {{-- RIGHT: Teammates --}}
