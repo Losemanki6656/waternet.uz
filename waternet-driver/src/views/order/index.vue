@@ -144,6 +144,11 @@ export default {
 		})
 	},
 
+	beforeUnmount() {
+		// the infinite-scroll handler is global; drop it so it doesn't run on other pages
+		window.onscroll = null
+	},
+
 	methods: {
 		initials(name) {
 			if (!name) return '?'

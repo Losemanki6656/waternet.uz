@@ -157,6 +157,13 @@ export default {
 #clients-map {
 	width: 100%;
 	height: 100%;
+	touch-action: none;
+}
+
+/* let the Yandex map own all touch gestures (drag / pinch-zoom) */
+#clients-map :deep(.ymaps-2-1-79-events-pane),
+#clients-map :deep([class*="-events-pane"]) {
+	touch-action: none !important;
 }
 
 .map-recenter {
