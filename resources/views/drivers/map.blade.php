@@ -8,7 +8,9 @@
             min-height: 460px;
             border-radius: 12px;
             overflow: hidden;
+            touch-action: none;   /* let Yandex own drag / pinch-zoom on touch devices */
         }
+        #drivers-map [class*="-events-pane"] { touch-action: none !important; }
 
         .mode-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
         .mode-tab {
