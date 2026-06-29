@@ -28,6 +28,7 @@ class UserController extends Controller
         'sklad'        => ['label' => 'Sklad',            'icon' => 'fas fa-warehouse',     'color' => 'secondary'],
         'users'        => ['label' => 'Xodimlar',         'icon' => 'fas fa-user-cog',      'color' => 'dark'],
         'regions'      => ['label' => 'Regionlar',        'icon' => 'fas fa-map-marker-alt','color' => 'danger'],
+        'drivers-map'  => ['label' => 'Haydovchilar xaritasi', 'icon' => 'fas fa-map-marked-alt', 'color' => 'info'],
         'smsmanager'   => ['label' => 'SMS',              'icon' => 'fas fa-sms',           'color' => 'primary'],
         'results'      => ['label' => 'Hisobotlar',       'icon' => 'fas fa-chart-bar',     'color' => 'success'],
         'DriverMobile' => ['label' => 'Driver Mobile',    'icon' => 'fas fa-mobile-alt',    'color' => 'info'],
