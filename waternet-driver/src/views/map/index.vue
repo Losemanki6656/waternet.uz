@@ -30,6 +30,7 @@ export default {
 
 	async mounted() {
 		// the native map renders behind the WebView — make the page see-through
+		document.documentElement.classList.add('native-map-open')
 		document.body.classList.add('native-map-open')
 
 		CapacitorApp.removeAllListeners().then(() => {
@@ -42,6 +43,7 @@ export default {
 	},
 
 	async beforeUnmount() {
+		document.documentElement.classList.remove('native-map-open')
 		document.body.classList.remove('native-map-open')
 		if (this.map) {
 			try {
