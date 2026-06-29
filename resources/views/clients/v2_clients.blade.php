@@ -332,12 +332,35 @@
 // ═══════════════════════════════════════════════════════════════════════
 // 1. YANDEX MAPS — init
 // ═══════════════════════════════════════════════════════════════════════
+// Big, clear teardrop pin (replaces the small red dot); stays draggable so it
+// can still be used as a location picker.
+window.BIG_PIN = {
+    iconLayout: 'default#image',
+    iconImageHref: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="54" height="72" viewBox="0 0 54 72">' +
+        '<path d="M27 0C12.1 0 0 12.1 0 27c0 19.5 27 45 27 45s27-25.5 27-45C54 12.1 41.9 0 27 0z" ' +
+        'fill="#EF4444" stroke="#ffffff" stroke-width="3"/>' +
+        '<circle cx="27" cy="27" r="10" fill="#ffffff"/>' +
+        '<circle cx="27" cy="27" r="5" fill="#EF4444"/></svg>'),
+    iconImageSize: [54, 72],
+    iconImageOffset: [-27, -72],
+    draggable: true
+};
+
 ymaps.ready(function () {
     var ymap = new ymaps.Map('map', {
         center: [41.2942336, 69.2518912],
         zoom: 7,
         controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
     });
+
+    // Disable kinetic drag/pinch inertia — its "Continuous" animation crashes
+    // inside Android WebView and freezes the map.
+    try {
+        ymap.behaviors.get('drag').options.set('inertia', false);
+        ymap.behaviors.get('multiTouch').options.set('inertia', false);
+    } catch (e) {
+    }
 
     window.ymap      = ymap;
     window.yplacemark = null;
@@ -378,10 +401,10 @@ function showLocation(location, fullname, clientId) {
 
     window.yplacemark = new ymaps.Placemark([lat, lng],
         { balloonContent: fullname },
-        { preset: 'islands#redCircleDotIcon', draggable: true }
+        window.BIG_PIN
     );
     ymap.geoObjects.add(window.yplacemark);
-    ymap.setCenter([lat, lng], 15);
+    ymap.setCenter([lat, lng], 16);
     _updateCoords(lat, lng);
 
     // Dragging the marker updates coords
@@ -397,7 +420,7 @@ function showLocation(location, fullname, clientId) {
         ymap.geoObjects.remove(window.yplacemark);
         window.yplacemark = new ymaps.Placemark(coords,
             { balloonContent: fullname },
-            { preset: 'islands#redCircleDotIcon', draggable: true }
+            window.BIG_PIN
         );
         ymap.geoObjects.add(window.yplacemark);
         window.yplacemark.events.add('dragend', function () {
