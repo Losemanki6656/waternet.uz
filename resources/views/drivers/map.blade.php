@@ -101,7 +101,9 @@
             }
 
             function balloon(d) {
-                return '<strong>' + d.name + '</strong><br>' + (d.phone || '') +
+                return '<strong>' + d.name + '</strong>' +
+                    (d.organization ? '<br><small style="color:#888">' + d.organization + '</small>' : '') +
+                    '<br>' + (d.phone || '') +
                     '<br>' + lastSeenLabel + ': ' + (d.last_location_at || '-');
             }
 

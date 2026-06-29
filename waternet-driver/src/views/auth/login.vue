@@ -165,7 +165,7 @@ export default {
 .login-hero {
 	position: relative;
 	background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 45%, #0EA5E9 100%);
-	padding: 54px 24px 44px;
+	padding: calc(54px + env(safe-area-inset-top)) 24px 44px;
 	text-align: center;
 	overflow: hidden;
 	border-radius: 0 0 34px 34px;
@@ -183,7 +183,7 @@ export default {
 
 .lang-pills {
 	position: absolute;
-	top: 16px;
+	top: calc(16px + env(safe-area-inset-top));
 	right: 16px;
 	display: flex;
 	gap: 6px;

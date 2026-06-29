@@ -93,13 +93,20 @@ class DriverLocationController extends Controller
      */
     public function locations()
     {
-        $orgId = auth()->user()->organization_id;
+        $user = auth()->user();
 
-        $drivers = User::where('organization_id', $orgId)
-            ->where('role', 3)
+        $query = User::where('role', 3)
             ->where('status', true)
             ->whereNotNull('last_lat')
-            ->get(['id', 'name', 'phone', 'last_lat', 'last_lng', 'last_location_at']);
+            ->with('organization:id,name');
+
+        // Super-admin (id == 1) sees every driver across all organizations;
+        // everyone else is scoped to their own organization.
+        if ($user->id != 1 && $user->organization_id) {
+            $query->where('organization_id', $user->organization_id);
+        }
+
+        $drivers = $query->get(['id', 'name', 'phone', 'organization_id', 'last_lat', 'last_lng', 'last_location_at']);
 
         $data = $drivers->map(function ($d) {
             $online = $d->last_location_at && $d->last_location_at->gt(now()->subMinutes(2));
@@ -108,6 +115,7 @@ class DriverLocationController extends Controller
                 'id' => $d->id,
                 'name' => $d->name,
                 'phone' => $d->phone,
+                'organization' => optional($d->organization)->name,
                 'lat' => (float) $d->last_lat,
                 'lng' => (float) $d->last_lng,
                 'last_location_at' => optional($d->last_location_at)->toDateTimeString(),

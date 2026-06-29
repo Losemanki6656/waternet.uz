@@ -74,7 +74,10 @@
  * Header — rounded, gradient, creative
  * ----------------------------------------------------------------- */
 .appHeader {
-	height: 62px;
+	/* extend the header up behind the (overlaid) status bar so the gradient
+	   reaches the very top edge; content stays below via padding-top */
+	height: calc(62px + env(safe-area-inset-top));
+	padding-top: env(safe-area-inset-top);
 	border: 0 !important;
 }
 
@@ -139,7 +142,7 @@
  * Bottom nav — floating rounded pill bar
  * ----------------------------------------------------------------- */
 #appCapsule {
-	padding-top: 72px;
+	padding-top: calc(72px + env(safe-area-inset-top));
 	padding-bottom: 96px;
 }
 

@@ -312,12 +312,14 @@
                             </li>
                         @endcan
                         @can('users')
-                            <li>
-                                <a href="{{ route('users') }}">
-                                    <i data-feather="user-check"></i>
-                                    <span data-key="t-dashboard">{{ __('messages.users') }}</span>
-                                </a>
-                            </li>
+                            @cannot('admin')
+                                <li>
+                                    <a href="{{ route('users') }}">
+                                        <i data-feather="user-check"></i>
+                                        <span data-key="t-dashboard">{{ __('messages.users') }}</span>
+                                    </a>
+                                </li>
+                            @endcannot
                         @endcan
 
                         @can('smsmanager')
@@ -346,12 +348,14 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="{{ route('traffics') }}">
-                                <i data-feather="tag"></i>
-                                <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
-                            </a>
-                        </li>
+                        @cannot('admin')
+                            <li>
+                                <a href="{{ route('traffics') }}">
+                                    <i data-feather="tag"></i>
+                                    <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
+                                </a>
+                            </li>
+                        @endcannot
 
                         @can('admin')
                             <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>

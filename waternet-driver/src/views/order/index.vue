@@ -292,7 +292,7 @@ export default {
 <style scoped>
 .order-search {
 	position: sticky;
-	top: 64px;
+	top: calc(64px + env(safe-area-inset-top));
 	z-index: 90;
 	display: flex;
 	align-items: center;
