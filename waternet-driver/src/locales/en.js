@@ -56,7 +56,9 @@ export default {
 	region: {
 		title: 'Regions',
 		selectAll: 'Select all',
-		submit: 'Save'
+		submit: 'Save',
+		empty: 'No regions assigned to you',
+		assigned: 'Your regions'
 	},
 	monitoring: {
 		balance: 'Balance',

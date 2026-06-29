@@ -56,7 +56,9 @@ export default {
 	region: {
 		title: 'Регионы',
 		selectAll: 'Выбрать все',
-		submit: 'Сохранить'
+		submit: 'Сохранить',
+		empty: 'Вам не назначены регионы',
+		assigned: 'Ваши регионы'
 	},
 	monitoring: {
 		balance: 'Баланс',

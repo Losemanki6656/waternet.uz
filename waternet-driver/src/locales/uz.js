@@ -56,7 +56,9 @@ export default {
 	region: {
 		title: 'Hududlar',
 		selectAll: 'Barchasini tanlash',
-		submit: 'Saqlash'
+		submit: 'Saqlash',
+		empty: 'Sizga hudud biriktirilmagan',
+		assigned: 'Biriktirilgan hududlaringiz'
 	},
 	monitoring: {
 		balance: 'Balans',
