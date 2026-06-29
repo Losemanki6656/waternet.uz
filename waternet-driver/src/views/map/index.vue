@@ -1,7 +1,7 @@
 <template>
 	<app-layout>
 		<div class="map-wrap">
-			<div id="clients-map"></div>
+			<div ref="mapRef" id="clients-map"></div>
 			<button type="button" class="map-recenter" @click="recenter">
 				<i class="fa-solid fa-location-crosshairs"></i>
 			</button>
@@ -11,28 +11,12 @@
 
 <script>
 import AppLayout from "@/components/AppLayout";
+import {GoogleMap} from "@capacitor/google-maps";
 import {Geolocation} from "@capacitor/geolocation";
 import {App as CapacitorApp} from '@capacitor/app';
 
-// Yandex Maps JS API key — read from waternet-driver/.env (YANDEX_MAPS_KEY).
-const YANDEX_KEY = import.meta.env.YANDEX_MAPS_KEY || ''
-
-let ymapsPromise = null
-
-function loadYmaps() {
-	if (window.ymaps && window.ymaps.Map) return Promise.resolve(window.ymaps)
-	if (ymapsPromise) return ymapsPromise
-
-	ymapsPromise = new Promise((resolve, reject) => {
-		const s = document.createElement('script')
-		s.src = `https://api-maps.yandex.ru/2.1/?apikey=${YANDEX_KEY}&lang=ru_RU`
-		s.onload = () => window.ymaps.ready(() => resolve(window.ymaps))
-		s.onerror = reject
-		document.head.appendChild(s)
-	})
-
-	return ymapsPromise
-}
+// Google Maps key (Android Maps SDK must be enabled for this key).
+const GOOGLE_MAPS_KEY = 'AIzaSyCWdCZwISLuqFF-IBrtdeWCHyAkL-qJH4k'
 
 export default {
 	name: "ClientsMap",
@@ -40,117 +24,98 @@ export default {
 
 	data() {
 		return {
-			map: null,
-			driverMark: null,
-			watchId: null
+			map: null
 		}
 	},
 
 	async mounted() {
+		// the native map renders behind the WebView — make the page see-through
+		document.body.classList.add('native-map-open')
+
 		CapacitorApp.removeAllListeners().then(() => {
 			CapacitorApp.addListener('backButton', () => {
 				this.$router.push({name: 'order'})
 			})
 		})
 
-		try {
-			const ymaps = await loadYmaps()
-			this.initMap(ymaps)
-		} catch (e) {
-			console.error('Yandex Maps failed to load', e)
-		}
+		await this.initMap()
 	},
 
-	beforeUnmount() {
-		if (this.watchId != null) {
-			Geolocation.clearWatch({id: this.watchId}).catch(() => {
-			})
-			this.watchId = null
+	async beforeUnmount() {
+		document.body.classList.remove('native-map-open')
+		if (this.map) {
+			try {
+				await this.map.destroy()
+			} catch (e) {
+			}
+			this.map = null
 		}
 	},
 
 	methods: {
-		initMap(ymaps) {
-			this.map = new ymaps.Map('clients-map', {
-				center: [39.767, 64.421],   // Buxoro fallback; recenters on the driver
-				zoom: 12,
-				controls: ['zoomControl']
-			})
+		async initMap() {
+			let center = {lat: 39.767, lng: 64.421}   // Buxoro fallback
 
-			// Kinetic drag/pinch inertia crashes inside the Android WebView
-			// ("map.action.Continuous: ticking while inactive") and freezes the
-			// map — disable inertia so gestures stay responsive.
 			try {
-				this.map.behaviors.get('drag').options.set('inertia', false)
-				this.map.behaviors.get('multiTouch').options.set('inertia', false)
+				const pos = await Geolocation.getCurrentPosition({enableHighAccuracy: true})
+				center = {lat: pos.coords.latitude, lng: pos.coords.longitude}
 			} catch (e) {
 			}
 
-			this.loadClients(ymaps)
-			this.trackDriver(ymaps)
-		},
-
-		loadClients(ymaps) {
-			$axios.get('/api/driver/clients-map').then(res => {
-				const clusterer = new ymaps.Clusterer({
-					preset: 'islands#invertedOrangeClusterIcons',
-					groupByCoordinates: false
+			try {
+				this.map = await GoogleMap.create({
+					id: 'clients-map',
+					element: this.$refs.mapRef,
+					apiKey: GOOGLE_MAPS_KEY,
+					config: {
+						center,
+						zoom: 13
+					}
 				})
 
-				const marks = (res.data || []).map(c => new ymaps.Placemark(
-					[c.lat, c.lng],
-					{
-						balloonContentHeader: c.fullname,
-						balloonContentBody:
-							(c.phone ? ('☎ +998' + c.phone + '<br>') : '') +
-							'Balans: ' + (c.balance || 0) + '<br>Idish: ' + (c.container || 0),
-						hintContent: c.fullname
-					},
-					{preset: 'islands#orangeIcon'}
-				))
-
-				clusterer.add(marks)
-				this.map.geoObjects.add(clusterer)
-			}).catch(() => {
-			})
-		},
-
-		trackDriver(ymaps) {
-			const update = (coords) => {
-				if (!this.map) return
-				const pos = [coords.latitude, coords.longitude]
+				// native realtime "you are here" blue dot
 				try {
-					if (this.driverMark) {
-						this.driverMark.geometry.setCoordinates(pos)
-					} else {
-						this.driverMark = new ymaps.Placemark(pos, {hintContent: 'Siz'}, {
-							preset: 'islands#geolocationIcon',
-							iconColor: '#16B981'
-						})
-						this.map.geoObjects.add(this.driverMark)
-						this.map.setCenter(pos, 14)
-					}
+					await this.map.enableCurrentLocation(true)
 				} catch (e) {
 				}
+
+				await this.loadClients()
+			} catch (e) {
+				console.error('GoogleMap create failed', e)
 			}
-
-			Geolocation.getCurrentPosition({enableHighAccuracy: true})
-				.then(p => update(p.coords))
-				.catch(() => {
-				})
-
-			Geolocation.watchPosition({enableHighAccuracy: true, timeout: 10000}, (p, err) => {
-				if (err || !p) return
-				update(p.coords)
-			}).then(id => {
-				this.watchId = id
-			}).catch(() => {
-			})
 		},
 
-		recenter() {
-			if (this.driverMark && this.map) {
-				this.map.setCenter(this.driverMark.geometry.getCoordinates(), 15, {duration: 300})
+		async loadClients() {
+			try {
+				const res = await $axios.get('/api/driver/clients-map')
+				const markers = (res.data || []).map(c => ({
+					coordinate: {lat: c.lat, lng: c.lng},
+					title: c.fullname,
+					snippet: (c.phone ? ('+998' + c.phone + ' · ') : '') +
+						'Balans: ' + (c.balance || 0) + ' · Idish: ' + (c.container || 0)
+				}))
+
+				if (markers.length && this.map) {
+					await this.map.addMarkers(markers)
+					try {
+						await this.map.enableClustering()
+					} catch (e) {
+					}
+				}
+			} catch (e) {
+			}
+		},
+
+		async recenter() {
+			if (!this.map) return
+			try {
+				const pos = await Geolocation.getCurrentPosition({enableHighAccuracy: true})
+				await this.map.setCamera({
+					coordinate: {lat: pos.coords.latitude, lng: pos.coords.longitude},
+					zoom: 15,
+					animate: true
+				})
+			} catch (e) {
 			}
 		}
 	}
@@ -165,18 +130,14 @@ export default {
 	right: 0;
 	bottom: 0;
 	z-index: 1;
+	background: transparent;
 }
 
 #clients-map {
+	display: block;
 	width: 100%;
 	height: 100%;
-	touch-action: none;
-}
-
-/* let the Yandex map own all touch gestures (drag / pinch-zoom) */
-#clients-map :deep(.ymaps-2-1-79-events-pane),
-#clients-map :deep([class*="-events-pane"]) {
-	touch-action: none !important;
+	background: transparent;
 }
 
 .map-recenter {

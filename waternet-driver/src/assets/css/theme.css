@@ -3,6 +3,16 @@
    Loaded after style.css so it overrides the legacy theme.
    ===================================================================== */
 
+/* Native Google map (@capacitor/google-maps) renders BEHIND the WebView, so
+   the page must be transparent where it shows through. The header/footer keep
+   their own solid background and paint on top of the map. */
+body.native-map-open,
+body.native-map-open #app,
+body.native-map-open .map-wrap,
+body.native-map-open #clients-map {
+	background: transparent !important;
+}
+
 :root {
 	/* Water-blue brand palette */
 	--wn-primary: #2563EB;
