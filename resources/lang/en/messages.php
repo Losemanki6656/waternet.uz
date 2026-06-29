@@ -298,6 +298,7 @@ return [
     'all_time'                               => 'All Time',
     'administration'                         => 'Administration',
     'shops'                                  => 'Merchants',
+    'merchants'                              => 'Merchants',
     'select_traffic'                         => 'Select Traffic Plan',
     'add_shop'                               => 'Add Merchant',
     'shop_name'                              => 'Merchant Name',

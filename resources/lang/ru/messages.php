@@ -298,6 +298,7 @@ return [
     'all_time'                                 => 'За всё время',
     'administration'                           => 'Администрирование',
     'shops'                                    => 'Магазины',
+    'merchants'                                => 'Мерчанты',
     'select_traffic'                           => 'Выбрать тариф',
     'add_shop'                                 => 'Добавить магазин',
     'shop_name'                                => 'Название магазина',

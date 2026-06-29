@@ -236,6 +236,7 @@
                 <div id="sidebar-menu">
                     <!-- Left Menu Start -->
                     <ul class="metismenu list-unstyled" id="side-menu">
+                        @php $isAdmin = auth()->user()->can('admin') || auth()->user()->id == 1; @endphp
                         <li class="menu-title" data-key="t-menu">{{ __('messages.Statistics') }}</li>
 
                         @can('bosh-menu')
@@ -312,14 +313,14 @@
                             </li>
                         @endcan
                         @can('users')
-                            @cannot('admin')
+                            @unless($isAdmin)
                                 <li>
                                     <a href="{{ route('users') }}">
                                         <i data-feather="user-check"></i>
                                         <span data-key="t-dashboard">{{ __('messages.users') }}</span>
                                     </a>
                                 </li>
-                            @endcannot
+                            @endunless
                         @endcan
 
                         @can('smsmanager')
@@ -348,16 +349,16 @@
                             </a>
                         </li>
 
-                        @cannot('admin')
+                        @unless($isAdmin)
                             <li>
                                 <a href="{{ route('traffics') }}">
                                     <i data-feather="tag"></i>
                                     <span data-key="t-dashboard">{{ __('messages.traffics') }}</span>
                                 </a>
                             </li>
-                        @endcannot
+                        @endunless
 
-                        @can('admin')
+                        @if($isAdmin)
                             <li class="menu-title" data-key="t-apps">{{ __('messages.administration') }}</li>
 
                             {{-- <li>
@@ -368,7 +369,7 @@
 
                             <li>
                                 <a href="{{ route('organizations') }}"><i
-                                        data-feather="award"></i><span>{{ __('messages.shops') }}</span>
+                                        data-feather="award"></i><span>{{ __('messages.merchants') }}</span>
                                 </a>
                             </li>
                             <li>
@@ -398,7 +399,7 @@
                                         Orgnization Swipers</span>
                                 </a>
                             </li> --}}
-                        @endcan
+                        @endif
 
                     </ul>
 

@@ -296,6 +296,7 @@ return [
     'all_time' => "All Time",
     'administration' => "Administrations",
     'shops' => "Shops",
+    'merchants' => 'Merchantlar',
     'select_traffic' => "Select Traffic",
     'add_shop' => "Add Shop",
     'shop_name' => "Shop Name",
