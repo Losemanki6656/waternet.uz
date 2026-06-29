@@ -37,7 +37,8 @@ export default {
 				order: 'nav.orders',
 				region: 'nav.regions',
 				application: 'nav.applications',
-				monitoring: 'nav.monitoring'
+				monitoring: 'nav.monitoring',
+				map: 'nav.map'
 			}
 			const key = map[this.$route.name]
 			return key ? this.$t(key) : this.$t('appName')

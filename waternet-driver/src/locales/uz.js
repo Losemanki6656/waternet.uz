@@ -13,6 +13,7 @@ export default {
 		regions: 'Hududlar',
 		applications: 'Arizalar',
 		monitoring: 'Monitoring',
+		map: 'Xarita',
 		logout: 'Chiqish',
 		menu: 'Menyu',
 		theme: 'Mavzu',

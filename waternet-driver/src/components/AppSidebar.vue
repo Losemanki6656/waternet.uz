@@ -68,6 +68,16 @@
 								</div>
 							</a>
 						</li>
+						<li>
+							<a @click="redirect('map')" class="item">
+								<div class="icon-box bg-primary">
+									<i class="fa-solid fa-map"></i>
+								</div>
+								<div class="in">
+									{{ $t('nav.map') }}
+								</div>
+							</a>
+						</li>
 
 
 						<li>

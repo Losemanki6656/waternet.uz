@@ -23,6 +23,8 @@ const routes = [
 	{path: '/application/show/:id', name: 'application.show', component: page('application/show')},
 
 	{path: '/monitoring', name: 'monitoring', component: page('monitoring/index')},
+
+	{path: '/map', name: 'map', component: page('map/index')},
 ]
 
 const router = createRouter({

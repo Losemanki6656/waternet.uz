@@ -46,6 +46,7 @@ Route::group([
     Route::post('/driver/areas', [HomeController::class, 'areas']);
     Route::post('/driver/areas/filter', [HomeController::class, 'areas_filter']);
     Route::get('/driver/monitoring', [HomeController::class, 'monitoring']);
+    Route::get('/driver/clients-map', [HomeController::class, 'clients_map']);
     Route::post('/driver/locations', [DriverLocationController::class, 'store']);
 
 

@@ -13,6 +13,7 @@ export default {
 		regions: 'Regions',
 		applications: 'Applications',
 		monitoring: 'Monitoring',
+		map: 'Map',
 		logout: 'Log out',
 		menu: 'Menu',
 		theme: 'Theme',

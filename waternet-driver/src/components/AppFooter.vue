@@ -27,6 +27,13 @@
 				<strong>{{ $t('nav.monitoring') }}</strong>
 			</div>
 		</router-link>
+
+		<router-link :to="{ name: 'map' }" class="item">
+			<div class="col">
+				<i class="fa-solid fa-map"></i>
+				<strong>{{ $t('nav.map') }}</strong>
+			</div>
+		</router-link>
 	</div>
 </template>
 

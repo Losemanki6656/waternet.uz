@@ -13,6 +13,7 @@ export default {
 		regions: 'Регионы',
 		applications: 'Заявки',
 		monitoring: 'Мониторинг',
+		map: 'Карта',
 		logout: 'Выход',
 		menu: 'Меню',
 		theme: 'Тема',

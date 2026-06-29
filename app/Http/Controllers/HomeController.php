@@ -2014,6 +2014,47 @@ class HomeController extends Controller
             ->get());
     }
 
+    /**
+     * Driver app — every client of the organization that has a GPS location,
+     * for the "all clients on the map" screen. location is stored as "lat,lng".
+     */
+    public function clients_map()
+    {
+        $orgId = auth()->user()->organization_id;
+
+        $clients = Client::where('organization_id', $orgId)
+            ->whereNotNull('location')
+            ->where('location', '!=', '')
+            ->where('location', '!=', '0')
+            ->get(['id', 'fullname', 'phone', 'location', 'balance', 'container']);
+
+        $data = $clients->map(function ($c) {
+            $parts = explode(',', $c->location);
+            if (count($parts) < 2) {
+                return null;
+            }
+
+            $lat = trim($parts[0]);
+            $lng = trim($parts[1]);
+
+            if (!is_numeric($lat) || !is_numeric($lng)) {
+                return null;
+            }
+
+            return [
+                'id' => $c->id,
+                'fullname' => $c->fullname,
+                'phone' => $c->phone,
+                'lat' => (float) $lat,
+                'lng' => (float) $lng,
+                'balance' => $c->balance,
+                'container' => $c->container,
+            ];
+        })->filter()->values();
+
+        return response()->json($data);
+    }
+
     public function areas_filter(Request $request)
     {
         $str = implode(',', $request->areas);
