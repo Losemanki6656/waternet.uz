@@ -534,6 +534,37 @@
 	margin-right: 14px;
 }
 
+/* ----------------------------------------------------------------- *
+ * Panelbox modals + toast fixes
+ * ----------------------------------------------------------------- */
+/* status bar is non-overlay now, so the leftover safe-area top inset on the
+   panel content only showed a white strip above the (blue) panel header */
+.panelbox .modal-dialog .modal-content {
+	padding-top: 0 !important;
+}
+
+/* Filter panel title must be white on the blue header (theme's high-specificity
+   rule otherwise forces it dark) */
+#FilterPanelRight .modal-title,
+#FilterPanelRight .modal-title i {
+	color: #fff !important;
+}
+
+/* "Please check your internet" toast: the theme's `transition: .2s all`
+   leaves `bottom` stuck at its from-value, so disable the transition and
+   lift the shown state ABOVE the floating bottom nav (bottom:14px, ~70px). */
+#internet-toast {
+	transition: none !important;
+}
+
+#internet-toast.toast-bottom {
+	bottom: -120px !important;
+}
+
+#internet-toast.toast-bottom.show {
+	bottom: 94px !important;
+}
+
 /* Language pills (sidebar) */
 .lang-switch {
 	display: flex;
