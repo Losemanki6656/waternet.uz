@@ -56,10 +56,25 @@ export default {
 		async initMap() {
 			let center = {lat: 39.767, lng: 64.421}   // Buxoro fallback
 
+			// Make sure location permission is granted BEFORE the map turns on its
+			// current-location layer — enabling it without permission crashes the
+			// native map (the exception bypasses JS try/catch).
+			let hasLocation = false
 			try {
-				const pos = await Geolocation.getCurrentPosition({enableHighAccuracy: true})
-				center = {lat: pos.coords.latitude, lng: pos.coords.longitude}
+				let perm = await Geolocation.checkPermissions()
+				if (perm.location !== 'granted' && perm.coarseLocation !== 'granted') {
+					perm = await Geolocation.requestPermissions()
+				}
+				hasLocation = (perm.location === 'granted' || perm.coarseLocation === 'granted')
 			} catch (e) {
+			}
+
+			if (hasLocation) {
+				try {
+					const pos = await Geolocation.getCurrentPosition({enableHighAccuracy: true})
+					center = {lat: pos.coords.latitude, lng: pos.coords.longitude}
+				} catch (e) {
+				}
 			}
 
 			try {
@@ -73,10 +88,12 @@ export default {
 					}
 				})
 
-				// native realtime "you are here" blue dot
-				try {
-					await this.map.enableCurrentLocation(true)
-				} catch (e) {
+				// native realtime "you are here" blue dot — only when allowed
+				if (hasLocation) {
+					try {
+						await this.map.enableCurrentLocation(true)
+					} catch (e) {
+					}
 				}
 
 				await this.loadClients()
